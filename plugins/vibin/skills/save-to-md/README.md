@@ -1,6 +1,6 @@
 # save-to-md
 
-Save the current Claude session as a markdown file under `docs/sessions/`, pre-injected with full context: date, repo, branch, HEAD, recent commits, dirty files, transcript path, active PR, worktree, recent Beads state, registered worktrees, branches, and plan files. After creating the artifact, `save-to-md` stages, commits, and pushes only that generated session file.
+Save the current Claude session as a markdown file under `docs/sessions/`, pre-injected with full context: date, repo, branch, HEAD, recent commits, dirty files, transcript path, active PR, worktree, recent Beads state, registered worktrees, branches, and plan files. After creating the artifact, `save-to-md` stages, commits, pushes, and lands only that generated session file on the repo's default branch.
 
 ## What it does
 
@@ -11,8 +11,12 @@ Save the current Claude session as a markdown file under `docs/sessions/`, pre-i
 5. Writes a metadata block + numbered sections: what was done, files changed, bead activity, repository maintenance, tools used, errors encountered, next steps, open questions, verification evidence.
 6. Stages only the generated artifact with `git add -f -- <session-file>`.
 7. Commits only that path with `git commit -m "docs: save session log" --only -- <session-file>` so unrelated staged or dirty files are excluded.
-8. Pushes the current branch and verifies the session-file commit contains no other paths.
-9. Facts-only rule — no speculation; ambiguity goes into Open Questions.
+8. If invoked from a feature branch, pushes that branch for context, then creates a docs-only publish branch from the default branch and copies only the generated session file into it.
+9. Publishes the session file to the default branch automatically: direct push when allowed, otherwise a docs-only PR that the skill opens and merges itself after checks are green.
+10. Verifies the session-file commit contains no other paths.
+11. Facts-only rule — no speculation; ambiguity goes into Open Questions.
+
+The generated session artifact must not be left on a side branch for the user to merge manually. If branch protection, failed checks, missing GitHub credentials, or mandatory human review prevent automatic merge, report the exact branch or PR that is blocked and why.
 
 The generated session note must list every bead created, closed, edited, claimed, assigned, commented on, or otherwise worked during the session. If no bead activity occurred, it says so explicitly.
 
