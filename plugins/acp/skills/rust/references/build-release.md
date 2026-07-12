@@ -20,7 +20,7 @@ rustc-wrapper = "/home/jmagar/.local/bin/sccache-wrapper"
 
 [env]
 CARGO_PROFILE_DEV_CODEGEN_BACKEND = "llvm"
-SCCACHE_SERVER_UDS = "/tmp/sccache-jmagar.sock"
+SCCACHE_SERVER_UDS = "/home/jmagar/.local/state/sccache/sccache.sock"
 
 [unstable]
 codegen-backend = true
@@ -66,7 +66,7 @@ Interpretation:
 - sccache is enabled through `/home/jmagar/.local/bin/sccache-wrapper`, not by
   pointing Cargo directly at `sccache`. The wrapper bypasses clippy, resolves
   rustup toolchain paths to stable version-pinned paths for sccache-dist safety,
-  exports `SCCACHE_SERVER_UDS=/tmp/sccache-jmagar.sock`, and then execs the
+  exports `SCCACHE_SERVER_UDS=/home/jmagar/.local/state/sccache/sccache.sock`, and then execs the
   mise-pinned `/home/jmagar/.local/sccache`.
 - Some repos add a repo-local rustc wrapper for project-specific side effects.
   Axon's `.cargo/config.toml` points at `scripts/cargo-rustc-wrapper`, which
