@@ -571,10 +571,10 @@
       "name": "aurora",
       "source": {
         "source": "git-subdir",
-        "url": "https://github.com/jmagar/aurora-design-system.git",
+        "url": "https://github.com/jmagar/aurora.git",
         "path": "plugin"
       },
-      "description": "Aurora design system \u2014 dark-first navy/cyan/rose/violet operator and agent control-plane UI across web (the @aurora shadcn registry, var(--aurora-*) tokens), Android (the tv.tootie.aurora Jetpack Compose library), and CLI/editor themes."
+      "description": "Aurora design system \u2014 dark-first navy/cyan/rose/Axon-orange operator and agent control-plane UI across web (the @aurora shadcn registry, var(--aurora-*) plus --axon-* tokens), Android (the tv.tootie.aurora Jetpack Compose library), and CLI/editor themes."
     },
     {
       "name": "zsnoop-mcp",

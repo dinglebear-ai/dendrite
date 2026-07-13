@@ -10,7 +10,7 @@
 | `agent-os` | local | ./plugins/agent-os | none | local | ./plugins/agent-os | none | no |
 | `agent-sdk-dev` | git-subdir | https://github.com/anthropics/claude-plugins-official.git:plugins/agent-sdk-dev | none | git-subdir | https://github.com/anthropics/claude-plugins-official.git:plugins/agent-sdk-dev | none | no |
 | `apprise` | git-subdir | https://github.com/jmagar/apprise-mcp.git:plugins/apprise | none | git-subdir | https://github.com/jmagar/apprise-mcp.git:plugins/apprise | none | no |
-| `aurora` | git-subdir | https://github.com/jmagar/aurora-design-system.git:plugin | none | git-subdir | https://github.com/jmagar/aurora-design-system.git:plugin | none | no |
+| `aurora` | git-subdir | https://github.com/jmagar/aurora.git:plugin | none | git-subdir | https://github.com/jmagar/aurora.git:plugin | none | no |
 | `axon` | git-subdir | https://github.com/jmagar/axon.git:plugins/axon | none | git-subdir | https://github.com/jmagar/axon.git:plugins/axon | none | yes |
 | `beads` | git-subdir | https://github.com/gastownhall/beads.git:plugins/beads | none | git-subdir | https://github.com/gastownhall/beads.git:plugins/beads | none | no |
 | `bytestash` | local | ./plugins/bytestash | none | local | ./plugins/bytestash | none | no |
