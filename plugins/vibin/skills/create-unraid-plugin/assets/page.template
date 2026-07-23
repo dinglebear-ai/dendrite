@@ -1,0 +1,130 @@
+=============================================================================
+ .page templates. Split into the files shown; replace PLUGIN_ID / PagePrefix /
+ PLUGIN_TITLE / MENU_LABEL / ICON_NAME / PLUGIN_PAGE_TAG. For a SINGLE-page
+ plugin, use only the first block but drop Type/Tabs and put your body after the
+ `---`. For a TABBED plugin, use all three files. The JS core + CSS go on the
+ FIRST child tab only (all xmenu tabs share one document). PLUGIN_NAMESPACE is
+ the shared CSS/JS/PHP namespace — replace it with a short identifier.
+=============================================================================
+
+
+===== FILE: src/usr/local/emhttp/plugins/PLUGIN_ID/PagePrefix.page =====
+Menu="MENU_LABEL"
+Title="PLUGIN_TITLE"
+Icon="icon-ICON_NAME"
+Tag="PLUGIN_PAGE_TAG"
+Type="xmenu"
+Tabs="true"
+---
+# Container only. Child pages (Menu="PagePrefix:N") render as tabs inside it.
+# For a single-page plugin, delete Type/Tabs above and put PHP/HTML here instead.
+
+
+===== FILE: src/usr/local/emhttp/plugins/PLUGIN_ID/PagePrefixMain.page =====
+Menu="PagePrefix:1"
+Title="Status"
+Tag="PLUGIN_PAGE_TAG"
+---
+<?php
+/* First tab. Owns the shared JS core + CSS for EVERY tab in this container
+   (they all render into one document). $var is in scope from the webGUI. */
+$csrf = $var['csrf_token'] ?? '';
+?>
+<div class="PLUGIN_NAMESPACE-wrap">
+  <div class="PLUGIN_NAMESPACE-status" id="PLUGIN_NAMESPACE-status">loading…</div>
+  <div class="PLUGIN_NAMESPACE-toolbar">
+    <button type="button" onclick="PLUGIN_NAMESPACEAction('start')">Start</button>
+    <button type="button" onclick="PLUGIN_NAMESPACEAction('stop')">Stop</button>
+    <button type="button" onclick="PLUGIN_NAMESPACERefresh()">Refresh</button>
+  </div>
+  <pre class="PLUGIN_NAMESPACE-log" id="PLUGIN_NAMESPACE-log"></pre>
+</div>
+
+<style>
+/* Theme against dynamix CSS variables so the plugin follows the user's theme. */
+.PLUGIN_NAMESPACE-wrap{padding:6px 0}
+.PLUGIN_NAMESPACE-status{font-size:13px;color:var(--text-color);padding:6px 0}
+.PLUGIN_NAMESPACE-toolbar{display:flex;gap:8px;margin:6px 0}
+.PLUGIN_NAMESPACE-toolbar button{border:1px solid var(--border-color);border-radius:6px;background:var(--shade-bg-color,transparent);color:var(--text-color);padding:5px 12px;font-size:12px;cursor:pointer}
+.PLUGIN_NAMESPACE-log{background:var(--shade-bg-color,transparent);border:1px solid var(--border-color);border-radius:6px;padding:8px;font-size:12px;color:var(--alt-text-color);max-height:220px;overflow:auto;white-space:pre-wrap}
+</style>
+
+<script>
+/* Shared core for all tabs. CSRF token injected on every POST. */
+const PLUGIN_NAMESPACE_CSRF = <?=json_encode($csrf, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)?>;
+const PLUGIN_NAMESPACE_URL  = "/plugins/PLUGIN_ID/include/exec.php";
+function PLUGIN_NAMESPACEPost(p){
+  p.csrf_token = PLUGIN_NAMESPACE_CSRF;
+  return fetch(PLUGIN_NAMESPACE_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:Object.entries(p).map(([k,v])=>encodeURIComponent(k)+'='+encodeURIComponent(v)).join('&')})
+    .then(r=>r.text().then(t=>{
+      if(!r.ok) throw new Error('http '+r.status+(r.status===403?' — session expired, reload the page':'')+': '+t.slice(0,100));
+      try{return JSON.parse(t);}catch(e){ throw new Error('bad response: '+t.slice(0,120)); }
+    }));
+}
+function PLUGIN_NAMESPACELog(o){ document.getElementById('PLUGIN_NAMESPACE-log').textContent = o.log || JSON.stringify(o); }
+function PLUGIN_NAMESPACEAction(a){ PLUGIN_NAMESPACEPost({action:a}).then(o=>{ PLUGIN_NAMESPACELog(o); PLUGIN_NAMESPACERefresh(); }).catch(e=>console.error('PLUGIN_ID '+a+':',e)); }
+let PLUGIN_NAMESPACEPollTimer;
+function PLUGIN_NAMESPACEPollDelay(value){
+  const seconds = Number(value);
+  return Number.isInteger(seconds) && seconds >= 5 && seconds <= 600 ? seconds * 1000 : 30000;
+}
+function PLUGIN_NAMESPACEScheduleRefresh(interval){
+  clearTimeout(PLUGIN_NAMESPACEPollTimer);
+  PLUGIN_NAMESPACEPollTimer = setTimeout(()=>{
+    PLUGIN_NAMESPACEPollTimer = undefined;
+    if(PLUGIN_NAMESPACEVisible()) PLUGIN_NAMESPACERefresh(); else PLUGIN_NAMESPACEScheduleRefresh(interval);
+  }, PLUGIN_NAMESPACEPollDelay(interval));
+}
+function PLUGIN_NAMESPACERefresh(){
+  clearTimeout(PLUGIN_NAMESPACEPollTimer);
+  PLUGIN_NAMESPACEPollTimer = undefined;
+  return PLUGIN_NAMESPACEPost({action:'status-json'}).then(d=>{
+    document.getElementById('PLUGIN_NAMESPACE-status').textContent = 'state: ' + (d.state ?? 'unknown');
+    PLUGIN_NAMESPACEScheduleRefresh(d.interval);
+  }).catch(e=>{ console.error('PLUGIN_ID status:',e); PLUGIN_NAMESPACEScheduleRefresh(); });
+}
+/* Poll only while this tab is actually visible: all xmenu tabs share one
+   document, so document.hidden stays false on a backgrounded sub-tab. */
+function PLUGIN_NAMESPACEVisible(){ const s=document.getElementById('PLUGIN_NAMESPACE-status'); return !document.hidden && !!s && s.offsetParent!==null; }
+PLUGIN_NAMESPACERefresh();
+</script>
+
+
+===== FILE: src/usr/local/emhttp/plugins/PLUGIN_ID/PagePrefixSettings.page =====
+Menu="PagePrefix:2"
+Title="Settings"
+Tag="gear"
+---
+<?php
+/* Native Unraid settings form. parse_plugin_cfg reads the saved .cfg (empty []
+   if none). Keep ONE $defaults array as the source of truth. Secrets do NOT
+   belong here — write those via exec.php to a chmod-600 file. */
+$plugin   = 'PLUGIN_ID';
+$cfg      = parse_plugin_cfg($plugin);
+$defaults = [ 'INTERVAL' => '30', 'MODE' => 'auto' ];
+$PLUGIN_NAMESPACE_g = static fn($k) => htmlspecialchars($cfg[$k] ?? $defaults[$k] ?? '', ENT_QUOTES);
+$PLUGIN_NAMESPACE_sel = static fn($k, $v) => (($cfg[$k] ?? $defaults[$k] ?? '') === $v) ? 'selected' : '';
+?>
+<form markdown="1" name="PLUGIN_ID_form" method="POST" action="/update.php" target="progressFrame">
+<input type="hidden" name="#file" value="PLUGIN_ID/PLUGIN_ID.cfg">
+
+### General
+
+_(Poll interval (s))_:
+: <input type="number" name="INTERVAL" min="5" max="600" value="<?=$PLUGIN_NAMESPACE_g('INTERVAL')?>">
+
+:PLUGIN_NAMESPACE_interval_plug:
+> How often the Status tab refreshes, in seconds.
+:end
+
+_(Mode)_:
+: <select name="MODE">
+  <option value="auto"   <?=$PLUGIN_NAMESPACE_sel('MODE','auto')?>>auto</option>
+  <option value="manual" <?=$PLUGIN_NAMESPACE_sel('MODE','manual')?>>manual</option>
+  </select>
+
+&nbsp;
+: <input type="submit" name="Apply" value="_(Apply)_" style="width:auto">
+
+</form>

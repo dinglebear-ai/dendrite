@@ -1,0 +1,44 @@
+# {{APPLICATION_NAME}} — Community Applications copy
+
+Keep this copy aligned with the application XML.
+
+## One-liner
+
+{{ONE_SENTENCE_VALUE_PROPOSITION}}
+
+## Plugin overview
+
+{{CONCISE_PLAIN_TEXT_OVERVIEW_MATCHING_PLUGIN_XML}}
+
+> **Security:** {{MATERIAL_SECURITY_WARNING_OR_REMOVE_IF_NOT_APPLICABLE}}
+
+## Optional forum support-thread post (BBCode)
+
+```bbcode
+[b]{{APPLICATION_NAME}}[/b] {{SUMMARY}}
+
+[b]What you get[/b]
+[list]
+[*]{{CAPABILITY_ONE}}
+[*]{{CAPABILITY_TWO}}
+[/list]
+
+[b]Requirements[/b]
+[list]
+[*]{{REQUIREMENT_ONE}}
+[/list]
+
+[b]Security — read before use[/b]
+{{SECURITY_DETAILS}}
+
+[b]Source & issues:[/b] {{PUBLIC_PROJECT_URL}}
+```
+
+## Categories
+
+`{{COLON_DELIMITED_CATEGORIES}}`
+
+## Support and listing screenshots
+
+- Primary screenshot for documentation or support: `{{PUBLIC_RAW_SCREENSHOT_URL}}`
+- Additional screenshots: {{SCREENSHOT_INVENTORY}}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create an Unraid Plugin"
+  short_description: "Build and review Unraid OS, API, and hybrid plugins"
+  default_prompt: "Use $create-unraid-plugin to build or review, package, test, and validate the right Unraid plugin architecture for this project."

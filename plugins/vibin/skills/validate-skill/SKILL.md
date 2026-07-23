@@ -2,7 +2,6 @@
 name: validate-skill
 description: Validate a Claude Code skill's SKILL.md using skills-ref validate, then layer in Claude Code-specific checks that skills-ref doesn't cover (trigger phrases, argument-hint, disable-model-invocation, plugin.json registration). Use whenever the user says "validate this skill", "check my skill", "is my skill valid", "review skill structure", "does this skill follow conventions", or is about to publish or install a skill. Also use proactively after creating or editing any SKILL.md file.
 allowed-tools: Read, Bash
-argument-hint: [path/to/skill or path/to/SKILL.md]
 ---
 
 ## Context
@@ -20,22 +19,15 @@ Set `SKILL_DIR` to the resolved directory. Set `SKILL_NAME` to its last path com
 
 ## Step 2 — Run skills-ref validate
 
-If `skills-ref` is not on PATH (`command -v skills-ref` returns nothing), emit `WARN skills-ref not installed — skipping schema validation` and skip to Step 3.
-
 ```bash
-skills-ref validate <SKILL_DIR>
+npx -y skills-ref validate <SKILL_DIR>
 ```
 
-Capture the output. `skills-ref` will report any schema violations.
-
-**Known false positives from skills-ref** — suppress these specific messages when reporting, since they are valid Claude Code frontmatter fields:
-- `Unexpected fields in frontmatter: argument-hint` — valid, skip
-- `Unexpected fields in frontmatter: disable-model-invocation` — valid, skip
-
-Report all other `skills-ref` output as-is.
-
-If suppressing the known false positives leaves only an empty `Validation failed`
-header with no bullet details, treat `skills-ref` as "✓ No issues".
+Always invoke `skills-ref` through `npx`; the package does not need a global
+installation. Capture its output and exit status, and report schema findings
+as-is. Do not suppress fields rejected by the current `skills-ref` schema. If
+`npx` cannot execute the package, report that as a validation failure rather
+than silently skipping schema validation.
 
 ## Step 3 — Claude Code-specific checks
 
@@ -70,7 +62,7 @@ Path:  <absolute SKILL_DIR>
 
 skills-ref
 ----------
-<output from skills-ref, minus suppressed false positives, or "✓ No issues">
+<output from skills-ref, or "✓ No issues">
 
 Claude Code checks
 ------------------

@@ -1,0 +1,75 @@
+<?php
+/* PLUGIN_ID - CSRF-guarded JSON backend for the web UI.
+   THIN SHIM: validate CSRF, validate inputs, shell out to the control script,
+   always emit JSON. No business logic here — it all lives in the .sh script. */
+header('Content-Type: application/json');
+
+/* CSRF: constant-time compare against the token in var.ini. */
+$var   = @parse_ini_file('/var/local/emhttp/var.ini');
+$csrf  = $var['csrf_token'] ?? '';
+$given = $_REQUEST['csrf_token'] ?? '';
+if (!$csrf || !hash_equals($csrf, $given)) {
+  http_response_code(403);
+  echo json_encode(['ok' => false, 'error' => 'csrf']);
+  exit;
+}
+
+$PLUGIN = 'PLUGIN_ID';
+$CFGDIR = "/boot/config/plugins/$PLUGIN";
+$SCRIPT = "/usr/local/emhttp/plugins/$PLUGIN/include/$PLUGIN.sh";
+$action = $_REQUEST['action'] ?? 'status-json';
+
+function run($cmd) { exec($cmd . ' 2>&1', $out, $rc); return [implode("\n", $out), $rc]; }
+
+switch ($action) {
+  case 'status-json':
+    [$out, $rc] = run(escapeshellarg($SCRIPT) . ' status-json');
+    $decoded = json_decode($out, true);
+    if ($rc !== 0 || !is_array($decoded)) {
+      http_response_code(500);
+      echo json_encode(['ok' => false, 'error' => 'status command failed']);
+      break;
+    }
+    echo json_encode($decoded);
+    break;
+
+  case 'start': case 'stop': case 'restart':
+    [$out, $rc] = run(escapeshellarg($SCRIPT) . ' ' . escapeshellarg($action));
+    // Log lines may precede JSON; trust the exit code for ok/fail.
+    echo json_encode(['ok' => $rc === 0, 'action' => $action, 'log' => $out]);
+    break;
+
+  case 'set-secret':
+    // Secrets go to a chmod-600 file, NEVER the world-readable .cfg.
+    $tok = trim($_REQUEST['value'] ?? '');
+    if ($tok === '') { echo json_encode(['ok' => false, 'error' => 'empty']); break; }
+    if (strlen($tok) > 4096 || preg_match('/[\r\n\x00]/', $tok)) {
+      echo json_encode(['ok' => false, 'error' => 'invalid secret shape']); break;
+    }
+    @mkdir($CFGDIR, 0700, true);
+    $old = umask(0077);
+    $tmp = tempnam($CFGDIR, '.secret.');
+    $ok = $tmp !== false && file_put_contents($tmp, $tok) !== false;
+    umask($old);
+    if (!$ok || !@chmod($tmp, 0600) || !@rename($tmp, "$CFGDIR/secret")) {
+      if ($tmp !== false) @unlink($tmp);
+      http_response_code(500);
+      echo json_encode(['ok' => false, 'error' => 'secret write failed']); break;
+    }
+    echo json_encode(['ok' => true, 'action' => 'set-secret']);
+    break;
+
+  /* Example: an identifier that reaches the shell MUST be allowlisted first —
+     escaping alone is not enough. Mirror the control script's own name shape.
+  case 'item-log':
+    $n = $_REQUEST['name'] ?? '';
+    if (!preg_match('/^PLUGIN_ID-[0-9]+$/', $n)) { echo json_encode(['ok'=>false,'error'=>'bad name']); break; }
+    [$out] = run(escapeshellarg($SCRIPT) . ' item-log ' . escapeshellarg($n));
+    echo json_encode(['ok' => true, 'log' => $out]);
+    break;
+  */
+
+  default:
+    http_response_code(400);
+    echo json_encode(['ok' => false, 'error' => 'unknown action']);
+}

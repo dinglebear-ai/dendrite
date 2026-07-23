@@ -1,0 +1,4 @@
+interface:
+  display_name: "Submit an Unraid Community App"
+  short_description: "Audit and submit Unraid plugin metadata to Community Applications"
+  default_prompt: "Use $submit-unraid-community-app to prepare this existing Unraid plugin for listing and submission to Community Applications."

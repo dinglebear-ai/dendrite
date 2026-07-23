@@ -1,0 +1,10 @@
+import { describe, expect, it } from "vitest";
+
+import { adapter, ApiModule } from "../src/index.js";
+
+describe("PLUGIN_TITLE API plugin", () => {
+  it("exports the Unraid API plugin contract", () => {
+    expect(adapter).toBe("nestjs");
+    expect(typeof ApiModule).toBe("function");
+  });
+});

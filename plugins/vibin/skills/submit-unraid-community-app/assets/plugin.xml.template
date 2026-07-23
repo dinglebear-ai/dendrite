@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Plugin>
+  <Name>{{PLUGIN_NAME}}</Name>
+  <PluginURL>{{PUBLIC_HTTPS_PLG_URL}}</PluginURL>
+  <Support>{{PUBLIC_SUPPORT_OR_ISSUES_URL}}</Support>
+  <Project>{{PUBLIC_PROJECT_URL}}</Project>
+  <Overview>{{CONCISE_PLAIN_TEXT_OVERVIEW}}</Overview>
+  <Category>{{PARSER_SUPPORTED_CATEGORY}}</Category>
+  <!-- Add only fields currently listed for plugins in the parser-backed field reference. -->
+</Plugin>

@@ -1,0 +1,6 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <title>{{APPLICATION_NAME}}</title>
+  <rect width="512" height="512" rx="96" fill="#202028"/>
+  <!-- Replace this scaffold with distinctive project artwork that remains legible at 256px. -->
+  <circle cx="256" cy="256" r="128" fill="#f15a24"/>
+</svg>

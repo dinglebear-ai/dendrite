@@ -5,7 +5,7 @@ Validate a Claude Code skill's `SKILL.md` — runs `skills-ref validate` for sch
 ## What it does
 
 1. Resolves the skill directory (from `$ARGUMENTS` or by walking up from CWD).
-2. Runs `skills-ref validate` (skipped with a WARN if not installed); suppresses known false-positives like `argument-hint` / `disable-model-invocation`.
+2. Runs `npx -y skills-ref validate` without requiring a global installation and reports its schema findings as-is.
 3. Adds Claude Code-specific checks:
    - description has trigger phrases
    - `allowed-tools` lists only real tool names

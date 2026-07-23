@@ -1,0 +1,66 @@
+#!/bin/bash
+###############################################################################
+# PLUGIN_ID - control script. All real logic lives here; exec.php is a thin
+# shim that shells to these subcommands. Emit *-json variants for the web UI
+# and a human-readable status for SSH.
+###############################################################################
+set -uo pipefail
+
+PLUGIN="PLUGIN_ID"
+CFGDIR="/boot/config/plugins/${PLUGIN}"       # USB flash — persists reboots
+# Churny runtime state (caches/locks/status) goes on tmpfs, NOT flash, or it
+# burns out the USB stick. Fall back to CFGDIR only if tmpfs is unavailable.
+RUNDIR="/var/local/emhttp/${PLUGIN}"
+mkdir -p "$RUNDIR" 2>/dev/null || RUNDIR="$CFGDIR"
+CFG="${CFGDIR}/${PLUGIN}.cfg"
+SECRET_FILE="${CFGDIR}/secret"
+
+# ---- defaults (overridden by <plugin>.cfg via load_cfg) --------------------
+INTERVAL="30"
+MODE="auto"
+SECRET=""
+
+# Allowlist of keys the settings form may set. load_cfg assigns ONLY these.
+CFG_KEYS="INTERVAL MODE"
+
+# Parse the .cfg WITHOUT sourcing it: the file is written by the web form, so
+# sourcing would execute anything a crafted value smuggled in. Read KEY="value"
+# lines, allowlist the key, and assign with printf -v (a literal set, no eval).
+load_cfg() {
+  [ -f "$CFG" ] || return 0
+  local line key val
+  while IFS= read -r line || [ -n "$line" ]; do
+    case "$line" in ''|\#*) continue;; esac
+    [ "${line#*=}" = "$line" ] && continue
+    key="${line%%=*}"; val="${line#*=}"; key="${key//[[:space:]]/}"
+    case "$key" in *[!A-Za-z0-9_]*|'') continue;; esac
+    case " $CFG_KEYS " in *" $key "*) ;; *) continue;; esac
+    val="${val%\"}"; val="${val#\"}"; val="${val%\'}"; val="${val#\'}"
+    printf -v "$key" '%s' "$val"
+  done < "$CFG"
+}
+load_cfg
+[ -z "$SECRET" ] && [ -f "$SECRET_FILE" ] && SECRET="$(cat "$SECRET_FILE" 2>/dev/null)"
+
+# Browser constraints are presentation only. Normalize every value again before
+# using it in commands or unquoted JSON.
+case "$INTERVAL" in ''|*[!0-9]*|????*) INTERVAL="30" ;; esac
+INTERVAL=$((10#$INTERVAL))
+(( INTERVAL >= 5 && INTERVAL <= 600 )) || INTERVAL="30"
+case "$MODE" in auto|manual) ;; *) MODE="auto" ;; esac
+
+json_escape() { sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'; }
+
+cmd_status()      { echo "PLUGIN_ID: mode=$MODE interval=${INTERVAL}s"; }
+cmd_status_json() { echo "{\"state\":\"idle\",\"mode\":\"$(printf '%s' "$MODE" | json_escape)\",\"interval\":${INTERVAL}}"; }
+cmd_start()       { echo "started"; }   # TODO: real work
+cmd_stop()        { echo "stopped"; }   # TODO: real work
+
+case "${1:-status}" in
+  start)        cmd_start ;;
+  stop)         cmd_stop ;;
+  restart)      cmd_stop; cmd_start ;;
+  status)       cmd_status ;;
+  status-json)  cmd_status_json ;;
+  *) echo "usage: $0 {start|stop|restart|status|status-json}"; exit 1 ;;
+esac

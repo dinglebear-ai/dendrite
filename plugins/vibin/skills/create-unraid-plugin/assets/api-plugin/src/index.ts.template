@@ -1,0 +1,17 @@
+import { Logger, Module } from "@nestjs/common";
+
+export const adapter = "nestjs";
+
+@Module({
+  /* Add providers only after aligning their imports, configuration, GraphQL
+     names, input validation, and UsePermissions metadata with the target API. */
+})
+class PLUGIN_PASCALApiModule {
+  private readonly logger = new Logger(PLUGIN_PASCALApiModule.name);
+
+  onModuleInit(): void {
+    this.logger.log("PLUGIN_TITLE API plugin initialized");
+  }
+}
+
+export const ApiModule = PLUGIN_PASCALApiModule;

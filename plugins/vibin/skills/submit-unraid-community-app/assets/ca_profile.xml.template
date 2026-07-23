@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CommunityApplications>
+  <Profile>{{NON_EMPTY_REPOSITORY_PROFILE}}</Profile>
+  <Icon>{{PUBLIC_ICON_URL}}</Icon>
+  <WebPage>{{PUBLIC_REPOSITORY_OR_MAINTAINER_URL}}</WebPage>
+  <!-- Optional: remove when no real forum or community landing page exists. -->
+  <Forum>{{OPTIONAL_UNRAID_FORUM_OR_COMMUNITY_URL}}</Forum>
+  <!-- Add optional parser-supported destinations only when real and maintained. -->
+</CommunityApplications>
