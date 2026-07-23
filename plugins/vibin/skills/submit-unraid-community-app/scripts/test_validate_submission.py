@@ -303,6 +303,23 @@ class SubmissionValidatorTests(unittest.TestCase):
             )
             self.assertIn("icon.svg contains a placeholder or TODO", result.stderr)
 
+    def test_unrelated_repository_content_is_not_treated_as_ca_input(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repository = materialize_repository(Path(tmp))
+            unrelated = repository / "node_modules/dependency"
+            unrelated.mkdir(parents=True)
+            (unrelated / "README.md").write_text("TODO upstream\n", encoding="utf-8")
+            (unrelated / "favicon.png").write_bytes(b"not a png")
+            docs = repository / "docs"
+            docs.mkdir()
+            (docs / "template.md").write_text("{{PLACEHOLDER}}\n", encoding="utf-8")
+
+            result = run_validator(repository)
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertNotIn("node_modules", result.stderr)
+            self.assertNotIn("docs/template.md", result.stderr)
+
     def test_invalid_xml_roots_are_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repository = materialize_repository(Path(tmp))

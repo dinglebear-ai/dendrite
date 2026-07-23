@@ -469,10 +469,28 @@ def fetch_and_compare_plugin_manifest(
     return False
 
 
-def scan_placeholders(repository: Path, errors: list[str]) -> None:
-    for path in repository.rglob("*"):
-        if not path.is_file() or ".git" in path.parts:
+def submission_text_artifacts(repository: Path) -> list[Path]:
+    """Return only files that CA consumes, not arbitrary repository content."""
+    candidates: set[Path] = set()
+    for path in repository.iterdir():
+        if not path.is_file():
             continue
+        name = path.name.lower()
+        if (
+            path.name.startswith("LICENSE")
+            or name in {"ca_profile.xml", "description.md"}
+            or name.startswith("icon.")
+            or path.suffix.lower() == ".plg"
+        ):
+            candidates.add(path)
+    plugins_dir = repository / "plugins"
+    if plugins_dir.is_dir():
+        candidates.update(path for path in plugins_dir.glob("*.xml") if path.is_file())
+    return sorted(candidates)
+
+
+def scan_placeholders(repository: Path, errors: list[str]) -> None:
+    for path in submission_text_artifacts(repository):
         if path.suffix.lower() not in TEXT_SUFFIXES and not path.name.startswith(
             "LICENSE"
         ):
@@ -610,9 +628,12 @@ def main() -> int:
             )
         urls.extend(collect_urls(path, root, errors))
 
-    for png in repository.rglob("*.png"):
-        if "icon" not in png.name.lower():
-            continue
+    icon_pngs = [
+        path
+        for path in submission_text_artifacts(repository)
+        if path.suffix.lower() == ".png" and "icon" in path.name.lower()
+    ]
+    for png in icon_pngs:
         dimensions = png_dimensions(png)
         relative = png.relative_to(repository)
         if dimensions is None:
