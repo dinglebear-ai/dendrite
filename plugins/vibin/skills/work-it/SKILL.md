@@ -21,19 +21,26 @@ Hard-stop if any required dependency or equivalent capability is unavailable:
   worktree.
 - `superpowers:executing-plans` — the implementation agent must execute the
   requested plan through this workflow.
-- `vibin:review-pr` — Codex-compatible PR Review Toolkit flow for the
-  mandatory PR review sweep.
 - `vibin:merge-status` — final read-only merge-readiness gate before completion.
 - Agent dispatch — implementation must happen in a dedicated implementation
   agent inside the worktree, not in the coordinator session.
-- `lavra:lavra-review` or the repo's closest full independent review
-  equivalent.
+- `lavra:lavra-review` — the one and only review run, at the end of the
+  workflow.
 - GitHub/forge CLI access for PR creation, CI status, and comment resolution.
 - `vibin:quick-push` for final publish and session logging.
 
-Review passes are not optional. If an exact named review tool is unavailable,
-use the closest repo-local equivalent. If no credible equivalent exists, stop
-and report the workflow as blocked instead of skipping the review.
+## Explicit Workflow Restriction
+
+- **NEVER use `superpowers:subagent-driven-development` for any task.** This
+  skill's implementation workflow is `superpowers:executing-plans` with one
+  dedicated implementation agent, followed by one final `lavra:lavra-review`
+  and verification. Do not substitute, combine, or layer
+  `superpowers:subagent-driven-development` onto this workflow.
+
+The only review is one final `lavra:lavra-review`. Do not invoke
+`vibin:review-pr`, the PR Review Toolkit, additional review agents, or any
+other review workflow. If `lavra:lavra-review` is unavailable, stop and report
+the workflow as blocked instead of substituting another review.
 
 ## Worktree Policy
 
@@ -71,13 +78,11 @@ actor, or worktree metadata showing another session is operating there.
   create the PR immediately after the first focused commit.
 - Commit early and commit often. Prefer small, reviewable commits after coherent
   plan slices, verification repairs, and review-fix batches.
-- Keep all implementation, review fixes, verification, commits, PR updates, and
-  PR comment resolution inside the worktree.
-- Fix every issue surfaced by verification, mandatory review waves, CI, and PR
-  comments. Pre-existing issues in the worktree are in scope.
-- Continue review/fix waves until diminishing returns are visible. If review
-  passes still find substantive issues, run another review wave before final
-  publish.
+- Keep all implementation, final review fixes, verification, commits, PR
+  updates, and PR comment resolution inside the worktree.
+- Fix every issue surfaced by verification, the single final
+  `lavra:lavra-review`, CI, and PR comments. Pre-existing issues in the
+  worktree are in scope.
 - Do not resolve PR comments until the matching code or documentation change is
   committed, pushed, and verified, or the comment is proven obsolete with
   evidence.
@@ -101,7 +106,7 @@ actor, or worktree metadata showing another session is operating there.
      paths when the plan is inside the source checkout; otherwise copy to
      `docs/plans/imported/<original-name>.md`.
    - Convert the plan into a coordinator checklist for the implementation agent,
-     PR tracking, review waves, and final gates.
+    PR tracking, the final review, and final gates.
 
 3. **Create the tracking PR**
    - Push the branch with upstream tracking.
@@ -131,29 +136,7 @@ actor, or worktree metadata showing another session is operating there.
      enough to understand the implementation, and rerun the reported
      verification before proceeding.
 
-5. **Run mandatory independent review**
-   - Run `lavra:lavra-review` or the closest full independent review equivalent
-     inside the worktree.
-   - Address every finding, regardless of severity.
-   - Re-run relevant verification after each fix batch and push follow-up
-     commits to the PR.
-
-6. **Run mandatory PR review toolkit sweep**
-   - Invoke `vibin:review-pr` inside the worktree against the PR and all
-     touched files in `apply-fixes` mode.
-   - Pass the PR URL/number, copied plan path, touched-file list, base branch,
-     and verification commands/results.
-   - Require every applicable PR Review Toolkit pass: code, tests, comments,
-     silent failures, type design, docs/config drift, and simplification.
-   - Address every finding, rerun verification, and push follow-up commits.
-
-7. **Repeat reviews until diminishing returns**
-   - If the mandatory review passes still surface substantive issues, run
-     another review wave using the strongest available review agents.
-   - Stop repeating only when new review waves produce no actionable findings or
-     only duplicate/non-actionable findings with evidence.
-
-8. **Resolve PR comments and CI**
+5. **Resolve PR comments and CI**
    - Fetch open PR comments/reviews with the repo's accepted tooling or `gh`
      CLI/API fallback.
    - Address every actionable comment in the worktree.
@@ -163,7 +146,14 @@ actor, or worktree metadata showing another session is operating there.
      unresolved actionable comments.
    - Check CI status and wait/retry as needed until all CI is green.
 
-9. **Log the final session state**
+6. **Run the single final review**
+   - After implementation, PR comment resolution, and CI are green, run
+     exactly one `lavra:lavra-review` inside the worktree.
+   - Address every finding, regardless of severity.
+   - Re-run relevant verification after each fix batch and push follow-up
+     commits to the PR. Do not run another review afterward.
+
+7. **Log the final session state**
    - Invoke `vibin:quick-push` from the worktree before the final readiness
      gate, so required session-log writes are committed and pushed before the
      final HEAD is validated.
@@ -173,10 +163,10 @@ actor, or worktree metadata showing another session is operating there.
    - For repeated quick-pushes in the same session, update the previously
      created session log only when there is substantive new information to add.
    - Ensure the session log captures branch, HEAD, worktree path, PR URL,
-     verification commands/results, review waves run, comments resolved,
+     verification commands/results, the single final review, comments resolved,
      remaining risks, and open questions.
 
-10. **Final gate**
+8. **Final gate**
    - Invoke `vibin:merge-status` from the worktree, using its collector script
      and `--run-checks` when the local checks are safe to execute.
    - If merge-status reports `not_ready`, `blocked`, or `unverified`, loop back
@@ -190,7 +180,7 @@ actor, or worktree metadata showing another session is operating there.
    - `git status --short` must be clean except for intentionally untracked
      ignored artifacts.
 
-11. **Publish final status**
+9. **Publish final status**
     - Do not create new commits after the final gate. If any final report or
       note would change tracked files, write it before rerunning the final gate.
     - Push only if the final gate left already-validated commits unpushed, then
@@ -204,9 +194,10 @@ workflow. Keep ownership explicit:
 - Implementation agent: execute the copied plan with
   `superpowers:executing-plans` inside the worktree and return only after the
   plan is implemented and verification is green.
-- Review agents: run all mandatory review passes; none are optional.
-- Follow-up review agents: run additional waves until diminishing returns are
-  observed.
+- Do not invoke `superpowers:subagent-driven-development` under any
+  circumstances; it is explicitly disallowed by this skill.
+- Review agent: run exactly one final `lavra:lavra-review`; do not dispatch any
+  other review agent or invoke any other review workflow.
 
 If no agent-dispatch mechanism exists, stop and report the implementation phase
 as blocked. Do not silently self-implement the plan in the coordinator session.
@@ -215,6 +206,6 @@ as blocked. Do not silently self-implement the plan in the coordinator session.
 
 Completion means all plan items are implemented, pre-existing and newly
 introduced worktree issues are fixed, lint/tests/CI are green, the PR exists,
-mandatory review waves have no outstanding actionable findings, PR comments are
-resolved, session logging is complete, and the worktree is clean. Anything less
-is blocked, not done.
+the single final `lavra:lavra-review` has no outstanding actionable findings,
+PR comments are resolved, session logging is complete, and the worktree is
+clean. Anything less is blocked, not done.
