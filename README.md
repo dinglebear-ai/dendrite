@@ -100,8 +100,8 @@ Useful starting points in the catalog:
 - 25 local plugin directories
 - 77 Claude marketplace entries
 - 77 Codex/OpenAI marketplace entries
-- 68 skills
-- 68 OpenAI agent companion files
+- 69 skills
+- 69 OpenAI agent companion files
 - 25 Gemini extension manifests
 - 6 MCP config files, defining 5 MCP servers
 - 3 command docs
@@ -131,7 +131,7 @@ Useful starting points in the catalog:
 | `testing` | App-testing and MCP-tooling skills: live QA of web, Android, and desktop apps; MCP server smoke-testing (mcporter); MCP-UI / Apps validation (mcpjam); and claude-in-mobile device automation. | android-app-testing, claude-in-mobile, desktop-app-testing, mcpjam-ui-testing, mcporter, web-app-testing | none | 6 | none |
 | `upstream-skills` | Skills vendored verbatim from upstream repos (openclaw + openai), kept in sync via sync-upstream-skills. | acpx, agent-transcript, autoreview, chatgpt-apps, define-goal, gog, handoff, meme-maker, openai-docs, session-viewer, yeet | none | 11 | none |
 | `uptime-kuma` | Read-only monitoring of a self-hosted Uptime Kuma instance via direct HTTP — Prometheus /metrics (API-key auth) and public status-page JSON. No monitor management (that requires Uptime Kuma's socket.io API). | uptime-kuma | none | 1 | none |
-| `vibin` | Workflow, repo, GitHub, Windows, Paperless, MCP gateway, Jetpack Compose, and SWAG utility skills. | check-skill-clis, chrome, claude-android-ninja, clipboard, compose-skill, create-swag-config, create-unraid-plugin, fastmcp-client-cli, gh-fix-ci, gh-pr, hand-off, homelab-map, jetpack-compose-expert, merge-status, monolith-check, nircmd, paperless-ngx, quick-push, rclone, refresh-docs, repo-status, review-pr, save-to-md, screenshots, submit-unraid-community-app, sysinternals, using-rmcp, validate-skill, work-it, worktree-setup | none | 30 | scaffold-claude-plugin.md |
+| `vibin` | Workflow, repo, GitHub, Windows, Paperless, MCP gateway, Jetpack Compose, and SWAG utility skills. | check-skill-clis, chrome, claude-android-ninja, clipboard, compose-skill, create-swag-config, create-unraid-plugin, fastmcp-client-cli, gh-fix-ci, gh-pr, hand-off, homelab-map, jetpack-compose-expert, merge-status, monolith-check, nircmd, paperless-ngx, quick-push, rclone, refresh-docs, repo-status, resume-work-lanes, review-pr, save-to-md, screenshots, submit-unraid-community-app, sysinternals, using-rmcp, validate-skill, work-it, worktree-setup | none | 31 | scaffold-claude-plugin.md |
 | `zsnoop-mcp` | ZFS snapshot exploration and recovery over SSH through the zsnoop-mcp server. | zsnoop-mcp | zsnoop | 1 | none |
 
 <!-- END GENERATED README INVENTORY -->

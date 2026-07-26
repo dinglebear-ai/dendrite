@@ -1,0 +1,4 @@
+interface:
+  display_name: "Resume work lanes"
+  short_description: "Reconstruct and restart interrupted agent work"
+  default_prompt: "Use $resume-work-lanes to find every interrupted Claude and Codex work lane and build a verified restart plan."
