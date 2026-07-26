@@ -131,13 +131,20 @@ class CollectLaneEvidenceTests(unittest.TestCase):
                 encoding="utf-8",
             )
 
-            artifact = collect(
-                workspace,
-                since_hours=24,
-                transcript_limit=10,
-                home=home,
-                cortex_binary=str(root / "missing-cortex"),
-            )
+            with patch.dict(
+                os.environ,
+                {
+                    "CLAUDE_CONFIG_DIR": str(home / ".claude"),
+                    "CODEX_HOME": str(home / ".codex"),
+                },
+            ):
+                artifact = collect(
+                    workspace,
+                    since_hours=24,
+                    transcript_limit=10,
+                    home=home,
+                    cortex_binary=str(root / "missing-cortex"),
+                )
             rendered = json.dumps(artifact)
 
             self.assertEqual(artifact["source_used"], "raw_files_fallback")
@@ -235,13 +242,18 @@ print(json.dumps(result))
             )
             fake_cortex.chmod(0o755)
 
-            artifact = collect(
-                workspace,
-                since_hours=24,
-                transcript_limit=10,
-                home=home,
-                cortex_binary=str(fake_cortex),
-            )
+            isolated_environment = {
+                "CLAUDE_CONFIG_DIR": str(home / ".claude"),
+                "CODEX_HOME": str(home / ".codex"),
+            }
+            with patch.dict(os.environ, isolated_environment):
+                artifact = collect(
+                    workspace,
+                    since_hours=24,
+                    transcript_limit=10,
+                    home=home,
+                    cortex_binary=str(fake_cortex),
+                )
 
             self.assertEqual(artifact["source_used"], "cortex")
             self.assertTrue(artifact["cortex"]["usable"])
@@ -289,13 +301,14 @@ print(json.dumps(result))
                 '"schema_current": True', '"schema_current": False'
             )
             fake_cortex.write_text(degraded_script, encoding="utf-8")
-            degraded = collect(
-                workspace,
-                since_hours=24,
-                transcript_limit=10,
-                home=home,
-                cortex_binary=str(fake_cortex),
-            )
+            with patch.dict(os.environ, isolated_environment):
+                degraded = collect(
+                    workspace,
+                    since_hours=24,
+                    transcript_limit=10,
+                    home=home,
+                    cortex_binary=str(fake_cortex),
+                )
             self.assertEqual(
                 degraded["source_used"], "cortex_degraded_with_raw_fallback"
             )
