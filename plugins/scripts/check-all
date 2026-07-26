@@ -4,6 +4,7 @@ set -euo pipefail
 jq empty .claude-plugin/marketplace.json .agents/plugins/marketplace.json
 plugins/scripts/validate-plugin-schemas
 python3 plugins/scripts/tests/test_sync_upstream_skills.py
+PYTHONDONTWRITEBYTECODE=1 python3 plugins/vibin/skills/resume-work-lanes/scripts/test_collect_lane_evidence.py
 python3 plugins/vibin/skills/create-unraid-plugin/scripts/test_validate_unraid_plugin.py
 python3 plugins/vibin/skills/submit-unraid-community-app/scripts/test_validate_submission.py
 plugins/scripts/check-marketplace-sync

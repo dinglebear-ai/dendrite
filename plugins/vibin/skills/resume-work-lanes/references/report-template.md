@@ -5,11 +5,25 @@ Use this shape. Omit empty optional sections, but never omit uncertainty or bloc
 ## Recovery summary
 
 - Evidence window: `<start> to <end>`
+- Session source: `<Cortex primary | raw-file fallback and reason>`
+- Cortex health: `<healthy | stale/unavailable with exact indicators>`
 - Sessions inspected: `<count and tools>`
 - Repositories/worktrees inspected: `<count>`
 - Active lanes: `<count>`
 - Recommended parallelism: `<count and reason>`
 - Global blocker: `<none or exact blocker>`
+
+## Coverage and limitations
+
+- Cortex calls: `<successful and failed calls>`
+- Projects: `<discovered / context-inspected / omitted>`
+- Sessions: `<enumerated / evidence-inspected / inventory-only>`
+- Truncation: `<search, context, raw fallback, repository limits>`
+- Collector errors: `<every error or none>`
+- Git freshness: `<local-ref snapshot; forge checks completed or pending>`
+- Trackers/forge verified: `<yes with scope | no>`
+
+Do not call the inventory complete when any required call failed, a truncation flag is true, or an inventory-only session remains unresolved.
 
 ## Lane inventory
 
