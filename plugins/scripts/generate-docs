@@ -19,7 +19,6 @@ PLUGINS = ROOT / "plugins"
 CLAUDE_MARKETPLACE = ROOT / ".claude-plugin" / "marketplace.json"
 CODEX_MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
 SCHEMAS = PLUGINS / "schemas"
-NO_MCP_SCRIPT = PLUGINS / "scripts" / "apply-no-mcp-marketplace"
 
 IGNORED_PLUGIN_DIRS = {"schemas"}
 PLACEHOLDER_RE = re.compile(r"\$\{(?:userConfig|user_config)\.([A-Za-z0-9_]+)\}")
@@ -297,20 +296,6 @@ def selector_cell(source: Any) -> str:
     return ", ".join(selectors) if selectors else "none"
 
 
-def no_mcp_selector_cell(source: Any) -> str:
-    if not isinstance(source, dict):
-        return "none"
-    return "ref=`marketplace-no-mcp`"
-
-
-def no_mcp_names() -> list[str]:
-    text = NO_MCP_SCRIPT.read_text()
-    match = re.search(r"NO_MCP_REF_NAMES\s*=\s*\{(?P<body>.*?)\}", text, re.S)
-    if not match:
-        return []
-    return sorted(re.findall(r'"([^"]+)"', match.group("body")))
-
-
 def doc_header(title: str) -> list[str]:
     return [
         f"# {title}",
@@ -406,7 +391,6 @@ def marketplace_sources_doc() -> GeneratedDoc:
     claude = marketplace_by_name(CLAUDE_MARKETPLACE)
     codex = marketplace_by_name(CODEX_MARKETPLACE)
     all_names = sorted(set(claude) | set(codex))
-    no_mcp = set(no_mcp_names())
     rows = []
     for name in all_names:
         claude_source = claude.get(name, {}).get("source")
@@ -420,15 +404,14 @@ def marketplace_sources_doc() -> GeneratedDoc:
                 markdown_escape(source_kind(codex_source)),
                 markdown_escape(normalized_source(codex_source)),
                 selector_cell(codex_source),
-                yes_no(name in no_mcp),
             ]
         )
 
     lines = doc_header("Marketplace Sources")
     lines.extend(
         [
-            "| Plugin | Claude kind | Claude source | Claude selector | Codex kind | Codex source | Codex selector | no-MCP ref |",
-            "|---|---|---|---|---|---|---|---:|",
+            "| Plugin | Claude kind | Claude source | Claude selector | Codex kind | Codex source | Codex selector |",
+            "|---|---|---|---|---|---|---|",
         ]
     )
     lines.extend("| " + " | ".join(row) + " |" for row in rows)
@@ -472,57 +455,12 @@ def schema_provenance_doc() -> GeneratedDoc:
     return GeneratedDoc(DOCS / "schema-provenance.md", "\n".join(lines))
 
 
-def no_mcp_variant_doc() -> GeneratedDoc:
-    names = no_mcp_names()
-    claude = marketplace_by_name(CLAUDE_MARKETPLACE)
-    codex = marketplace_by_name(CODEX_MARKETPLACE)
-    rows = []
-    for name in names:
-        rows.append(
-            [
-                f"`{markdown_escape(name)}`",
-                markdown_escape(normalized_source(claude.get(name, {}).get("source"))),
-                no_mcp_selector_cell(claude.get(name, {}).get("source")),
-                markdown_escape(normalized_source(codex.get(name, {}).get("source"))),
-                no_mcp_selector_cell(codex.get(name, {}).get("source")),
-            ]
-        )
-
-    lines = doc_header("No-MCP Marketplace Variant")
-    lines.extend(
-        [
-            "`marketplace-no-mcp` is a long-lived alternate branch for installs that do not want bundled MCP server registrations.",
-            "",
-            "`main` is the full/default marketplace. The no-MCP branch keeps the same plugin and skill catalog while removing MCP server registrations for users who rely on a separate gateway, prefer CLI-only usage, or want skills to use their fallback paths.",
-            "",
-            "The branch keeps plugin and skill entries available while removing bundled MCP server registrations from local plugin assets and Gemini extension manifests. It also points selected remote plugin sources at their own `marketplace-no-mcp` refs.",
-            "",
-            "Do not merge, delete, or retire this branch unless intentionally retiring the no-MCP release variant. Update `NO_MCP_REF_NAMES` in `plugins/scripts/apply-no-mcp-marketplace` when a new remote MCP-backed marketplace entry needs the alternate ref.",
-            "",
-            "The branch is synchronized by `.github/workflows/sync-marketplace-no-mcp.yml` after pushes to `main` and on a daily schedule. Drift is checked by `.github/workflows/check-no-mcp-drift.yml` and can be checked locally with `plugins/scripts/check-no-mcp-drift --compare-ref`.",
-            "",
-            "The branch should allow GitHub Actions to push sync commits. Humans should not casually push, merge, or close it; direct human writes are release-maintenance work and must be followed by the drift check.",
-            "",
-            "Marketplace install smoke tests live in `plugins/scripts/smoke-marketplace-install`. The scheduled drift workflow runs the smoke against both `origin/main` and `origin/marketplace-no-mcp`.",
-            "",
-            "## Ref-Managed Entries",
-            "",
-            "| Plugin | Claude source | Claude selector | Codex source | Codex selector |",
-            "|---|---|---|---|---|",
-        ]
-    )
-    lines.extend("| " + " | ".join(row) + " |" for row in rows)
-    lines.append("")
-    return GeneratedDoc(DOCS / "no-mcp-variant.md", "\n".join(lines))
-
-
 def generated_docs() -> list[GeneratedDoc]:
     return [
         plugin_matrix_doc(),
         configuration_matrix_doc(),
         marketplace_sources_doc(),
         schema_provenance_doc(),
-        no_mcp_variant_doc(),
     ]
 
 

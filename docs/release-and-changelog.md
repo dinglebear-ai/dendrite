@@ -9,7 +9,7 @@ commit history.
 Update `CHANGELOG.md` for repo-wide changes:
 
 - Marketplace entry additions, removals, and source/ref policy changes.
-- CI, sync, schema, drift, and install-smoke automation.
+- CI, schema, and install-smoke automation.
 - Generated documentation behavior.
 - Cross-plugin documentation or configuration contract changes.
 
@@ -29,10 +29,4 @@ Run:
 ```bash
 plugins/scripts/check-all
 plugins/scripts/smoke-marketplace-install
-```
-
-For no-MCP publication, also run:
-
-```bash
-plugins/scripts/check-no-mcp-drift --compare-ref
 ```

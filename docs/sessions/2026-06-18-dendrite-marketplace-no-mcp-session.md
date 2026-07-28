@@ -11,6 +11,13 @@ worktree: /home/jmagar/workspace/dendrite ed43890 [main]
 
 # Dendrite marketplace and no-MCP variant session
 
+> **Superseded 2026-07-28.** The no-MCP marketplace variant described below has
+> been retired fleet-wide. The `marketplace-no-mcp` branch, its sync and drift
+> workflows, the `apply-no-mcp-marketplace` / `check-no-mcp-drift` scripts, and
+> `docs/no-mcp-variant.md` are all gone; `main` is the only published
+> marketplace branch. This log is kept as a dated historical record — do not
+> treat any policy in it as current.
+
 ## User Request
 
 The session started as a broad Dendrite plugin and skill maintenance pass: review skills, remove or relocate duplicated skills, add missing docs, create Gemini extension manifests, and update Rust/rmcp guidance. Later requests narrowed to keeping a `marketplace-no-mcp` branch/ref around for installs where MCP servers are already provided by the Labby gateway, documenting that policy across repos, and saving this session.

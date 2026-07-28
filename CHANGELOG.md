@@ -6,6 +6,7 @@ All notable changes to Dendrite are recorded here.
 
 ### Removed
 
+- Retired the no-MCP marketplace variant (2026-07-28). Deleted the `marketplace-no-mcp` branch, the `sync-marketplace-no-mcp.yml` and `check-no-mcp-drift.yml` workflows, `plugins/scripts/apply-no-mcp-marketplace`, `plugins/scripts/check-no-mcp-drift`, and the generated `docs/no-mcp-variant.md`. Dropped the drift step from `check-all`, the drift gate from the `.githooks/pre-push` hook, the `no-MCP ref` column from `docs/marketplace-sources.md`, and all no-MCP install/runbook guidance from the README, CONTRIBUTING, and the docs. `main` is now the only published marketplace branch.
 - Removed the `arrs` plugin. Its ten per-service skills (Radarr, Sonarr, Prowlarr, Overseerr, SABnzbd, qBittorrent, Plex, Jellyfin, Tautulli, Tracearr) were merged into the standalone `rustarr` plugin (github.com/jmagar/rustarr), which now exposes the same services through its MCP server and CLI. De-registered from the Claude and Codex marketplace manifests and regenerated the inventory docs.
 
 ### Added

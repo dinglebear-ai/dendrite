@@ -9,9 +9,18 @@ Dendrite owns the portable Claude Code, Codex, and Gemini plugin marketplace.
 It carries plugin sources, skills, MCP config snippets, commands, hooks,
 scripts, Gemini extension manifests, and OpenAI agent companion files.
 
+This is not a Rust repo — there is no `Cargo.toml` and no build step. The
+deliverables are JSON manifests, Markdown skills, and the Python/Bash scripts
+under `plugins/scripts/` that generate and validate them.
+
+Remote: `git@github.com:dinglebear-ai/dendrite.git`. Default branch: `main`.
+`main` is the only published marketplace branch.
+
 The Lab control-plane plugin is the exception: `plugins/labby` stays in
-`jmagar/lab` and is referenced from marketplace manifests as a GitHub
-subdirectory source.
+`dinglebear-ai/labby` and is referenced from both marketplace manifests as a
+`git-subdir` source at `https://github.com/dinglebear-ai/labby.git:plugins/labby`.
+That repo was formerly `jmagar/lab`; the old URL still works only through
+GitHub's transfer redirect, so keep the manifests on the canonical name.
 
 ## Repository Rules
 
@@ -28,50 +37,19 @@ subdirectory source.
 - Plugin README and CHANGELOG files must be useful, not empty placeholders.
   `plugins/scripts/check-plugin-docs` enforces this as part of `check-all`.
 
-## Long-Lived Branches
+## Generated Files
 
-- `marketplace-no-mcp` is an intentional long-lived marketplace variant branch,
-  not stale cleanup. It keeps the same skill/plugin catalog available while
-  removing bundled MCP server registrations for environments where those MCP
-  servers are already connected through a separate MCP gateway or aggregator.
-  Leave the branch and its worktree in place unless the repository owner
-  explicitly asks to retire the no-MCP marketplace variant.
-- Do not merge `marketplace-no-mcp` into `main` by default. `main` is the
-  canonical full marketplace for normal users and should keep bundled MCP server
-  registrations where a plugin owns them; `marketplace-no-mcp` is the
-  gateway-oriented alternate ref.
-- The `.github/workflows/sync-marketplace-no-mcp.yml` workflow keeps
-  `marketplace-no-mcp` current after pushes to `main` and on a daily schedule:
-  it brings `main`'s tree into the branch, runs
-  `plugins/scripts/apply-no-mcp-marketplace`, validates both marketplace
-  manifests, runs the no-MCP invariant check, and pushes the branch only when
-  that produces a change. The transform regenerates Gemini manifests, the README
-  inventory, and generated docs as part of its deterministic rewrite.
-  - The merge step records a merge commit but takes `main`'s tree **wholesale**
-    (`git read-tree --reset -u origin/main`) instead of a content merge.
-    `marketplace-no-mcp` is a deterministic transform of `main`, so a content
-    merge conflicts on every transform-derived file (README, generated docs,
-    deleted `.mcp.json`); taking main's tree and re-deriving via the transform
-    is conflict-proof. Do not revert this to a plain `git merge`.
-- **Just push to `main` — the no-MCP branch is automatic.** The pre-push hook
-  does NOT block main pushes on no-MCP drift (that drift is transient and the
-  sync workflow self-heals it on every main push). No `--no-verify` or manual
-  reconciliation is needed for normal main work.
-- The `.github/workflows/check-no-mcp-drift.yml` workflow runs
-  `plugins/scripts/check-no-mcp-drift --compare-ref` on a schedule and on
-  manual dispatch. It compares `origin/marketplace-no-mcp` with `origin/main`
-  plus the deterministic no-MCP transform, then smoke-tests marketplace
-  installs from both refs.
-- `marketplace-no-mcp` should allow GitHub Actions to push sync commits, but
-  humans should not casually push, merge, or close it. Direct human writes are
-  release-maintenance work and must be followed by
-  `plugins/scripts/check-no-mcp-drift --compare-ref`. The pre-push hook still
-  hard-enforces the drift compare on direct pushes to `marketplace-no-mcp` (only
-  there — main pushes are not gated, see above).
-- Keep the no-MCP transform deterministic. If a new MCP-backed marketplace entry
-  needs the alternate ref, add its plugin name to `NO_MCP_REF_NAMES` in
-  `plugins/scripts/apply-no-mcp-marketplace` instead of hand-editing the
-  long-lived branch.
+Several tracked files are generated and must not be hand-edited. Change the
+inputs, then rerun the generator:
+
+| Generated file | Generator |
+|---|---|
+| `README.md` inventory and curated-plugins blocks (between the `GENERATED README INVENTORY` / `GENERATED CURATED PLUGINS` markers) | `plugins/scripts/generate-readme-inventory` |
+| `docs/plugin-matrix.md`, `docs/configuration-matrix.md`, `docs/marketplace-sources.md`, `docs/schema-provenance.md` | `plugins/scripts/generate-docs` |
+| `plugins/*/gemini-extension.json` | `plugins/scripts/generate-gemini-extensions` |
+
+`plugins/scripts/check-all` runs each generator in `--check` mode, so stale
+generated output fails the build.
 
 ## Vendored Upstream Skills
 
@@ -104,12 +82,10 @@ repos and kept in sync by `plugins/scripts/sync-upstream-skills`. Full reference
 # No local labby plugin copy.
 test ! -e plugins/labby
 
-# Apply and validate the no-MCP marketplace transform locally.
-plugins/scripts/apply-no-mcp-marketplace
+# The one command to run before pushing. Runs manifest parsing, schema
+# validation, script unit tests, marketplace alignment, plugin docs, and every
+# generator in --check mode.
 plugins/scripts/check-all
-
-# Compare origin/marketplace-no-mcp with origin/main plus the no-MCP transform.
-plugins/scripts/check-no-mcp-drift --compare-ref
 
 # Smoke Claude, Codex, and Gemini marketplace/extension installs in temp homes.
 plugins/scripts/smoke-marketplace-install
@@ -139,9 +115,9 @@ plugins/scripts/sync-upstream-skills check
 plugins/scripts/sync-upstream-skills apply --all
 
 # Regenerate README inventory plus docs/plugin-matrix.md,
-# docs/configuration-matrix.md, docs/marketplace-sources.md,
-# docs/schema-provenance.md, and docs/no-mcp-variant.md after changing
-# manifests, config, schemas, skills, or no-MCP marketplace rules.
+# docs/configuration-matrix.md, docs/marketplace-sources.md, and
+# docs/schema-provenance.md after changing manifests, config, schemas, or
+# skills.
 plugins/scripts/generate-readme-inventory
 plugins/scripts/generate-docs
 

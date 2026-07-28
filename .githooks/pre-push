@@ -4,28 +4,3 @@ set -euo pipefail
 # Always validate the state being pushed: manifests, schemas, generated docs,
 # plugin docs, marketplace alignment.
 plugins/scripts/check-all
-
-# The no-MCP drift compare checks that origin/marketplace-no-mcp equals
-# origin/main plus the deterministic no-MCP transform. It legitimately fails in
-# the transient window right after main advances but before the sync catches up,
-# so it is NOT enforced on main pushes — pushing to main is the normal flow, and
-# sync-marketplace-no-mcp.yml reconciles the no-MCP branch automatically on every
-# main push (with the scheduled check-no-mcp-drift.yml as a daily backstop).
-# Blocking a main push on that self-healing drift is pure friction.
-#
-# It IS enforced when a human pushes the marketplace-no-mcp branch directly, where
-# the invariant must hold and there is no CI step to fix it afterward.
-enforce_drift_check=false
-while read -r _local_ref _local_sha remote_ref _remote_sha; do
-  case "$remote_ref" in
-    refs/heads/marketplace-no-mcp)
-      enforce_drift_check=true
-      ;;
-  esac
-done
-
-if [ "$enforce_drift_check" = true ]; then
-  plugins/scripts/check-no-mcp-drift --compare-ref --skip-if-missing-refs
-else
-  echo "pre-push: no-MCP drift compare not enforced here (CI sync owns it for main)" >&2
-fi

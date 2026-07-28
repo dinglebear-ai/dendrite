@@ -1,6 +1,6 @@
 ---
 name: repo-status
-description: Audit the current Git checkout, open worktrees, local branches, protected long-lived refs such as marketplace-no-mcp, stale or merged cleanup candidates, merge readiness, conflicts, PR/CI/test state, blockers, and safest merge order. Use when the user asks for repo status, branch/worktree cleanup candidates, stale branch review, protected branch review, conflict investigation, merge readiness, or what must be done before open branches can merge.
+description: Audit the current Git checkout, open worktrees, local branches, stale or merged cleanup candidates, merge readiness, conflicts, PR/CI/test state, blockers, and safest merge order. Use when the user asks for repo status, branch/worktree cleanup candidates, stale branch review, conflict investigation, merge readiness, or what must be done before open branches can merge.
 ---
 
 # Repo Status
@@ -10,22 +10,6 @@ description: Audit the current Git checkout, open worktrees, local branches, pro
 Start from live Git evidence. Do not infer branch cleanliness, mergeability, CI state, or stale status from memory alone.
 
 Keep the work read-only unless the user explicitly asks to merge, delete, rebase, clean, stage, commit, push, or run a destructive cleanup.
-
-## Protected Long-Lived Refs
-
-Some branches and worktrees are intentionally long-lived distribution variants, not merge-ready feature work or stale cleanup. Treat any branch, remote ref, or worktree named `marketplace-no-mcp` as a protected long-lived ref.
-
-The `marketplace-no-mcp` ref exists so Claude/Codex marketplace installs can use the same plugin and skill catalog without bundled MCP server registrations when those MCP servers are already available through the Labby gateway. It is expected to remain separate from `main`.
-
-For protected long-lived refs:
-
-- Do not mark them `ready_to_merge`, `needs_work`, `conflicted`, or `stale_cleanup_candidate`.
-- Do not suggest merging them into `main`, closing them, deleting them, pruning their worktrees, rebasing them away, or otherwise "cleaning them up".
-- Do not include them in merge order except to say they are intentionally excluded.
-- Report them as `protected_long_lived_ref` with the reason: "no-MCP marketplace variant; leave branch/worktree/ref in place".
-- Only recommend touching them if Jacob explicitly asks to retire, modify, publish, or repair the no-MCP marketplace variant by name.
-
-When a repository has a `CLAUDE.md`, check it for branch policy before making cleanup recommendations. If `CLAUDE.md` mentions `marketplace-no-mcp` or another protected ref, honor that local policy even if generic stale evidence says the branch is old, merged, or has a persistent worktree.
 
 ## Evidence Sweep
 
@@ -100,11 +84,11 @@ Use the collector's `stale_evidence` fields as inputs, not conclusions:
 
 In `stale_evidence`, `null` means the field was not evaluated or evidence was unavailable. `false` means the check was evaluated and did not match.
 
-A branch may be old without being stale, or merged while still needing cleanup of a worktree or remote. Protected long-lived refs are a separate class: stale evidence is still useful context, but it must not become a cleanup recommendation.
+A branch may be old without being stale, or merged while still needing cleanup of a worktree or remote.
 
 ## Per Worktree And Branch Review
 
-Treat `main`, `master`, `trunk`, `develop`, and the repository default branch from `origin/HEAD` as primary candidates. Review every other local branch unless the user narrows scope. If unsure whether a branch is primary, include it and mark its role as unknown. If the branch or worktree is a protected long-lived ref such as `marketplace-no-mcp`, record its status and policy reason, then skip mergeability probes and stale-cleanup analysis for that ref.
+Treat `main`, `master`, `trunk`, `develop`, and the repository default branch from `origin/HEAD` as primary candidates. Review every other local branch unless the user narrows scope. If unsure whether a branch is primary, include it and mark its role as unknown.
 
 For each worktree from `git worktree list --porcelain` and each reviewed local branch:
 
@@ -166,7 +150,6 @@ When using a temporary worktree, clean it up before final response. If cleanup f
 
 Classify every non-primary branch/worktree as exactly one of:
 
-- `protected_long_lived_ref`: intentionally persistent branch/ref/worktree such as `marketplace-no-mcp`; exclude from merge order and cleanup recommendations unless Jacob explicitly asks to retire or modify that variant.
 - `ready_to_merge`: clean worktree, branch is not behind base or has been checked against current base, merge check passes, tests/CI are passing or explicitly not required, and reviews are satisfied if PR evidence exists.
 - `needs_work`: active branch with useful commits but missing tests, failing tests/CI, draft PR, unresolved review feedback, dirty worktree, unclear base, or incomplete implementation.
 - `conflicted`: merge check fails or forge marks it conflicting. Include exact files and required reconciliation.
@@ -204,8 +187,6 @@ When multiple branches/worktrees are open, propose a merge order using these rul
 4. Branches touching overlapping files should be ordered to minimize conflict churn.
 5. Stale cleanup candidates should be removed before active merge work if they create confusing worktrees or branch names.
 
-Protected long-lived refs such as `marketplace-no-mcp` are never part of merge order or stale cleanup ordering. List them separately as "protected / leave in place".
-
 If order depends on unknowns, list the dependency or missing evidence.
 
 ## Final Report Shape
@@ -213,7 +194,7 @@ If order depends on unknowns, list the dependency or missing evidence.
 Lead with a compact status summary:
 
 - Current checkout: branch, clean/dirty, ahead/behind.
-- Open worktrees/branches: count and high-level classification, including any protected long-lived refs.
+- Open worktrees/branches: count and high-level classification.
 - Merge order: ordered list or "none ready".
 
 Then provide a table:

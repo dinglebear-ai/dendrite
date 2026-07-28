@@ -92,8 +92,8 @@ covers it.
 - **`local_only` is the contract** that keeps dendrite adaptations
   (`agents/openai.yaml`) from being clobbered on `apply`. Add to it if a skill
   grows other dendrite-local files.
-- **No MCP servers** in this plugin, so it needs no entry in `NO_MCP_REF_NAMES`;
-  the no-MCP transform treats it as identity.
+- **No MCP servers** in this plugin — it ships skills only, with no `.mcp.json`
+  and no Gemini `mcpServers` block.
 - The tool is **stdlib-only**; its tests
   (`plugins/scripts/tests/test_sync_upstream_skills.py`) mock the network seams
   and run offline inside `check-all`.

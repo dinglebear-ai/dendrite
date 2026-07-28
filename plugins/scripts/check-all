@@ -9,7 +9,6 @@ python3 plugins/vibin/skills/create-unraid-plugin/scripts/test_validate_unraid_p
 python3 plugins/vibin/skills/submit-unraid-community-app/scripts/test_validate_submission.py
 plugins/scripts/check-marketplace-sync
 plugins/scripts/check-plugin-docs
-plugins/scripts/check-no-mcp-drift
 plugins/scripts/generate-gemini-extensions --check
 plugins/scripts/generate-readme-inventory --check --strict
 plugins/scripts/generate-docs --check

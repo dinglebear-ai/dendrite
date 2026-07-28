@@ -4,35 +4,16 @@ Use this guide when changing Dendrite marketplace entries, plugin packaging, or
 generated docs.
 
 Keep `README.md` user-facing. Installation, marketplace selection, and catalog
-orientation belong there; release maintenance, drift repair, validation
-procedures, and transform details belong in this file or the docs under
-`docs/`.
+orientation belong there; release maintenance, validation procedures, and
+packaging details belong in this file or the docs under `docs/`.
 
 ## Marketplace Model
 
-- `main` is the full/default marketplace. It may include plugin-provided MCP
-  server registrations when those registrations are useful for a normal install.
-- `marketplace-no-mcp` is a generated marketplace variant. It keeps the same
-  plugin and skill catalog while removing bundled MCP server registrations.
+- `main` is the only published marketplace branch. It may include
+  plugin-provided MCP server registrations when those registrations are useful
+  for a normal install.
 - External plugin sources should be referenced from the marketplace manifests
   instead of copied into this repository.
-
-## No-MCP Variant
-
-Do not hand-edit `marketplace-no-mcp` as the primary fix. Change `main` and the
-deterministic transform, then let `.github/workflows/sync-marketplace-no-mcp.yml`
-publish the derived branch.
-
-When a remote MCP-backed marketplace entry also publishes a
-`marketplace-no-mcp` ref, add its plugin name to `NO_MCP_REF_NAMES` in
-`plugins/scripts/apply-no-mcp-marketplace`.
-
-Drift is checked by `.github/workflows/check-no-mcp-drift.yml` and can be
-checked locally with:
-
-```bash
-plugins/scripts/check-no-mcp-drift --compare-ref
-```
 
 ## Plugin Layout
 
@@ -81,13 +62,11 @@ plugins/scripts/generate-docs
 
 1. Remove both marketplace entries.
 2. Remove the local plugin directory if Dendrite owns it.
-3. Remove its name from `NO_MCP_REF_NAMES` if present.
-4. Regenerate docs and run the full checks.
+3. Regenerate docs and run the full checks.
 
 ## Required Checks
 
 ```bash
 plugins/scripts/check-all
-plugins/scripts/check-no-mcp-drift --compare-ref
 plugins/scripts/smoke-marketplace-install
 ```

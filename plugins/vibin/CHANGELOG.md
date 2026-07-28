@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Removed protected-long-lived-ref handling from `repo-status`, including the
+  `protected_long_lived_ref` status value. It only ever described the
+  `marketplace-no-mcp` marketplace variant, which has been retired.
 - Added `review-pr` so Codex can run the PR Review Toolkit command flow as a
   Vibin skill, including code, tests, comments, silent failures, type design,
   and simplification passes.

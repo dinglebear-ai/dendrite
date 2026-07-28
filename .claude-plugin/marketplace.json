@@ -562,7 +562,7 @@
       "name": "labby",
       "source": {
         "source": "git-subdir",
-        "url": "https://github.com/jmagar/lab.git",
+        "url": "https://github.com/dinglebear-ai/labby.git",
         "path": "plugins/labby"
       },
       "description": "Skills and gateway-oriented guidance for the Lab homelab control plane."
