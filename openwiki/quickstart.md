@@ -9,7 +9,9 @@ tags: [marketplace, plugins, skills, claude-code, codex, gemini, mcp]
 
 [Dendrite](https://github.com/jmagar/dendrite) is a portable plugin catalog for Claude Code, Codex, and Gemini. It packages agent skills, MCP server registrations, commands, hooks, config helpers, Gemini extension manifests, and OpenAI companion metadata in a single repository.
 
-This OpenWiki knowledge base explains how Dendrite works, how to maintain it, and where to find key files and workflows.
+This repository uses OpenWiki as its code documentation system. OpenWiki provides recurring, regenerated documentation that explains how Dendrite works, how to maintain it, and where to find key files and workflows.
+
+**Documentation split:** [CLAUDE.md](CLAUDE.md) is the source of truth for agent memory (repository rules, checks, and workflows), while this OpenWiki under `/openwiki/` provides code-focused documentation on architecture, operations, and source organization.
 
 ## What Dendrite Provides
 
@@ -102,7 +104,7 @@ See [source map](source-map.md) for complete file locations.
 
 ## Documentation Overview
 
-This OpenWiki covers:
+**OpenWiki** (this `/openwiki/` directory) provides code-focused documentation:
 
 - **[Marketplace Model](marketplace-model.md)**: Dual-branch architecture and no-MCP variant
 - **[Plugin Structure](plugin-structure.md)**: Standard plugin layout and required files
@@ -110,5 +112,7 @@ This OpenWiki covers:
 - **[Operations](operations.md)**: Common maintenance workflows
 - **[Automation](automation.md)**: CI/CD workflows and validation scripts
 - **[Source Map](source-map.md)**: Quick navigation to key files
+
+**[CLAUDE.md](CLAUDE.md)** is the source of truth for agent memory, containing repository rules, common checks, and maintainer workflows. It includes an OpenWiki section that links back to this knowledge base.
 
 The OpenWiki is regenerated on a schedule by the [OpenWiki Update workflow](.github/workflows/openwiki-update.yml). Do not hand-edit generated pages unless explicitly asked; prefer updating source code and letting OpenWiki regenerate.
