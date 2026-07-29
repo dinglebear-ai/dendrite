@@ -7,7 +7,11 @@
       "command": "uvx",
       "args": [
         "zsnoop-mcp"
-      ]
+      ],
+      "env": {
+        "ZSNOOP_CONFIG": "${ZSNOOP_CONFIG}",
+        "ZSNOOP_LOG_LEVEL": "${ZSNOOP_LOG_LEVEL}"
+      }
     }
   },
   "settings": [

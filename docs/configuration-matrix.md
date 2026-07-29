@@ -62,5 +62,5 @@
 | `vibin` | `swag_proxy_confs_path` | `SWAG_PROXY_CONFS_PATH` | SWAG proxy-confs path | no | `plugins/vibin/scripts/setup-swag.sh` | Host path to the SWAG nginx/proxy-confs directory. |
 | `vibin` | `swag_public_base_domain` | `SWAG_PUBLIC_BASE_DOMAIN` | SWAG public base domain | no | `plugins/vibin/scripts/setup-swag.sh` | Base domain used for generated subdomains, such as example.com. |
 | `vibin` | `swag_reload_wait_seconds` | `SWAG_RELOAD_WAIT_SECONDS` | SWAG reload wait seconds | no | `plugins/vibin/scripts/setup-swag.sh` | Seconds to wait for SWAG filewatch reload before health checks. |
-| `zsnoop-mcp` | `zsnoop_config` | `ZSNOOP_CONFIG` | Zsnoop Config | no | none | Optional path to hosts.toml. If unset, zsnoop-mcp uses $XDG_CONFIG_HOME/zsnoop-mcp/hosts.toml or ~/.config/zsnoop-mcp/hosts.toml. |
-| `zsnoop-mcp` | `zsnoop_log_level` | `ZSNOOP_LOG_LEVEL` | Zsnoop Log Level | no | none | Optional zsnoop-mcp stderr log level: DEBUG, INFO, WARNING, or ERROR. |
+| `zsnoop-mcp` | `zsnoop_config` | `ZSNOOP_CONFIG` | Zsnoop Config | no | `plugins/zsnoop-mcp/.mcp.json` | Optional path to hosts.toml. If unset, zsnoop-mcp uses $XDG_CONFIG_HOME/zsnoop-mcp/hosts.toml or ~/.config/zsnoop-mcp/hosts.toml. |
+| `zsnoop-mcp` | `zsnoop_log_level` | `ZSNOOP_LOG_LEVEL` | Zsnoop Log Level | no | `plugins/zsnoop-mcp/.mcp.json` | Optional zsnoop-mcp stderr log level: DEBUG, INFO, WARNING, or ERROR. |

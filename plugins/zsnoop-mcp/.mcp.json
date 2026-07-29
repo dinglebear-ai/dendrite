@@ -4,7 +4,11 @@
       "command": "uvx",
       "args": [
         "zsnoop-mcp"
-      ]
+      ],
+      "env": {
+        "ZSNOOP_CONFIG": "${user_config.zsnoop_config}",
+        "ZSNOOP_LOG_LEVEL": "${user_config.zsnoop_log_level}"
+      }
     }
   }
 }
