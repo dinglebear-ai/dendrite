@@ -5,7 +5,7 @@
     "name": "Jacob Magar",
     "email": "jmagar@users.noreply.github.com"
   },
-  "repository": "https://github.com/jmagar/swag-mcp",
+  "repository": "https://github.com/dinglebear-ai/swag-mcp",
   "license": "MIT",
   "keywords": [
     "swag",
@@ -15,7 +15,7 @@
     "mcp"
   ],
   "skills": "./skills/",
-  "homepage": "https://github.com/jmagar/swag-mcp",
+  "homepage": "https://github.com/dinglebear-ai/swag-mcp",
   "interface": {
     "displayName": "SWAG MCP",
     "shortDescription": "Manage SWAG reverse-proxy configuration through MCP workflows.",

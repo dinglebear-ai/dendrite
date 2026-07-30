@@ -33,6 +33,6 @@
     "brandColor": "#2563EB"
   },
   "commands": "./commands/",
-  "repository": "https://github.com/jmagar/lab",
-  "homepage": "https://github.com/jmagar/lab"
+  "repository": "https://github.com/dinglebear-ai/labby",
+  "homepage": "https://github.com/dinglebear-ai/labby"
 }

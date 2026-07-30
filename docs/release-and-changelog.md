@@ -1,3 +1,9 @@
+---
+title: Release and changelog policy
+created: 2026-07-30
+updated: 2026-07-30
+---
+
 # Release And Changelog Policy
 
 Dendrite currently tracks changes under an `Unreleased` section. Keep root and

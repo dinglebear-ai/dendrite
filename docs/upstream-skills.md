@@ -1,3 +1,9 @@
+---
+title: Vendored upstream skills
+created: 2026-07-30
+updated: 2026-07-30
+---
+
 # Vendored Upstream Skills
 
 The `upstream-skills` plugin (`plugins/upstream-skills/`) bundles agent skills
