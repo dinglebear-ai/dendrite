@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   marketplace:
-    uses: dinglebear-ai/workflows/.github/workflows/marketplace-ci.yml@d7bbe71ddc1157e32ed0bebf928fc07438ba58b0
+    uses: dinglebear-ai/workflows/.github/workflows/marketplace-ci.yml@eb5f36cf517ffc949aca1c81e2ccbc71b5a85267
     with:
       validation-command: plugins/scripts/check-all
       cli-install-command: >-
@@ -27,12 +27,13 @@ jobs:
       smoke-command: plugins/scripts/smoke-marketplace-install
 
   contract:
-    uses: dinglebear-ai/workflows/.github/workflows/fleet-contract.yml@d7bbe71ddc1157e32ed0bebf928fc07438ba58b0
+    uses: dinglebear-ai/workflows/.github/workflows/fleet-contract.yml@eb5f36cf517ffc949aca1c81e2ccbc71b5a85267
     with:
       profile: ops
+      implementation-ref: eb5f36cf517ffc949aca1c81e2ccbc71b5a85267
 
   workflow-policy:
-    uses: dinglebear-ai/workflows/.github/workflows/fleet-policy.yml@d7bbe71ddc1157e32ed0bebf928fc07438ba58b0
+    uses: dinglebear-ai/workflows/.github/workflows/fleet-policy.yml@eb5f36cf517ffc949aca1c81e2ccbc71b5a85267
 
   validate:
     name: Validate
