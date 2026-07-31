@@ -16,11 +16,13 @@ concurrency:
 
 jobs:
   marketplace:
-    uses: dinglebear-ai/workflows/.github/workflows/marketplace-ci.yml@98e40816bfab64ed9fcce82236e9ecb0c0055d7d
+    uses: dinglebear-ai/workflows/.github/workflows/marketplace-ci.yml@542ea7b7e5ca2d4e21f3277bfcf158584fee90ec
     with:
       validation-command: >-
         python -m pip install --disable-pip-version-check jsonschema==4.26.0 &&
         plugins/scripts/check-all
+      validation-setup-command: >-
+        npm install --global @google/gemini-cli@0.47.0
       enable-python-cache: false
       enable-node-cache: false
       cli-install-command: >-
@@ -31,13 +33,13 @@ jobs:
       smoke-command: plugins/scripts/smoke-marketplace-install
 
   contract:
-    uses: dinglebear-ai/workflows/.github/workflows/fleet-contract.yml@98e40816bfab64ed9fcce82236e9ecb0c0055d7d
+    uses: dinglebear-ai/workflows/.github/workflows/fleet-contract.yml@542ea7b7e5ca2d4e21f3277bfcf158584fee90ec
     with:
       profile: ops
-      implementation-ref: 98e40816bfab64ed9fcce82236e9ecb0c0055d7d
+      implementation-ref: 542ea7b7e5ca2d4e21f3277bfcf158584fee90ec
 
   workflow-policy:
-    uses: dinglebear-ai/workflows/.github/workflows/fleet-policy.yml@98e40816bfab64ed9fcce82236e9ecb0c0055d7d
+    uses: dinglebear-ai/workflows/.github/workflows/fleet-policy.yml@542ea7b7e5ca2d4e21f3277bfcf158584fee90ec
 
   validate:
     name: Validate
