@@ -2,37 +2,58 @@ name: Validate marketplaces
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: marketplace-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
+  marketplace:
+    uses: dinglebear-ai/workflows/.github/workflows/marketplace-ci.yml@542ea7b7e5ca2d4e21f3277bfcf158584fee90ec
+    with:
+      validation-command: >-
+        python -m pip install --disable-pip-version-check jsonschema==4.26.0 &&
+        plugins/scripts/check-all
+      validation-setup-command: >-
+        npm install --global @google/gemini-cli@0.47.0
+      enable-python-cache: false
+      enable-node-cache: false
+      cli-install-command: >-
+        npm install --global
+        @anthropic-ai/claude-code@2.1.220
+        @openai/codex@0.144.6
+        @google/gemini-cli@0.47.0
+      smoke-command: plugins/scripts/smoke-marketplace-install
+
+  contract:
+    uses: dinglebear-ai/workflows/.github/workflows/fleet-contract.yml@542ea7b7e5ca2d4e21f3277bfcf158584fee90ec
+    with:
+      profile: ops
+      implementation-ref: 542ea7b7e5ca2d4e21f3277bfcf158584fee90ec
+
+  workflow-policy:
+    uses: dinglebear-ai/workflows/.github/workflows/fleet-policy.yml@542ea7b7e5ca2d4e21f3277bfcf158584fee90ec
+
   validate:
-    runs-on: ubuntu-latest
+    name: Validate
+    if: always()
+    needs: [marketplace, contract, workflow-policy]
+    runs-on: [self-hosted, ci-pool-ops]
+    timeout-minutes: 5
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Install marketplace CLIs
-        run: npm install -g @anthropic-ai/claude-code @openai/codex @google/gemini-cli@0.47.0
-
-      - name: Smoke marketplace CLIs
+      - name: Require all marketplace checks
+        env:
+          MARKETPLACE: ${{ needs.marketplace.result }}
+          CONTRACT: ${{ needs.contract.result }}
+          WORKFLOW_POLICY: ${{ needs.workflow-policy.result }}
         run: |
-          command -v claude
-          claude --version
-          command -v codex
-          codex --version
-          command -v gemini
-          gemini --version
-
-      - name: Validate marketplace manifests
-        run: plugins/scripts/check-all
-
-      - name: Smoke marketplace installs
-        run: plugins/scripts/smoke-marketplace-install
+          test "$MARKETPLACE" = success
+          test "$CONTRACT" = success
+          test "$WORKFLOW_POLICY" = success

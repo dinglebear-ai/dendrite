@@ -1,3 +1,9 @@
+---
+title: Configuration
+created: 2026-07-30
+updated: 2026-07-30
+---
+
 # Configuration
 
 Dendrite plugins use runtime-specific plugin settings where available. Setup

@@ -1,3 +1,9 @@
+---
+title: Marketplace operations
+created: 2026-07-30
+updated: 2026-07-30
+---
+
 # Marketplace Operations
 
 Use this runbook when adding, removing, renaming, or updating marketplace

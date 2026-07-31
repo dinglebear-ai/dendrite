@@ -1,3 +1,9 @@
+---
+title: Plugin documentation standard
+created: 2026-07-30
+updated: 2026-07-30
+---
+
 # Plugin Documentation Standard
 
 Every plugin with skills or Claude/Codex manifests must include useful

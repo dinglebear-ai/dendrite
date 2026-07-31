@@ -1,3 +1,9 @@
+---
+title: Installation
+created: 2026-07-30
+updated: 2026-07-30
+---
+
 # Installation
 
 Dendrite publishes a single marketplace from `main`. Installing it registers the
