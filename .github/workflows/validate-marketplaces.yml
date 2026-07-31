@@ -16,9 +16,11 @@ concurrency:
 
 jobs:
   marketplace:
-    uses: dinglebear-ai/workflows/.github/workflows/marketplace-ci.yml@eb5f36cf517ffc949aca1c81e2ccbc71b5a85267
+    uses: dinglebear-ai/workflows/.github/workflows/marketplace-ci.yml@98e40816bfab64ed9fcce82236e9ecb0c0055d7d
     with:
       validation-command: plugins/scripts/check-all
+      enable-python-cache: false
+      enable-node-cache: false
       cli-install-command: >-
         npm install --global
         @anthropic-ai/claude-code@2.1.220
@@ -27,13 +29,13 @@ jobs:
       smoke-command: plugins/scripts/smoke-marketplace-install
 
   contract:
-    uses: dinglebear-ai/workflows/.github/workflows/fleet-contract.yml@eb5f36cf517ffc949aca1c81e2ccbc71b5a85267
+    uses: dinglebear-ai/workflows/.github/workflows/fleet-contract.yml@98e40816bfab64ed9fcce82236e9ecb0c0055d7d
     with:
       profile: ops
-      implementation-ref: eb5f36cf517ffc949aca1c81e2ccbc71b5a85267
+      implementation-ref: 98e40816bfab64ed9fcce82236e9ecb0c0055d7d
 
   workflow-policy:
-    uses: dinglebear-ai/workflows/.github/workflows/fleet-policy.yml@eb5f36cf517ffc949aca1c81e2ccbc71b5a85267
+    uses: dinglebear-ai/workflows/.github/workflows/fleet-policy.yml@98e40816bfab64ed9fcce82236e9ecb0c0055d7d
 
   validate:
     name: Validate
