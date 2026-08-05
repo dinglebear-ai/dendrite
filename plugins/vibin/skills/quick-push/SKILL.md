@@ -1,6 +1,6 @@
 ---
 name: quick-push
-description: Create the save-to-md session doc before staging, git add all, commit with Claude co-authorship trailer, and push to current/new feature branch — including project version bump and changelog update when applicable. Use when the user says "quick push", "push my changes", "commit and push", "ship this", "push to a new branch", or any request to wrap up local work and get it on the remote. Accepts optional `--no-bump` argument to skip the version bump.
+description: Stage, commit, and push the current repository changes with an optional version bump and changelog update. Use when the user says "quick push", "push my changes", "commit and push", "ship this", "push to a new branch", or asks to publish the current worktree. Session logging is handled separately by wrap-session so quick-push never mutates the personal knowledge base. Accepts optional `--no-bump` argument to skip the version bump.
 allowed-tools: Bash, Read, Edit, Write, TodoWrite
 ---
 
@@ -20,10 +20,8 @@ Work through these steps in order. The arguments string `$ARGUMENTS` may contain
 - Capture the intended dirty set before staging with `git status --short` and
   review exactly what will be included.
 - If the working tree is clean, continue in clean-tree mode: skip version bump
-  and changelog edits, save/update the session log only if there is substantive
-  session information to add, then push any unpushed commits. If the tree is
-  still clean after session-log handling and there are no unpushed commits, stop
-  and report that there was nothing to push.
+  and changelog edits, then push any unpushed commits. If there are no unpushed
+  commits, stop and report that there was nothing to push.
 - If dirty files appear unrelated, pre-existing, or unclear and you are not
   operating inside a known owned worktree, stop before staging and ask for
   confirmation or a narrower path. Whole-repo staging is only safe when the
@@ -78,28 +76,11 @@ If a `CHANGELOG.md` exists in the repo root:
 - If the changelog format is unrecognizable (no commit hash table, no clear anchor), skip rather than guess
 - If no CHANGELOG.md exists, skip this step
 
-### 4. Save or update session context before staging
-Invoke the `save-to-md` skill before staging anything so the session document can be included in the commit.
+### 4. Preserve the session-logging boundary
 
-If this is a repeat quick-push in the same session and a session log was already
-created, do not create a duplicate log. Append or update the existing session
-log only when there is substantive new information to add, such as new commits,
-verification results, review outcomes, PR/CI state, risks, or follow-up work. If
-there is no substantive new information, record that the existing log remains
-current and continue.
+`quick-push` publishes the current repository only. It does not invoke `save-to-md`, `log-code-session`, or `wrap-session`, and it does not stage artifacts from `~/docs` or another repository.
 
-Because quick-push stages the whole worktree immediately afterward, constrain this invocation to session documentation:
-- Write the session document
-- Or update the prior session document for this same session when one exists
-- Perform read-only maintenance checks needed to document the session
-- Create or update beads only when directly required to track remaining work from this session
-- Do not move plan files, delete branches/worktrees, or update unrelated stale docs during quick-push; record those as follow-up work instead
-
-After `save-to-md` finishes:
-- Record the final absolute path it prints; if no path is printed, stop before staging or committing
-- Check whether the file is ignored with `git -C "$(git rev-parse --show-toplevel)" check-ignore -q -- <session-doc-path>`
-- If the file is ignored by repo rules (common for `docs/sessions/`), stage it explicitly with `git add -f -- <session-doc-path>` during the staging step below
-- If the save fails, report the error and stop before staging or committing
+When session closeout is also requested, run `wrap-session` as a separate workflow after the repository push so the final commit, PR, CI, and verification state can be recorded accurately.
 
 ### 5. Stage, commit, and push
 - Get the repo root with `repo_root=$(git rev-parse --show-toplevel)`
@@ -107,7 +88,6 @@ After `save-to-md` finishes:
 - If the final dirty set includes unrelated, pre-existing, or unclear files and
   you are not in a known owned worktree, stop before staging.
 - Stage all changes from the repo root with `git -C "$repo_root" add .`
-- If the generated session document was ignored, also run `git -C "$repo_root" add -f -- <session-doc-path>`
 - If there are staged changes, create a meaningful commit message following the repo's conventions
 - Always include Claude's co-authorship trailer:
   ```text
@@ -124,9 +104,8 @@ After `save-to-md` finishes:
 **Notes:**
 - If creating a new branch, name it based on the changes (e.g., `feat/add-user-auth`, `fix/navbar-styling`)
 - The changelog update is part of the commit — it goes in the same commit as the other changes
-- The session document is part of the commit — save it before staging, then explicitly force-add it if repo ignore rules would hide it
-- A repeat quick-push in the same session should update the prior session document when there is substance to add, not create a second session document
-- The saved session document captures pre-commit HEAD metadata; do not amend the session document after the push unless the user explicitly asks for final-HEAD metadata
+- Session and maintenance logs belong to the separate `wrap-session` workflow and personal knowledge-base repository
+- Run `wrap-session` after the push when final commit, PR, CI, or verification state matters
 - End with a summary of what was pushed and the branch name
 - List all unfinished tasks in the session and next steps for the user to consider
 - If any step fails (e.g., version bump, changelog update, push), report the error and stop the process to avoid partial commits

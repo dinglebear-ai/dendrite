@@ -1,0 +1,4 @@
+interface:
+  display_name: "Log Decisions"
+  short_description: "Record durable choices as linked ADRs."
+  default_prompt: "Use $log-decisions to capture the durable choices and their rationale."

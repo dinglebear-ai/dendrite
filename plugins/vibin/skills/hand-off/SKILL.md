@@ -1,13 +1,12 @@
 ---
 name: hand-off
-description: Load the most recent save-to-md session log into a fresh session and brief the new agent on where the prior session left off. Use at the start of a new conversation when the user says "hand off", "pick up where we left off", "resume the last session", "continue from yesterday", "load the last session log", or otherwise signals they want the prior session's context restored. Pair with save-to-md — that skill writes the log; this one reads it back in.
+description: Load the most recent log-code-session artifact into a fresh session and brief the new agent on where prior coding work left off. Use at the start of a new conversation when the user says "hand off", "pick up where we left off", "resume the last session", "continue from yesterday", "load the last session log", or otherwise wants prior engineering context restored. Prefer the central personal knowledge base, with repo-local docs/sessions as a fallback.
 allowed-tools: Read, Bash, Glob
-argument-hint: [path-to-session-md]
 ---
 
 ## Context
 
-- Date: !`TZ=America/New_York date '+%Y-%m-%d %H:%M:%S EST'`
+- Date: !`TZ=America/New_York date '+%Y-%m-%d %H:%M:%S %Z'`
 - Repo root: !`git rev-parse --show-toplevel 2>/dev/null || echo "not a git repo"`
 - Current branch: !`git branch --show-current 2>/dev/null`
 - Current HEAD: !`git rev-parse --short HEAD 2>/dev/null`
@@ -16,18 +15,18 @@ argument-hint: [path-to-session-md]
 - Active PR: !`gh pr view --json number,title,url 2>/dev/null || echo "none"`
 - Working directory: !`pwd`
 - Argument: $ARGUMENTS
-- Latest session files: !`ls -t "$(git rev-parse --show-toplevel 2>/dev/null || pwd)/docs/sessions"/*.md 2>/dev/null | head -5`
+- Latest session files: !`{ ls -t "${HOMELAB_DOCS_ROOT:-$HOME/docs}/sessions"/*.md 2>/dev/null; ls -t "$(git rev-parse --show-toplevel 2>/dev/null || pwd)/docs/sessions"/*.md 2>/dev/null; } | awk '!seen[$0]++' | head -5`
 
 # Hand-Off: Resume Prior Session
 
-Your job is to load the prior session's `save-to-md` log and brief the user on where things stand, so this fresh session can pick up cleanly.
+Your job is to load the prior `log-code-session` artifact and brief the user on where things stand so this fresh session can continue cleanly.
 
 ## Step 1: Locate the session file
 
 - If `$ARGUMENTS` is non-empty, treat it as the path (resolve relative paths from the repo root).
-- Otherwise, use the most recent file from `docs/sessions/` (first entry in the "Latest session files" list above).
+- Otherwise, use the most recent file from the central `${HOMELAB_DOCS_ROOT:-$HOME/docs}/sessions/` directory, falling back to repo-local `docs/sessions/`.
 - To pick an older log, the user can invoke this skill with the file path as `$ARGUMENTS`.
-- If no session file is found, stop and tell the user — suggest running `save-to-md` next time they want a hand-off to work.
+- If no session file is found, stop and suggest running `wrap-session` or `log-code-session` next time.
 
 ## Step 2: Read the session file
 

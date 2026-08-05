@@ -1,7 +1,7 @@
 {
     "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
     "name": "vibin",
-  "description": "Workflow, repo, GitHub, Windows, Paperless, MCP gateway, Jetpack Compose, and SWAG utility skills.",
+  "description": "Knowledge, session closeout, repository, GitHub, homelab, Windows, Paperless, MCP gateway, Jetpack Compose, and SWAG utility skills.",
   "skills": "./skills/",
     "author": {
         "name": "Jacob Magar",

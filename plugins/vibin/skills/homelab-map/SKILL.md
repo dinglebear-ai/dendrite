@@ -1,69 +1,85 @@
 ---
 name: homelab-map
-description: 'This skill should be used whenever a prompt mentions any of Jacob''s named homelab hosts — **tootie, dookie, shart, squirts, steamy, steamy-wsl, vivobook, vivobook-wsl** — or the **WillyNet** LAN. It provides the authoritative map of which host runs which service, IPs, ports, SSH details, storage layout, backup chains, MCP server locations, and known issues. Example triggers: "what''s on dookie", "is plex running on tootie", "ssh into squirts", "where''s the qdrant container", "which box has the GPU", "check shart''s backup status", "the steamy box", "ssh steamy-wsl", "vivobook-wsl logs". Does NOT fire on generic "my homelab" / "my server" / "my NAS" prompts that don''t name a specific host. Runtime inventory is generated at `~/.homelab/homelab.md` and `~/.homelab/homelab.json`; `references/homelab.md` is only the report template.'
+description: Load or refresh the authoritative personal homelab context layer whenever a prompt concerns named hosts, service placement, topology, storage, networking, proxies, MCP services, backups, or current infrastructure drift. Use for TOOTIE, DOOKIE, Squirts, Shart, Steamy, Vivobook, WillyNet, "where does this service run", "map the homelab", "refresh inventory", or "check declared versus observed state". Prefer version-controlled configuration for desired state, the ~/docs generators for observed domain inventories, and ~/.homelab for the compiled overview.
+allowed-tools: Read, Bash
 ---
 
-# homelab-map
+# Homelab Map
 
-Quick map of Jacob's homelab. **Full runtime inventory lives at `~/.homelab/homelab.md` and `~/.homelab/homelab.json` — read or regenerate those files the moment you need anything more specific than this overview.**
+Use the homelab knowledge system as a layered context source, not a static list copied into this skill.
 
-## Nodes at a glance
+## Stable host roles
 
-| Name | Role | LAN IP | OS | Notes |
-|---|---|---|---|---|
-| **tootie** | Primary NAS / app server | 10.1.0.2 | Unraid 7.2.4 (i7-13700K, 128GB) | 49 containers. Web: `:6969`. SSH port `29229`. Also runs dookie as a KVM guest. **⚠ no parity disk currently.** |
-| **dookie** | Dev / AI / MCP hub | 10.1.0.6 | Linux KVM guest on tootie | Axon RAG stack, syslog-mcp (1514/3100), arcane-mcp (44332), unraid-mcp (40010), Lab (8765), MCP bridge containers (40020-40060). |
-| **squirts** | Edge services | 10.1.0.8 | Ubuntu (4 cores, 15GB) | SWAG (149 active configs), Authelia, AdGuard, Gotify, MCP gateway, Vaultwarden, Paperless, etc. RAM sample 10GiB/14GiB used. |
-| **shart** | ZFS backup target | 10.1.0.3 | Unraid | ZFS `backup` pool 7.27TB / 1.80TB used. Also has old link-local `169.254.80.235` on `shim-br0`. Receives Syncoid streams from tootie + squirts. |
-| **steamy** | GPU workloads (RTX 4070) | 10.1.0.65 | Win11 + WSL2 | `crawl4r-qdrant` (GPU qdrant). Arcane marks this env disabled/offline, but `ssh steamy-wsl` works and remains the default target for the `screenshots`, `clipboard`, `nircmd` skills. |
-| **vivobook** | Mobile dev laptop | 10.1.0.5 (when docked) | Win11 + WSL2 | Just an `arcane-agent`. |
+- **TOOTIE**: primary Unraid storage and application host; also owns the DOOKIE VM.
+- **DOOKIE**: development, AI, MCP, indexing, and automation hub.
+- **Squirts**: edge and utility services, including SWAG and authentication-adjacent services.
+- **Shart**: backup and replication target.
+- **Steamy / steamy-wsl**: Windows and WSL GPU workstation surfaces.
+- **Vivobook / vivobook-wsl**: mobile development workstation surfaces.
 
-All nodes joined to **Tailscale** mesh (`100.x.y.z`). Router is a UniFi UCG-Max ("The Mothership"). WiFi SSID `WillyNet`. Public services live at `*.tootie.tv` via SWAG.
+Treat exact versions, counts, IPs, ports, health, and service placement as point-in-time facts that require current evidence.
 
-## "Where does X live" — quick lookups
+## Source precedence
 
-| If the user mentions… | It's on… |
-|---|---|
-| Plex, Sonarr, Radarr, Bazarr, Prowlarr, qBittorrent, Sabnzbd, Tautulli, Immich, Audiobookshelf, Kavita, Navidrome | tootie |
-| Axon runtime, Qdrant (CPU), TEI/Qwen3-Embedding, axon-chrome | dookie |
-| GPU qdrant (`crawl4r-qdrant`), anything with `gpu-nvidia` | steamy |
-| SWAG, Authelia, AdGuard, Gotify, Vaultwarden, Paperless, Linkding, Karakeep, Bytestash, Memos, Radicale, Searxng, Dockge, Dozzle, multi-scrobbler/maloja, RustDesk | squirts |
-| Sanoid / Syncoid backups, ZFS receive | shart |
-| Portainer, Glances, Scrutiny, Vnstat, MinIO, Loggifly, Notifiarr, Apprise API, Olivetin, Crontab UI, Zipline | tootie |
-| **MCP servers** — syslog, arcane, unraid, swag, unifi, gotify, tailscale, apprise, rmcp-template/example | mostly **dookie + squirts** — see `~/.homelab/homelab.md` §"MCP Server Ecosystem" for exact host |
-| Windows sandbox (tootie:8006 noVNC), agent-os skill target | tootie (`agent-os-win11` / dockurr/windows container) |
+Use the source that owns the question:
 
-## Conventions
+1. **Desired state**: version-controlled Compose, SWAG, and non-secret configuration in the homelab repository.
+2. **Observed state**: generated domain inventories under `~/docs/generated/`.
+3. **Compiled overview**: `~/.homelab/homelab.md`, `homelab.json`, and `context-sources.json`.
+4. **Rationale and history**: ADRs, standards, service docs, reports, plans, maintenance logs, and code-session logs under `~/docs`.
+5. **Live verification**: direct read-only query when the decision depends on current runtime health and the generated snapshot is stale.
 
-- **All scatological naming.** Don't be cute about it — they are named tootie, dookie, shart, squirts. Use the names verbatim.
-- **`steamy-wsl` ≠ `steamy`** in skill defaults: most skills (`screenshots`, `clipboard`, `nircmd`, `chrome`) target the WSL2 alias because the actual user desktop / win11 box is reached via WSL ssh.
-- **`*.tootie.tv` = SWAG vhost on squirts**, fronts a service running anywhere. Don't assume the service is on tootie just because of the domain.
-- **arcane-agent usually runs on every node** — it manages local compose projects. Check the generated report because stopped/missing agents are runtime state.
-- **Public SSH does not exist.** All inter-node SSH goes through the Tailscale mesh.
+A historical log never overrides current desired or observed state. A running container does not prove that its configuration is version-controlled.
 
-## When to read the reference doc
+## Refresh
 
-Read `~/.homelab/homelab.md` or `~/.homelab/homelab.json` whenever you need:
-- Exact container lists per host
-- Storage layout (Unraid disk slots, ZFS pools, share-level breakdowns)
-- Backup chains (which datasets replicate where)
-- All 149 active SWAG configs
-- Current runtime collection notes and known follow-up checks
-- Known issues / tech debt log
-- Specific port numbers beyond the headline ones above
-
-`grep` the generated report — it's structured with clear generated headers (`## Nodes`, `## Service Location Summary`, `## Host Container Inventory`, `## Storage Architecture`, `## AI / RAG / Agent Stack`, `## MCP Server Ecosystem`, etc.)
-
-## Updating this skill
-
-`~/.homelab/homelab.md`, `~/.homelab/homelab.json`, and `~/.homelab/index.html` are generated from live collection plus the template at `references/homelab.md`. Refresh them instead of hand-editing point-in-time data:
+Run the context refresh when current infrastructure facts matter:
 
 ```bash
-python3 <skill-dir>/scripts/generate-homelab-report.py
+python3 <skill-dir>/scripts/refresh-context.py
 ```
 
-By default, the generator also starts or reuses a viewer on `0.0.0.0:40500` so SWAG can reach it through dookie's Tailscale IP, checks `tailscale status`, and attempts Tailscale Serve on HTTPS port `8447` only if Tailscale is installed and usable. Use `--no-serve` when you only want files.
+The refresh process:
 
-The generator uses non-interactive SSH, Docker CLI, ZFS CLI, Unraid shell commands, and SWAG config files. Treat container counts, RAM%, uptime numbers etc. as **point-in-time** — re-run the generator before acting on anything that depends on current state. Names of nodes, roles, and architectural choices are stable; individual IPs and ports should still be verified before automation.
+1. runs the existing specialized `~/docs/scripts` collectors in dependency order;
+2. regenerates the compiled `~/.homelab` map using the existing live collector;
+3. writes `~/.homelab/context-sources.json` with source paths, freshness, checksums, collector results, and Git state for the declared homelab repository.
 
-If a stable architectural fact changes (node renamed, service permanently moved, critical port changed), update `scripts/generate-homelab-report.py` and/or the template in `references/homelab.md`, then regenerate `~/.homelab` artifacts. Keep this overview aligned with the generated report.
+Use `--skip-collect` to compile from existing docs snapshots, `--skip-live-map` to refresh only specialized inventories and the source manifest, and `--strict` when any failed collector must fail the whole run.
+
+## Existing specialized inventories
+
+Prefer the narrowest generated source:
+
+- containers and Compose projects: `generated/homelab/docker.*`
+- SWAG routes and upstreams: `generated/homelab/proxies.*`
+- hosts and devices: `generated/homelab/devices.*`
+- health: `generated/homelab/health.*`
+- Unraid and storage: `generated/homelab/unraid.*`
+- UniFi and Tailscale: `generated/net/unifi.*`, `generated/net/tailscale.*`
+- MCP gateway and servers: `generated/mcp/`
+- repository fleet: `generated/dev/` and workspace inventory pages
+
+Read JSON sidecars for machine reasoning and Markdown for human context.
+
+## Drift reasoning
+
+When asked about drift, compare declared and observed state explicitly:
+
+- declared Compose service missing at runtime;
+- running container absent from version-controlled Compose;
+- proxy config targeting a missing or moved upstream;
+- service documentation naming the wrong host;
+- generated snapshot older than the freshness required by the task;
+- standard claiming enforcement that repository measurement disproves;
+- maintenance or session record describing work that was never reflected in desired state.
+
+Report the two conflicting sources, their observation times, and which source owns the intended truth. Do not silently edit either side.
+
+## Operating rules
+
+- `*.tootie.tv` identifies a SWAG route, not necessarily a service running on TOOTIE.
+- Use host names exactly as configured.
+- Public SSH is not assumed; prefer the configured Tailscale and LABBY paths.
+- Do not expose secrets from generated JSON, environment files, or live commands.
+- Refresh before relying on volatile counts or health claims.

@@ -1,15 +1,15 @@
 # hand-off
 
-Load the most recent `save-to-md` session log into a fresh Claude session and brief the new agent on where the prior session left off.
+Load the most recent `log-code-session` artifact from the central knowledge base, with repo-local fallback, and brief the new agent on where prior coding work left off.
 
 ## What it does
 
-1. Finds the newest `docs/sessions/*.md` in the repo (or one passed as `$ARGUMENTS`).
+1. Finds the newest `${HOMELAB_DOCS_ROOT:-$HOME/docs}/sessions/*.md`, falling back to repo-local `docs/sessions/*.md` (or uses one passed as `$ARGUMENTS`).
 2. Reads the full file — Next Steps, Open Questions, Files Modified, Errors Encountered.
 3. Compares the session's git/PR state to the current state and flags drift (branch mismatch, HEAD moved, PR closed, etc.).
 4. Produces a short briefing so the new agent can pick up cleanly.
 
-Pairs with `save-to-md` — that skill writes the log; this one reads it back.
+Pairs with `wrap-session` and `log-code-session`; those workflows write the code-session artifact and this one reads it back.
 
 ## Invoke
 

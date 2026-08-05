@@ -11,6 +11,8 @@ All notable changes to Dendrite are recorded here.
 
 ### Added
 
+- Added the Vibin knowledge-layer skill suite: `wrap-session`, `log-code-session`, `log-homelab-maintenance`, `log-decisions`, `new-runbook`, `new-report`, `align-standards`, and `deploy-new-service`.
+- Added a `homelab-map` context refresher that composes the existing `~/docs` inventory generators and emits a source-hashed manifest without persisting raw command output.
 - Added the `gog` skill to the Vibin plugin for safe Google Workspace automation (Gmail, Calendar, Drive, Docs, Sheets, Contacts) with stable JSON output, scoped auth, and command guards; regenerated the README and plugin-matrix inventories.
 - Added missing `README.md` and `CHANGELOG.md` files for all current skill directories.
 - Added a curated-plugin inventory to the root `README.md`, including marketplace coverage and repo counts.
@@ -26,6 +28,8 @@ All notable changes to Dendrite are recorded here.
 
 ### Changed
 
+- Refactored `save-to-md` into the focused `log-code-session` logger and retained `save-to-md` as a deprecated compatibility alias. Session logging no longer commits, pushes, mutates trackers, or cleans repositories.
+- Separated repository publishing from knowledge capture: `quick-push` now publishes repository changes, while `wrap-session` records final code and infrastructure state afterward.
 - Reworked the Rust skill into a broader Rust-patterns skill covering the rmcp family, Lab CLI conventions, async service boundaries, UI streaming, and repository layout rules.
 - Updated marketplace metadata to keep the Claude and OpenAI plugin manifests aligned.
 - Moved the `creating-snippets` skill out of Dendrite and into the Labby plugin source in the Lab repository.
@@ -36,6 +40,7 @@ All notable changes to Dendrite are recorded here.
 
 ### Fixed
 
+- Prevented the pre-push test suite from inheriting repository-local `GIT_*` variables that redirected temporary-repository commits into the real Dendrite worktree. The hook now clears Git-local environment, the lane-evidence test helper strips inherited Git variables, and a regression test simulates hook execution.
 - Scoped the `.githooks/pre-push` no-MCP drift compare to pushes that target `main` or `marketplace-no-mcp`, so feature-branch pushes are no longer blocked by pre-existing cross-ref drift. CI still enforces the invariant via `check-no-mcp-drift.yml` and `sync-marketplace-no-mcp.yml`. `check-all` still runs on every push.
 - Hardened several skill scripts and docs based on reviewer findings, including Plex token handling, mcporter output quoting, and explicit Overseerr media identifiers.
 - Restored the expected skill documentation contract: every Dendrite skill now has `SKILL.md`, `agents/openai.yaml`, `README.md`, and `CHANGELOG.md`.

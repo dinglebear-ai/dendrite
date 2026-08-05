@@ -22,16 +22,45 @@ from collect_lane_evidence import (
 
 
 def git(path: Path, *args: str) -> None:
+    # Git hooks export GIT_DIR, GIT_WORK_TREE, and related repository-local
+    # variables. They override `git -C` and can redirect temporary-repository
+    # tests into the real checkout. Test git commands must always start clean.
+    clean_env = {
+        key: value for key, value in os.environ.items() if not key.startswith("GIT_")
+    }
     subprocess.run(
         ["git", "-C", str(path), *args],
         check=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
+        env=clean_env,
     )
 
 
 class CollectLaneEvidenceTests(unittest.TestCase):
+    def test_git_helper_ignores_inherited_hook_repository_environment(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            repository = root / "repository"
+            repository.mkdir()
+            wrong_git_dir = root / "wrong.git"
+            wrong_work_tree = root / "wrong-worktree"
+
+            with patch.dict(
+                os.environ,
+                {
+                    "GIT_DIR": str(wrong_git_dir),
+                    "GIT_WORK_TREE": str(wrong_work_tree),
+                    "GIT_INDEX_FILE": str(root / "wrong.index"),
+                },
+            ):
+                git(repository, "init", "-b", "main")
+
+            self.assertTrue((repository / ".git").is_dir())
+            self.assertFalse(wrong_git_dir.exists())
+            self.assertFalse(wrong_work_tree.exists())
+
     def test_correlates_sessions_and_all_worktrees_without_leaking_secrets(
         self,
     ) -> None:

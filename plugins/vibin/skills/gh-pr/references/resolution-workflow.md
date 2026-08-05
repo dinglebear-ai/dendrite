@@ -303,7 +303,7 @@ gh auth refresh -s repo -s workflow
 This skill integrates with:
 
 - **quick-push:** Commit messages already follow linking format
-- **save-to-md:** Session logs capture which threads were addressed
+- **wrap-session / log-code-session:** Code-session logs capture which threads were addressed
 - **comprehensive-review:full-review:** Pre-PR review can catch issues before human review
 - **superpowers:finishing-a-development-branch:** Verification runs before declaring work complete
 

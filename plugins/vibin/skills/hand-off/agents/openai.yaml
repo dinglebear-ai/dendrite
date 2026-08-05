@@ -1,4 +1,4 @@
 interface:
   display_name: "Hand Off"
-  short_description: "Load the most recent save-to-md session log into a fresh handoff summary."
+  short_description: "Load the latest code-session artifact into a fresh handoff summary."
   default_prompt: "Use $hand-off to prepare a concise continuation handoff from the latest saved session log."

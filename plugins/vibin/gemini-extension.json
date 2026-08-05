@@ -1,7 +1,7 @@
 {
   "name": "vibin",
   "version": "0.1.0",
-  "description": "Workflow, repo, GitHub, Windows, Paperless, MCP gateway, Jetpack Compose, and SWAG utility skills.",
+  "description": "Knowledge, session closeout, repository, GitHub, homelab, Windows, Paperless, MCP gateway, Jetpack Compose, and SWAG utility skills.",
   "settings": [
     {
       "name": "Paperless API Token",

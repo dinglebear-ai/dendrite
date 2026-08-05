@@ -1,0 +1,4 @@
+interface:
+  display_name: "New Report"
+  short_description: "Create a sourced analytical report."
+  default_prompt: "Use $new-report to capture this investigation and its conclusions."

@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Git exports repository-local GIT_* variables to hooks. Clear them before the
+# test suite creates temporary repositories; otherwise `git -C <temp>` can still
+# target this worktree and corrupt the branch under test.
+for variable in $(git rev-parse --local-env-vars); do
+  unset "$variable"
+done
+
 # Always validate the state being pushed: manifests, schemas, generated docs,
 # plugin docs, marketplace alignment.
 plugins/scripts/check-all
