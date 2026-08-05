@@ -22,7 +22,7 @@ You're SSH'd from Windows into a remote Linux box running Claude. Claude can't s
   C:\screens\*.png                       │
        ↑                                 │
        │                                 │
-  steamy-wsl (WSL Ubuntu)  ─── ssh ────  │
+  winhost-wsl (WSL Ubuntu)  ─── ssh ────  │
        │                                 │
        └── powershell.exe ───────────────┘
                                   Claude `Read`s the PNG
@@ -30,7 +30,7 @@ You're SSH'd from Windows into a remote Linux box running Claude. Claude can't s
 
 ## Prerequisites
 
-- Passwordless SSH from the Claude host to your Windows-side WSL (`ssh steamy-wsl` should just work).
+- Passwordless SSH from the Claude host to your Windows-side WSL (`ssh winhost-wsl` should just work).
 - A screenshots folder on the Windows side — defaults to `C:\screens`. Win+Shift+S autosave or any tool that lands PNGs there will work for Mode 1.
 - For Chrome tab capture, use the separate `chrome` skill.
 
@@ -38,7 +38,7 @@ You're SSH'd from Windows into a remote Linux box running Claude. Claude can't s
 
 **SSH alias** — `~/.ssh/config` on the Linux side has an entry like:
 ```
-Host steamy-wsl
+Host winhost-wsl
     HostName <win11-ip-or-tailscale-name>
     User <wsl-username>
     IdentityFile ~/.ssh/...
@@ -84,6 +84,6 @@ screens/
 
 | Symptom | Check |
 |---------|-------|
-| "no screenshots found" | `ssh steamy-wsl ls /mnt/c/screens` — is the dir populated? Is `$SCREENS_REMOTE_DIR` pointing at the right place? |
-| `ssh steamy-wsl` itself errors | Test with `ssh steamy-wsl true`. Likely an SSH config / network issue, not the skill. |
+| "no screenshots found" | `ssh winhost-wsl ls /mnt/c/screens` — is the dir populated? Is `$SCREENS_REMOTE_DIR` pointing at the right place? |
+| `ssh winhost-wsl` itself errors | Test with `ssh winhost-wsl true`. Likely an SSH config / network issue, not the skill. |
 | Captured PNG is all black | Hardware-accelerated app — known PowerShell `CopyFromScreen` limitation. Use the `chrome` skill if it's Chrome; otherwise use ShareX/NirCmd or `PrintWindow` + `PW_RENDERFULLCONTENT`. |

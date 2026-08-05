@@ -1,6 +1,6 @@
 ---
 name: nircmd
-description: Drive a Windows machine over SSH via the NirCmd CLI and its NirSoft companion utilities — capture specific windows or regions, control audio (volume, mute, mediaplay), TTS via `speak`, lock workstation, list/activate windows, simulate keystrokes, plus scriptable NirSoft tools for network state (CurrPorts, WifiInfoView), system forensics (LastActivityView, BrowsingHistoryView, TurnedOnTimesView), open handles (OpenedFilesView), and file search (SearchMyFiles). Use whenever the user wants to control audio/volume, make Windows speak something, lock the workstation, list open ports / Wi-Fi APs / recent activity / open file handles on Windows, or do any other Windows-side action via NirCmd or a NirSoft companion CLI. For clipboard operations use the `clipboard` skill; for desktop screenshots prefer the `screenshots` skill. Defaults to `ssh steamy-wsl`, NirCmd at `C:\tools\nircmd\nircmd.exe`, NirSoft companions at `C:\tools\nirsoft\`; override via `NIRCMD_HOST`, `NIRCMD_PATH`, `NIRSOFT_DIR` env vars.
+description: Drive a Windows machine over SSH via the NirCmd CLI and its NirSoft companion utilities — capture specific windows or regions, control audio (volume, mute, mediaplay), TTS via `speak`, lock workstation, list/activate windows, simulate keystrokes, plus scriptable NirSoft tools for network state (CurrPorts, WifiInfoView), system forensics (LastActivityView, BrowsingHistoryView, TurnedOnTimesView), open handles (OpenedFilesView), and file search (SearchMyFiles). Use whenever the user wants to control audio/volume, make Windows speak something, lock the workstation, list open ports / Wi-Fi APs / recent activity / open file handles on Windows, or do any other Windows-side action via NirCmd or a NirSoft companion CLI. For clipboard operations use the `clipboard` skill; for desktop screenshots prefer the `screenshots` skill. Defaults to `ssh winhost-wsl`, NirCmd at `C:\tools\nircmd\nircmd.exe`, NirSoft companions at `C:\tools\nirsoft\`; override via `NIRCMD_HOST`, `NIRCMD_PATH`, `NIRSOFT_DIR` env vars.
 ---
 
 # nircmd
@@ -10,7 +10,7 @@ Bridge for driving a Win11 desktop remotely from this SSH session via the NirCmd
 ## Defaults (override via env vars)
 
 ```bash
-NIRCMD_HOST="${NIRCMD_HOST:-steamy-wsl}"                          # ssh alias
+NIRCMD_HOST="${NIRCMD_HOST:-winhost-wsl}"                          # ssh alias
 NIRCMD_PATH="${NIRCMD_PATH:-/mnt/c/tools/nircmd/nircmd.exe}"      # POSIX path from WSL
 NIRSOFT_DIR="${NIRSOFT_DIR:-/mnt/c/tools/nirsoft}"                # NirSoft companion tools dir
 ```

@@ -15,7 +15,7 @@ touches the machine.
   host's context.
 - `scripts/remote-context.py` - helper that reads host memory and gathers live
   SSH/Tailscale/syslog context.
-- `templates/remotes/squirts/REMOTE.md` - sample host memory draft.
+- `templates/remotes/edgehost/REMOTE.md` - sample host memory draft.
 - `.claude-plugin/plugin.json` - Claude Code plugin manifest.
 - `.codex-plugin/plugin.json` - Codex plugin manifest.
 

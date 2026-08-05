@@ -38,7 +38,7 @@
     },
     {
       "name": "Host-forward SSH target",
-      "description": "SSH user@host of the Docker host's port-forward into the guest (user@<docker-host-tailscale-ip>). Use this path \u2014 NOT `ssh agent-os` \u2014 for Tailscale maintenance inside the guest, since it survives `tailscale down`. Example: docker@100.120.242.29. Default: 'docker@100.120.242.29'.",
+      "description": "SSH user@host of the Docker host's port-forward into the guest (user@<docker-host-tailscale-ip>). Use this path \u2014 NOT `ssh agent-os` \u2014 for Tailscale maintenance inside the guest, since it survives `tailscale down`. Example: docker@198.51.100.20. Default: 'docker@198.51.100.20'.",
       "envVar": "AGENT_OS_HOST_FORWARD_SSH",
       "sensitive": false
     },
@@ -50,25 +50,25 @@
     },
     {
       "name": "Windows-MCP URL",
-      "description": "Full HTTP(S) URL of the Windows-MCP endpoint inside the agent-os VM, including the /mcp path. This is what the plugin registers as the windows-mcp MCP server. Example: https://agent-os.example.ts.net/mcp. Prefer the VM's own stable Tailscale/MagicDNS name so it follows the VM across Docker hosts. Default: 'https://agent-os.manatee-triceratops.ts.net/mcp'.",
+      "description": "Full HTTP(S) URL of the Windows-MCP endpoint inside the agent-os VM, including the /mcp path. This is what the plugin registers as the windows-mcp MCP server. Example: https://agent-os.example.ts.net/mcp. Prefer the VM's own stable Tailscale/MagicDNS name so it follows the VM across Docker hosts. Default: 'https://agent-os.example.ts.net/mcp'.",
       "envVar": "AGENT_OS_MCP_URL",
       "sensitive": false
     },
     {
       "name": "noVNC URL",
-      "description": "Base URL of the dockur/windows web (noVNC) UI on the Docker host, for visual debugging. Example: http://tootie:8006. Default: 'http://tootie:8006'.",
+      "description": "Base URL of the dockur/windows web (noVNC) UI on the Docker host, for visual debugging. Example: http://nashost:8006. Default: 'http://nashost:8006'.",
       "envVar": "AGENT_OS_NOVNC_URL",
       "sensitive": false
     },
     {
       "name": "Docker host running the VM",
-      "description": "SSH alias/host of the Docker host that runs the agent-os-win11 container (for `docker ps`, compose up, etc.). Example: tootie. Default: 'tootie'.",
+      "description": "SSH alias/host of the Docker host that runs the agent-os-win11 container (for `docker ps`, compose up, etc.). Example: nashost. Default: 'nashost'.",
       "envVar": "AGENT_OS_VM_HOST",
       "sensitive": false
     },
     {
       "name": "VM Tailscale IP / SSH host",
-      "description": "The agent-os guest's own Tailscale IP (or MagicDNS name) used by `ssh agent-os` for in-guest commands on port 22. Example: 100.109.125.128. Default: '100.109.125.128'.",
+      "description": "The agent-os guest's own Tailscale IP (or MagicDNS name) used by `ssh agent-os` for in-guest commands on port 22. Example: 198.51.100.10. Default: '198.51.100.10'.",
       "envVar": "AGENT_OS_VM_TAILSCALE_IP",
       "sensitive": false
     }

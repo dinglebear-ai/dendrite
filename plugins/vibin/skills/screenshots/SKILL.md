@@ -1,6 +1,6 @@
 ---
 name: screenshots
-description: Bridge for viewing the user's own desktop when they're SSH'd in and can't paste images. Three modes — (1) fetch an existing screenshot from the user's screenshots dir, (2) take a fresh full-screen / region / active-window capture via ShareX CLI on a Windows target, (3) fall back to a PowerShell-only capture if ShareX isn't installed. Use when the user says "check my screenshot", "look at my screen", "latest screen", "take a screenshot of my desktop", "capture my screen", "show me my desktop", "screenshot this window", "grab a region of my screen", or similar references to seeing their own machine. Defaults target the user's Win11 box via `ssh steamy-wsl`; override `SCREENS_HOST` (and friends) if pointing at a different host. **For Chrome tab screenshots (any window state, including minimized), use the `chrome` skill instead — this skill is for desktop pixels.**
+description: Bridge for viewing the user's own desktop when they're SSH'd in and can't paste images. Three modes — (1) fetch an existing screenshot from the user's screenshots dir, (2) take a fresh full-screen / region / active-window capture via ShareX CLI on a Windows target, (3) fall back to a PowerShell-only capture if ShareX isn't installed. Use when the user says "check my screenshot", "look at my screen", "latest screen", "take a screenshot of my desktop", "capture my screen", "show me my desktop", "screenshot this window", "grab a region of my screen", or similar references to seeing their own machine. Defaults target the user's Win11 box via `ssh winhost-wsl`; override `SCREENS_HOST` (and friends) if pointing at a different host. **For Chrome tab screenshots (any window state, including minimized), use the `chrome` skill instead — this skill is for desktop pixels.**
 ---
 
 # screenshots
@@ -10,7 +10,7 @@ The user develops over SSH; their desktop is on another machine. This skill turn
 ## Defaults (override via env vars)
 
 ```bash
-SSH_TARGET="${SCREENS_HOST:-steamy-wsl}"                                            # ssh alias of the desktop machine
+SSH_TARGET="${SCREENS_HOST:-winhost-wsl}"                                            # ssh alias of the desktop machine
 SCREENS_BASE="${SCREENS_BASE:-/mnt/c/screens}"                                       # root screenshots dir
 REMOTE_DIR="${SCREENS_REMOTE_DIR:-$SCREENS_BASE/$(date +%Y-%m)}"                    # current month subdir (ShareX saves to YYYY-MM folders)
 NATIVE_DIR="${SCREENS_NATIVE_DIR:-C:\\screens}"                                     # same root in native Windows form
