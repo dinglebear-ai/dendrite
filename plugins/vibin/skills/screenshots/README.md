@@ -22,7 +22,7 @@ You're SSH'd from Windows into a remote Linux box running Claude. Claude can't s
   C:\screens\*.png                       │
        ↑                                 │
        │                                 │
-  winhost-wsl (WSL Ubuntu)  ─── ssh ────  │
+  winhost-wsl (WSL Ubuntu)  ─── ssh ──── │
        │                                 │
        └── powershell.exe ───────────────┘
                                   Claude `Read`s the PNG

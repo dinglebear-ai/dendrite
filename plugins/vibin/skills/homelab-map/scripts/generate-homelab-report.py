@@ -374,7 +374,7 @@ def report_payload(snapshots: dict[str, HostSnapshot], generated_at: dt.datetime
         "generator": "skills/homelab-map/scripts/generate-homelab-report.py",
         "collection_method": "non-interactive SSH, Docker CLI, ZFS CLI, Unraid shell commands, and SWAG config files",
         "network": "HomeLAN / 192.0.2.0/24 plus Tailscale mesh",
-        "primary_public_domain": "*.nashost.tv via SWAG on edgehost",
+        "primary_public_domain": "*.example.internal via SWAG on edgehost",
         "overview": {
             "total_nodes": len(snapshots),
             "total_containers_running": total_containers,
@@ -408,8 +408,8 @@ def render_report(snapshots: dict[str, HostSnapshot], generated_at: dt.datetime)
     swag_configs = snapshots["edgehost"].extras.get("swag_configs", "")
     swag_names = [line for line in swag_configs.splitlines() if line.strip()]
     total_containers = sum(len(s.containers) for s in snapshots.values())
-    tootie_df = "\n".join(snapshots["nashost"].df)
-    tootie_parity = snapshots["nashost"].extras.get("parity", "").strip()
+    nashost_df = "\n".join(snapshots["nashost"].df)
+    nashost_parity = snapshots["nashost"].extras.get("parity", "").strip()
 
     node_rows = []
     for key in ["nashost", "devhost", "edgehost", "backuphost", "winhost", "laptophost"]:
@@ -459,7 +459,7 @@ def render_report(snapshots: dict[str, HostSnapshot], generated_at: dt.datetime)
     ["Total containers running", str(total_containers)],
     ["Active SWAG proxy configs", str(len(swag_names)) if swag_names else "not collected"],
     ["Network", "HomeLAN / 192.0.2.0/24 plus Tailscale mesh"],
-    ["Primary public domain", "*.nashost.tv via SWAG on edgehost"],
+    ["Primary public domain", "*.example.internal via SWAG on edgehost"],
 ])}
 
 ## Collection Notes
@@ -495,13 +495,13 @@ Observed means the expected container name was found in the live `docker ps` out
 ### nashost - Unraid Array and Cache
 
 ```text
-{tootie_df or 'not collected'}
+{nashost_df or 'not collected'}
 ```
 
 Parity status excerpt:
 
 ```text
-{tootie_parity or 'not collected'}
+{nashost_parity or 'not collected'}
 ```
 
 Block devices excerpt:
