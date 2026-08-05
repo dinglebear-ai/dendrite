@@ -28,6 +28,8 @@ All notable changes to Dendrite are recorded here.
 
 ### Changed
 
+
+- Relicense Dinglebear-owned original work under AGPL-3.0-only and document separate commercial licensing; third-party material retains its original terms.
 - Refactored `save-to-md` into the focused `log-code-session` logger and retained `save-to-md` as a deprecated compatibility alias. Session logging no longer commits, pushes, mutates trackers, or cleans repositories.
 - Separated repository publishing from knowledge capture: `quick-push` now publishes repository changes, while `wrap-session` records final code and infrastructure state afterward.
 - Reworked the Rust skill into a broader Rust-patterns skill covering the rmcp family, Lab CLI conventions, async service boundaries, UI streaming, and repository layout rules.

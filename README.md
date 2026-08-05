@@ -195,3 +195,7 @@ plugin source directories in this repo.
 Development and marketplace-operation docs live in
 [CONTRIBUTING.md](CONTRIBUTING.md) and
 [docs/marketplace-operations.md](docs/marketplace-operations.md).
+
+## License
+
+Original Dinglebear-authored portions of this project are licensed under [AGPL-3.0-only](LICENSE). Separate commercial licensing is available for organizations that need terms outside the AGPL. Third-party material remains under its original license. See [LICENSING.md](LICENSING.md).
