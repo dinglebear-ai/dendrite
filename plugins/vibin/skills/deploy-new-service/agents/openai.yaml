@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deploy New Service"
+  short_description: "Declare, validate, deploy, and verify a homelab service."
+  default_prompt: "Use $deploy-new-service to add this service safely and record the rollout."

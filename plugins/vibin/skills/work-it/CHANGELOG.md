@@ -3,6 +3,8 @@
 All notable changes to the `work-it` skill are recorded here. Format roughly follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## Unreleased
+- Run `wrap-session` after repository publishing and final verification instead of coupling session capture to `quick-push`.
+- Preserve implementation-agent handoffs as evidence for the final code-session log.
 - Reworked the flow around safe worktree reuse, early draft PR creation,
   mandatory `vibin:review-pr` sweeps, repeated review waves until diminishing
   returns, final `vibin:merge-status`, and `vibin:quick-push` publishing.

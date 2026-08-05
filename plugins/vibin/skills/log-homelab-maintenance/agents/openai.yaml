@@ -1,0 +1,4 @@
+interface:
+  display_name: "Log Homelab Maintenance"
+  short_description: "Write a factual infrastructure maintenance record without changing or publishing anything."
+  default_prompt: "Use $log-homelab-maintenance to record the hosts, services, evidence, safety actions, changes, verification, rollback, and follow-ups from this maintenance session."

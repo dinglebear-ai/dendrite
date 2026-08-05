@@ -261,6 +261,11 @@ def run_git(
             )
         timeout = min(timeout, max(1, remaining))
     try:
+        clean_env = {
+            key: value
+            for key, value in os.environ.items()
+            if not key.startswith("GIT_")
+        }
         return subprocess.run(
             command,
             check=check,
@@ -268,6 +273,7 @@ def run_git(
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             timeout=timeout,
+            env=clean_env,
         )
     except (OSError, subprocess.TimeoutExpired) as error:
         if check:

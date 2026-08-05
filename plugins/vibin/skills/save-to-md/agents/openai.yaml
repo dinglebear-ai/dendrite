@@ -1,4 +1,4 @@
 interface:
-  display_name: "Save To Md"
-  short_description: "Save session documentation to a Markdown artifact with useful context and outcomes."
-  default_prompt: "Use $save-to-md to write a complete session note that captures decisions, commands, changes, and follow-ups."
+  display_name: "Save to MD (Deprecated)"
+  short_description: "Compatibility alias for log-code-session."
+  default_prompt: "Use $log-code-session instead of $save-to-md to record this coding session."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "New Runbook"
+  short_description: "Create an evidence-backed reusable procedure."
+  default_prompt: "Use $new-runbook to create a reusable procedure from proven evidence."

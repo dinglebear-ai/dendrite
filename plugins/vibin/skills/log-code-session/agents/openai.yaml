@@ -1,0 +1,4 @@
+interface:
+  display_name: "Log Code Session"
+  short_description: "Write a factual coding-session log without publishing or repository cleanup."
+  default_prompt: "Use $log-code-session to record the coding work, decisions, changes, verification, failures, and follow-ups from this session."

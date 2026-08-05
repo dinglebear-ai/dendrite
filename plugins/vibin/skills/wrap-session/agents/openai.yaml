@@ -1,0 +1,4 @@
+interface:
+  display_name: "Wrap Session"
+  short_description: "Route session closeout to code and/or homelab maintenance logs."
+  default_prompt: "Use $wrap-session to classify the full session, write the appropriate durable logs, cross-link them when needed, and validate the knowledge base."

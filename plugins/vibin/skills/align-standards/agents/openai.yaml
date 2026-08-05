@@ -1,0 +1,4 @@
+interface:
+  display_name: "Align Standards"
+  short_description: "Audit and reconcile repository or homelab standards."
+  default_prompt: "Use $align-standards to measure policy, enforcement, and fleet drift."

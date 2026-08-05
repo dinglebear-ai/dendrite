@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added domain-specific knowledge skills for coding sessions, homelab maintenance, decisions, runbooks, reports, standards alignment, service deployment, and session routing.
+- Renamed the focused coding logger to `log-code-session`; retained `save-to-md` as a compatibility alias with all publishing and repository-maintenance behavior removed.
+- Reworked `homelab-map` into a layered context compiler over desired configuration, specialized `~/docs` inventories, and the live topology map.
+- Decoupled `quick-push` from session logging and updated `work-it` and `hand-off` to use the central knowledge workflow.
+- Hardened `resume-work-lanes` temporary Git repositories against inherited hook `GIT_*` variables and added a regression test after the pre-push suite was observed committing its secret-redaction fixture into the real worktree.
 - Removed protected-long-lived-ref handling from `repo-status`, including the
   `protected_long_lived_ref` status value. It only ever described the
   `marketplace-no-mcp` marketplace variant, which has been retired.

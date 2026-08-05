@@ -128,10 +128,9 @@ actor, or worktree metadata showing another session is operating there.
    - Require a concise handoff with changed files, plan items completed,
      verification commands and results, remaining risks, and whether the
      worktree is clean or dirty.
-   - Require that handoff to be captured in the session log through
-     `vibin:save-to-md`. If the implementation agent cannot invoke that skill
-     safely, the coordinator must carry the handoff into the `quick-push` /
-     `save-to-md` session log before final completion.
+   - Require that handoff to be preserved for the final `vibin:wrap-session`
+     closeout. The coordinator owns the final routing and must carry the
+     implementation handoff into the code-session log.
    - When the agent returns, inspect `git status --short`, review changed files
      enough to understand the implementation, and rerun the reported
      verification before proceeding.
@@ -154,17 +153,16 @@ actor, or worktree metadata showing another session is operating there.
      commits to the PR. Do not run another review afterward.
 
 7. **Log the final session state**
-   - Invoke `vibin:quick-push` from the worktree before the final readiness
-     gate, so required session-log writes are committed and pushed before the
-     final HEAD is validated.
-   - `quick-push` is expected to invoke `vibin:save-to-md`. If no session log
-     was created or updated during quick-push, invoke `vibin:save-to-md`
-     immediately and commit/push that session-log update before continuing.
-   - For repeated quick-pushes in the same session, update the previously
-     created session log only when there is substantive new information to add.
-   - Ensure the session log captures branch, HEAD, worktree path, PR URL,
-     verification commands/results, the single final review, comments resolved,
-     remaining risks, and open questions.
+   - Invoke `vibin:quick-push` from the worktree so repository changes are
+     committed and pushed before final session evidence is captured.
+   - Invoke `vibin:wrap-session` after the push and final verification state is
+     known. This workflow is code-only unless live infrastructure was also
+     changed, in which case the router must create both artifacts.
+   - Ensure the code-session log captures branch, final HEAD, worktree path, PR
+     URL, verification commands/results, the single final review, comments
+     resolved, remaining risks, and open questions.
+   - Do not make `quick-push` stage or publish files from the personal knowledge
+     base.
 
 8. **Final gate**
    - Invoke `vibin:merge-status` from the worktree, using its collector script
