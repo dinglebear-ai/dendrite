@@ -1,7 +1,7 @@
 # Windows-MCP call patterns (agent-os VM via the Lab gateway)
 
 Verified live 2026-05-29 after the destructive-gate fix. The desktop target is the **agent-os**
-Windows 11 VM (container `agent-os-win11`, `dockur/windows` on host `tootie`), driven through the
+Windows 11 VM (container `agent-os-win11`, `dockur/windows` on host `nashost`), driven through the
 `agent-os_windows-mcp` upstream on the Lab gateway.
 
 ## Invocation surface
@@ -15,7 +15,7 @@ async () => {
 ```
 Outside Code Mode the same server may appear as direct `mcp__windows-mcp__*` tools, via a gateway
 `execute` wrapper, or as OpenAI/Codex app tools. **Canonical upstream tool names + params are below**
-— adapt only the wrapper to whatever surface is live. Do NOT target `steamy-windows-mcp` (that's the
+— adapt only the wrapper to whatever surface is live. Do NOT target `winhost-windows-mcp` (that's the
 user's personal desktop).
 
 ## ⚠️ Destructive-action gate (critical)
@@ -35,11 +35,11 @@ docker-compose.yml restart` (the dev container bind-mounts `./bin/labby`).
 Read-only tools (`Screenshot`, `Snapshot`) are never gated.
 
 ## Preflight / readiness
-1. VM up? `ssh tootie 'docker ps --format "{{.Names}}" | grep agent-os-win11'`. If absent:
-   `ssh tootie 'cd /home/jmagar/compose/windows && docker compose up -d'` (storage is
+1. VM up? `ssh nashost 'docker ps --format "{{.Names}}" | grep agent-os-win11'`. If absent:
+   `ssh nashost 'cd /home/jmagar/compose/windows && docker compose up -d'` (storage is
    pre-provisioned → boots existing install, ~5 min cold). Windows-MCP starts via a **scheduled
    task** inside the guest — it comes up on its own after boot.
-2. MCP reachable? **Do NOT** TCP-probe `agent-os.tootie.tv:8765` from the host (false-negative — wrong
+2. MCP reachable? **Do NOT** TCP-probe `agent-os.example.internal:8765` from the host (false-negative — wrong
    interface). The real readiness check is a `Screenshot {}` call returning an image.
 
 ## Tool reference (canonical names + params)
@@ -89,7 +89,7 @@ The `\\host.lan\Data` SMB share is install-time only. Post-OOBE, transfer by eit
 - **HTTP-pull via PowerShell** (verified reachable — guest→host `True`): serve the build on a host
   (`python -m http.server`) and
   `PowerShell {command:"Invoke-WebRequest -Uri 'http://<host>:PORT/app.exe' -OutFile \"$env:USERPROFILE\\Desktop\\app.exe\"; Unblock-File \"$env:USERPROFILE\\Desktop\\app.exe\""}`.
-- **SCP** to the guest: `scp -P 2222 app.exe docker@<tootie-ip>:` (port 2222 forwards to guest sshd).
+- **SCP** to the guest: `scp -P 2222 app.exe docker@<nashost-ip>:` (port 2222 forwards to guest sshd).
 Always `Unblock-File` copied binaries (MOTW/SmartScreen), and pre-create a firewall allow rule if
 the app binds a port (first-bind raises a desktop prompt that stalls unattended runs).
 

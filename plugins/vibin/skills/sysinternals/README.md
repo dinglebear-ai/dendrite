@@ -25,7 +25,7 @@ Built on the [Sysinternals Suite](https://learn.microsoft.com/en-us/sysinternals
 ```
 [remote Linux + Claude]                       [Win11 desktop]
        │
-       │  ssh steamy-wsl  ─────────────────►  WSL Ubuntu
+       │  ssh winhost-wsl  ─────────────────►  WSL Ubuntu
        │                                           │
        │                                           │  shells out to
        │                                           ▼
@@ -39,7 +39,7 @@ Built on the [Sysinternals Suite](https://learn.microsoft.com/en-us/sysinternals
 
 ## Prerequisites
 
-- Passwordless SSH from the Claude host to your Windows-side WSL (`ssh steamy-wsl`). Same alias as the nircmd skill — they share `NIRCMD_HOST` if `SYSINTERNALS_HOST` is unset.
+- Passwordless SSH from the Claude host to your Windows-side WSL (`ssh winhost-wsl`). Same alias as the nircmd skill — they share `NIRCMD_HOST` if `SYSINTERNALS_HOST` is unset.
 - Sysinternals Suite installed at `C:\tools\sysinternals\`. One-shot install:
   ```powershell
   Invoke-WebRequest 'https://download.sysinternals.com/files/SysinternalsSuite.zip' -OutFile $env:TEMP\sys.zip

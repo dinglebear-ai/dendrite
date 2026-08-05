@@ -5,5 +5,5 @@
 - Scaffolded Plexus as a remote-device memory plugin.
 - Added dual Claude Code and Codex plugin manifests.
 - Added `operating-remote` skill, `remote-context` command, helper script, and
-  first `squirts` REMOTE.md profile.
+  first `edgehost` REMOTE.md profile.
 - Added `bootstrap-plexus` skill for explicit persistent data initialization.

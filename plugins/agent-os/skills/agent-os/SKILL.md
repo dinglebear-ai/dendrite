@@ -1,11 +1,11 @@
 ---
 name: agent-os
-description: Use when the user asks to drive or test Claude's reserved agent-os Windows 11 sandbox VM via Windows-MCP, PowerShell, screenshots, desktop apps, installers, registry, filesystem, or noVNC. Triggers include agent-os, the agent-os VM or desktop, windows sandbox, winbox, run on agent-os, screenshot agent-os, or PowerShell on agent-os. Prefer webwright for generic web verification; use agent-os only when the task depends on the Windows sandbox or desktop. Do not use for the user's personal Windows machines such as steamy or steamy-wsl.
+description: Use when the user asks to drive or test Claude's reserved agent-os Windows 11 sandbox VM via Windows-MCP, PowerShell, screenshots, desktop apps, installers, registry, filesystem, or noVNC. Triggers include agent-os, the agent-os VM or desktop, windows sandbox, winbox, run on agent-os, screenshot agent-os, or PowerShell on agent-os. Prefer webwright for generic web verification; use agent-os only when the task depends on the Windows sandbox or desktop. Do not use for the user's personal Windows machines such as winhost or winhost-wsl.
 ---
 
 # agent-os (Windows sandbox VM)
 
-A real Windows 11 desktop reserved for Claude, running on host `tootie` as the **`agent-os`** VM (container name `agent-os-win11`, image `dockur/windows`). "Winbox" is only the historical nickname; the skill name and official name are **agent-os**. Both `agent-os` and `winbox` remain trigger phrases for compatibility.
+A real Windows 11 desktop reserved for Claude, running on host `nashost` as the **`agent-os`** VM (container name `agent-os-win11`, image `dockur/windows`). "Winbox" is only the historical nickname; the skill name and official name are **agent-os**. Both `agent-os` and `winbox` remain trigger phrases for compatibility.
 
 Drive it through **Windows-MCP** ([CursorTouch/Windows-MCP](https://github.com/CursorTouch/Windows-MCP)) — an MCP server installed inside the VM that exposes native click/type/shell/clipboard/filesystem/registry tools. In Claude Code these usually surface as `mcp__plugin_agent-os_windows-mcp__*`, while older installs may show `mcp__windows-mcp__*`.
 
@@ -36,14 +36,14 @@ Sensitive values (the token) substitute in configs and reach subprocesses as env
 
 ## Why Windows-MCP, not noVNC
 
-The previous version of this skill drove the VM through `agent-browser` against `http://tootie:8006`'s noVNC canvas. That path still works as a visual fallback, but Windows-MCP is the new primary surface because:
+The previous version of this skill drove the VM through `agent-browser` against `http://nashost:8006`'s noVNC canvas. That path still works as a visual fallback, but Windows-MCP is the new primary surface because:
 
 - **Real keyboard.** `Type` reliably handles full strings including shifted symbols (`!@#$%^&*()`, `:`, `"`, etc.). The noVNC `Shift+<digit>` bug is gone.
 - **Real accessibility tree.** `Snapshot` returns interactive elements with ids — Claude can target controls by name, not by reasoning about pixels.
 - **Native shell.** `PowerShell` runs commands directly; no `Win+R`, no canvas focus juggling.
 - **Faster.** No browser, no canvas event dispatch, no per-character `press` loop.
 
-Reach for noVNC at `http://tootie:8006` only when you need to *see* the desktop visually for debugging (e.g. confirming a screenshot that Windows-MCP returned), or if Windows-MCP is unreachable.
+Reach for noVNC at `http://nashost:8006` only when you need to *see* the desktop visually for debugging (e.g. confirming a screenshot that Windows-MCP returned), or if Windows-MCP is unreachable.
 
 ## Browser/web-dev priority
 
@@ -54,7 +54,7 @@ When the task is web development, browser verification, screenshots, or page int
 3. **agent-browser** - fresh browser automation when the task does not need the agent-os desktop/session.
 4. **claude-in-chrome on agent-os** - when the workflow specifically needs Claude-in-Chrome inside the sandbox VM.
 5. **agent-os Windows-MCP** - OS-level control, desktop apps, PowerShell, installer flows, or browser tasks that require the actual desktop.
-6. **claude-in-chrome on steamy** - last choice; the user's personal desktop/session.
+6. **claude-in-chrome on winhost** - last choice; the user's personal desktop/session.
 
 Do not reach for Windows-MCP (or the agent-os desktop browser) just because it's available when `webwright` can do the web task more directly — webwright is the default for generic web work. Do use Windows-MCP / the agent-os browser when the task depends on installed Windows software, the sandbox desktop, the filesystem, registry, native dialogs, or a browser profile inside agent-os.
 
@@ -63,7 +63,7 @@ Do not reach for Windows-MCP (or the agent-os desktop browser) just because it's
 Already wired — Claude Code reaches it automatically, nothing to start per session. The link has four layers, inner → outer; understand them so you can repair whichever one breaks:
 
 1. **Server (inside the VM).** Windows-MCP (CursorTouch/Windows-MCP, a Python HTTP MCP server) runs in the guest on `localhost:8000`, bearer-token protected. It's installed and starts with the VM.
-2. **Exposure (inside the VM).** `tailscale serve` publishes it over the tailnet with HTTPS and a stable MagicDNS name — `https://agent-os.manatee-triceratops.ts.net/ → http://localhost:8000`. This is what keeps the URL stable as the VM moves hosts. Recreate with `tailscale serve --bg http://localhost:8000` if the mapping is ever lost (`tailscale serve status` to check).
+2. **Exposure (inside the VM).** `tailscale serve` publishes it over the tailnet with HTTPS and a stable MagicDNS name — `https://agent-os.example.ts.net/ → http://localhost:8000`. This is what keeps the URL stable as the VM moves hosts. Recreate with `tailscale serve --bg http://localhost:8000` if the mapping is ever lost (`tailscale serve status` to check).
 3. **Client (this plugin).** The `agent-os` plugin's `.mcp.json` registers the `windows-mcp` server from your userConfig via `${user_config.*}` substitution. Set the URL + token in plugin settings; there's nothing to edit in `~/.claude.json`. The registration:
    ```jsonc
    "windows-mcp": {
@@ -131,7 +131,7 @@ Task patterns — open an app and act on it, run PowerShell headless, drive nati
 
 When something looks wrong and you need eyeballs, the old path still works:
 
-- URL: `http://tootie:8006/vnc.html?autoconnect=1&resize=remote`
+- URL: `http://nashost:8006/vnc.html?autoconnect=1&resize=remote`
 - Drive with `agent-browser` (see git history of this file for the canvas/dispatch helpers).
 
 Treat this strictly as a visual debugger. Once you've identified the problem, fix it through Windows-MCP — don't fall back into the per-char `press` loop just because noVNC is open.
@@ -140,9 +140,9 @@ Treat this strictly as a visual debugger. Once you've identified the problem, fi
 
 These predate Windows-MCP but remain useful where the MCP path is awkward:
 
-- **`/oem` install-time drop folder.** Host path `/mnt/cache/compose/windows/oem` **on tootie** is mounted as `\\host.lan\Data` *only during initial Windows install/OOBE*. Once setup completes, the SMB share is gone. Use only for first-boot provisioning. (Note: the VM moved hosts on 2026-05-31 — the old `/home/jmagar/compose/windows/oem` path on dookie no longer exists.)
-- **RDP on `tootie:33890`.** Exposed by the `agent-os-win11` container in addition to noVNC. No agent-side RDP client installed today; install `freerdp` if a real interactive session is ever needed (now that Windows-MCP exists, the case for this is weaker).
-- **SSH to the guest on `tootie:2222`.** The container forwards host port `2222` → guest port `22`. Confirmed exposed on the running container; whether sshd is actually running and configured inside the guest depends on first-boot provisioning. If it answers, this is the cleanest scripted side-channel — no `PowerShell` round-trip through the MCP server.
+- **`/oem` install-time drop folder.** Host path `/mnt/cache/compose/windows/oem` **on nashost** is mounted as `\\host.lan\Data` *only during initial Windows install/OOBE*. Once setup completes, the SMB share is gone. Use only for first-boot provisioning. (Note: the VM moved hosts on 2026-05-31 — the old `/home/jmagar/compose/windows/oem` path on devhost no longer exists.)
+- **RDP on `nashost:33890`.** Exposed by the `agent-os-win11` container in addition to noVNC. No agent-side RDP client installed today; install `freerdp` if a real interactive session is ever needed (now that Windows-MCP exists, the case for this is weaker).
+- **SSH to the guest on `nashost:2222`.** The container forwards host port `2222` → guest port `22`. Confirmed exposed on the running container; whether sshd is actually running and configured inside the guest depends on first-boot provisioning. If it answers, this is the cleanest scripted side-channel — no `PowerShell` round-trip through the MCP server.
 
 ## Operating notes
 

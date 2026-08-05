@@ -7,17 +7,17 @@ All notable changes to this skill are recorded here. Format roughly follows [Kee
 ### Changed
 
 - Renamed the skill from `winbox` to `agent-os`; `winbox` remains a legacy trigger phrase only.
-- Added the shared web-dev priority ladder: CDP on agent-os, agent-browser, claude-in-chrome on agent-os, agent-os Windows-MCP, then claude-in-chrome on steamy.
+- Added the shared web-dev priority ladder: CDP on agent-os, agent-browser, claude-in-chrome on agent-os, agent-os Windows-MCP, then claude-in-chrome on winhost.
 - Updated docs and examples to use `agent-os` as the primary name.
-- Updated current operational host references to `tootie`; older `dookie` references below are historical migration notes.
+- Updated current operational host references to `nashost`; older `devhost` references below are historical migration notes.
 
 ## 2026-05-17 (later — naming + side-channel correction)
 
 ### Changed
 
-- **Clarified the VM's official name.** The sandbox is officially the **`agent-os`** VM (container `agent-os-win11`, image `dockur/windows`). At the time it ran on host `dookie`; it later moved to `tootie`. At the time, `winbox` remained the skill name; on 2026-05-23 the skill was renamed to `agent-os` and `winbox` became a legacy trigger phrase only.
+- **Clarified the VM's official name.** The sandbox is officially the **`agent-os`** VM (container `agent-os-win11`, image `dockur/windows`). At the time it ran on host `devhost`; it later moved to `nashost`. At the time, `winbox` remained the skill name; on 2026-05-23 the skill was renamed to `agent-os` and `winbox` became a legacy trigger phrase only.
 - Replaced all `docker ps | grep windows` / `docker inspect windows` references with the correct container name, `agent-os-win11`.
-- Promoted host-forwarded SSH (then `dookie:2222`, now `tootie:2222`) from "not verified" to "confirmed exposed by the container" in the side-channel list. Whether sshd is actually answering inside the guest depends on first-boot provisioning, but the port forward is real.
+- Promoted host-forwarded SSH (then `devhost:2222`, now `nashost:2222`) from "not verified" to "confirmed exposed by the container" in the side-channel list. Whether sshd is actually answering inside the guest depends on first-boot provisioning, but the port forward is real.
 
 ## 2026-05-17
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the WillyNet homelab report from live host checks.
+"""Generate the HomeLAN homelab report from live host checks.
 
 The script intentionally uses only stdlib Python plus non-interactive SSH so it
 can run outside an agent session. It avoids secrets and records collection
@@ -71,45 +71,45 @@ class HostSnapshot:
 
 
 HOSTS = [
-    HostSpec("tootie", "tootie", "tootie", "Primary NAS / app server", "Unraid", ssh_port=29229, zfs=True, unraid=True),
-    HostSpec("dookie", "dookie", "dookie", "Dev / AI / MCP hub", "Linux KVM guest on tootie", zfs=False),
-    HostSpec("squirts", "squirts", "squirts", "Edge services", "Ubuntu", zfs=True),
-    HostSpec("shart", "shart", "shart", "ZFS backup target", "Unraid", zfs=True, unraid=True),
-    HostSpec("steamy", "steamy / steamy-wsl", "steamy-wsl", "GPU workloads", "Windows 11 + WSL2"),
-    HostSpec("vivobook", "vivobook / vivobook-wsl", "vivobook-wsl", "Mobile dev laptop", "Windows 11 + WSL2"),
+    HostSpec("nashost", "nashost", "nashost", "Primary NAS / app server", "Unraid", ssh_port=29229, zfs=True, unraid=True),
+    HostSpec("devhost", "devhost", "devhost", "Dev / AI / MCP hub", "Linux KVM guest on nashost", zfs=False),
+    HostSpec("edgehost", "edgehost", "edgehost", "Edge services", "Ubuntu", zfs=True),
+    HostSpec("backuphost", "backuphost", "backuphost", "ZFS backup target", "Unraid", zfs=True, unraid=True),
+    HostSpec("winhost", "winhost / winhost-wsl", "winhost-wsl", "GPU workloads", "Windows 11 + WSL2"),
+    HostSpec("laptophost", "laptophost / laptophost-wsl", "laptophost-wsl", "Mobile dev laptop", "Windows 11 + WSL2"),
 ]
 
 SERVICE_HINTS = {
-    "tootie": [
+    "nashost": [
         "plex", "sonarr", "radarr", "bazarr", "prowlarr", "qbittorrent", "sabnzbd",
         "tautulli", "immich", "audiobookshelf", "kavita", "navidrome", "minio",
         "loggifly", "notifiarr", "apprise-api", "olivetin", "zipline", "agent-os-win11",
     ],
-    "dookie": [
+    "devhost": [
         "axon", "axon-qdrant", "axon-tei", "axon-chrome", "syslog-mcp",
         "arcane-mcp", "unraid-mcp", "gotify-mcp", "unifi-mcp", "tailscale-mcp",
         "apprise-mcp", "labby",
     ],
-    "squirts": [
+    "edgehost": [
         "swag", "authelia", "adguard", "gotify", "vaultwarden", "paperless",
         "linkding", "karakeep", "bytestash", "memos", "radicale", "searxng",
         "dockge", "dozzle", "rustdesk", "multi-scrobbler", "maloja",
     ],
-    "shart": ["arcane-agent", "portainer_agent", "dockersocket"],
-    "steamy": ["crawl4r-qdrant", "arcane-agent"],
-    "vivobook": ["arcane-agent"],
+    "backuphost": ["arcane-agent", "portainer_agent", "dockersocket"],
+    "winhost": ["crawl4r-qdrant", "arcane-agent"],
+    "laptophost": ["arcane-agent"],
 }
 
 MCP_HINTS = [
-    ("syslog-mcp", "dookie", "1514 TCP/UDP, 3100 HTTP"),
-    ("arcane-mcp", "dookie", "44332"),
-    ("unraid-mcp", "dookie", "40010"),
-    ("gotify-mcp", "dookie", "40020"),
-    ("unifi-mcp", "dookie", "40030"),
-    ("tailscale-mcp", "dookie", "40040"),
-    ("apprise-mcp", "dookie", "40050"),
-    ("example-mcp", "dookie", "40060"),
-    ("swag-mcp", "squirts", "8012 localhost binding"),
+    ("syslog-mcp", "devhost", "1514 TCP/UDP, 3100 HTTP"),
+    ("arcane-mcp", "devhost", "44332"),
+    ("unraid-mcp", "devhost", "40010"),
+    ("gotify-mcp", "devhost", "40020"),
+    ("unifi-mcp", "devhost", "40030"),
+    ("tailscale-mcp", "devhost", "40040"),
+    ("apprise-mcp", "devhost", "40050"),
+    ("example-mcp", "devhost", "40060"),
+    ("swag-mcp", "edgehost", "8012 localhost binding"),
 ]
 
 
@@ -208,7 +208,7 @@ def collect_host(spec: HostSpec) -> HostSnapshot:
         df = ssh_command(spec, "df -h /mnt/user /mnt/cache 2>/dev/null || df -h /mnt/user 2>/dev/null || true")
         if df.ok and df.stdout:
             snap.df = df.stdout.splitlines()
-        if spec.key == "tootie":
+        if spec.key == "nashost":
             parity = ssh_command(
                 spec,
                 "mdcmd status 2>/dev/null | egrep 'mdNumDisabled|diskName\\.0|rdevName\\.0|diskSize\\.0' || true",
@@ -217,7 +217,7 @@ def collect_host(spec: HostSpec) -> HostSnapshot:
             lsblk = ssh_command(spec, "lsblk -d -o NAME,SIZE,MODEL,TYPE 2>/dev/null | sed -n '1,40p' || true")
             snap.extras["lsblk"] = lsblk.stdout if lsblk.ok else ""
 
-    if spec.key == "squirts":
+    if spec.key == "edgehost":
         swag = ssh_command(
             spec,
             "d=/mnt/appdata/swag/nginx/proxy-confs; "
@@ -235,7 +235,7 @@ def collect_host(spec: HostSpec) -> HostSnapshot:
 def lan_ip(snapshot: HostSnapshot) -> str:
     for line in snapshot.ipv4:
         for token in line.split():
-            if token.startswith("10.1.0."):
+            if token.startswith("192.0.2."):
                 return token.split("/")[0]
     return ""
 
@@ -332,7 +332,7 @@ def snapshot_to_dict(snapshot: HostSnapshot) -> dict[str, object]:
 
 
 def report_payload(snapshots: dict[str, HostSnapshot], generated_at: dt.datetime) -> dict[str, object]:
-    swag_configs = snapshots["squirts"].extras.get("swag_configs", "")
+    swag_configs = snapshots["edgehost"].extras.get("swag_configs", "")
     swag_names = [line for line in swag_configs.splitlines() if line.strip()]
     total_containers = sum(len(s.containers) for s in snapshots.values())
 
@@ -373,46 +373,46 @@ def report_payload(snapshots: dict[str, HostSnapshot], generated_at: dt.datetime
         "generated_at_display": generated_at.strftime("%Y-%m-%d %H:%M:%S %Z"),
         "generator": "skills/homelab-map/scripts/generate-homelab-report.py",
         "collection_method": "non-interactive SSH, Docker CLI, ZFS CLI, Unraid shell commands, and SWAG config files",
-        "network": "WillyNet / 10.1.0.0/24 plus Tailscale mesh",
-        "primary_public_domain": "*.tootie.tv via SWAG on squirts",
+        "network": "HomeLAN / 192.0.2.0/24 plus Tailscale mesh",
+        "primary_public_domain": "*.nashost.tv via SWAG on edgehost",
         "overview": {
             "total_nodes": len(snapshots),
             "total_containers_running": total_containers,
             "active_swag_proxy_configs": len(swag_names) if swag_names else None,
         },
-        "nodes": [snapshot_to_dict(snapshots[key]) for key in ["tootie", "dookie", "squirts", "shart", "steamy", "vivobook"]],
+        "nodes": [snapshot_to_dict(snapshots[key]) for key in ["nashost", "devhost", "edgehost", "backuphost", "winhost", "laptophost"]],
         "service_summary": service_summary,
         "mcp_servers": mcp_servers,
         "swag_proxy_configs": swag_names,
         "collection_errors": collection_errors,
         "known_follow_up_checks": [
-            "If tootie parity excerpt shows diskName.0= or diskSize.0=0, parity is not assigned.",
+            "If nashost parity excerpt shows diskName.0= or diskSize.0=0, parity is not assigned.",
             "If Arcane marks a host offline but SSH works, reconcile Arcane environment registration.",
             "If an expected service appears under missing, check whether it moved, stopped, or changed container name.",
             "Confirm backup freshness from Sanoid/Syncoid logs; this report does not prove backup success.",
         ],
         "key_urls": [
-            {"service": "Unraid Web UI", "url": "http://10.1.0.2:6969"},
-            {"service": "Syslog MCP", "url": "http://dookie:3100"},
-            {"service": "Arcane UI", "url": "https://arcane.tootie.tv"},
-            {"service": "Arcane MCP", "url": "http://dookie:44332"},
-            {"service": "Unraid MCP", "url": "http://dookie:40010"},
-            {"service": "Plex", "url": "http://10.1.0.2:32400"},
-            {"service": "Windows sandbox noVNC", "url": "http://tootie:8006"},
-            {"service": "Windows sandbox RDP", "url": "tootie:33890"},
+            {"service": "Unraid Web UI", "url": "http://192.0.2.2:6969"},
+            {"service": "Syslog MCP", "url": "http://devhost:3100"},
+            {"service": "Arcane UI", "url": "https://arcane.example.internal"},
+            {"service": "Arcane MCP", "url": "http://devhost:44332"},
+            {"service": "Unraid MCP", "url": "http://devhost:40010"},
+            {"service": "Plex", "url": "http://192.0.2.2:32400"},
+            {"service": "Windows sandbox noVNC", "url": "http://nashost:8006"},
+            {"service": "Windows sandbox RDP", "url": "nashost:33890"},
         ],
     }
 
 
 def render_report(snapshots: dict[str, HostSnapshot], generated_at: dt.datetime) -> str:
-    swag_configs = snapshots["squirts"].extras.get("swag_configs", "")
+    swag_configs = snapshots["edgehost"].extras.get("swag_configs", "")
     swag_names = [line for line in swag_configs.splitlines() if line.strip()]
     total_containers = sum(len(s.containers) for s in snapshots.values())
-    tootie_df = "\n".join(snapshots["tootie"].df)
-    tootie_parity = snapshots["tootie"].extras.get("parity", "").strip()
+    tootie_df = "\n".join(snapshots["nashost"].df)
+    tootie_parity = snapshots["nashost"].extras.get("parity", "").strip()
 
     node_rows = []
-    for key in ["tootie", "dookie", "squirts", "shart", "steamy", "vivobook"]:
+    for key in ["nashost", "devhost", "edgehost", "backuphost", "winhost", "laptophost"]:
         snap = snapshots[key]
         node_rows.append([
             snap.spec.label,
@@ -444,7 +444,7 @@ def render_report(snapshots: dict[str, HostSnapshot], generated_at: dt.datetime)
         for error in snap.errors:
             collection_errors.append(f"{snap.spec.label}: {error}")
 
-    return f"""# WillyNet Homelab - Infrastructure Documentation
+    return f"""# HomeLAN Homelab - Infrastructure Documentation
 
 > Generated: {generated_at.strftime('%Y-%m-%d %H:%M:%S %Z')}
 > Generator: `skills/homelab-map/scripts/generate-homelab-report.py`
@@ -458,8 +458,8 @@ def render_report(snapshots: dict[str, HostSnapshot], generated_at: dt.datetime)
     ["Total nodes", str(len(snapshots))],
     ["Total containers running", str(total_containers)],
     ["Active SWAG proxy configs", str(len(swag_names)) if swag_names else "not collected"],
-    ["Network", "WillyNet / 10.1.0.0/24 plus Tailscale mesh"],
-    ["Primary public domain", "*.tootie.tv via SWAG on squirts"],
+    ["Network", "HomeLAN / 192.0.2.0/24 plus Tailscale mesh"],
+    ["Primary public domain", "*.nashost.tv via SWAG on edgehost"],
 ])}
 
 ## Collection Notes
@@ -492,7 +492,7 @@ Observed means the expected container name was found in the live `docker ps` out
 
 ## Storage Architecture
 
-### tootie - Unraid Array and Cache
+### nashost - Unraid Array and Cache
 
 ```text
 {tootie_df or 'not collected'}
@@ -507,26 +507,26 @@ Parity status excerpt:
 Block devices excerpt:
 
 ```text
-{snapshots["tootie"].extras.get("lsblk", "not collected")}
+{snapshots["nashost"].extras.get("lsblk", "not collected")}
 ```
 
 ### ZFS Pools
 
-#### tootie
+#### nashost
 
-{format_zpool(snapshots["tootie"])}
+{format_zpool(snapshots["nashost"])}
 
-#### squirts
+#### edgehost
 
-{format_zpool(snapshots["squirts"])}
+{format_zpool(snapshots["edgehost"])}
 
-#### shart
+#### backuphost
 
-{format_zpool(snapshots["shart"])}
+{format_zpool(snapshots["backuphost"])}
 
 ## Reverse Proxy & Public Services
 
-SWAG is expected on `squirts`. Active proxy config count is generated from `/mnt/appdata/swag/nginx/proxy-confs`.
+SWAG is expected on `edgehost`. Active proxy config count is generated from `/mnt/appdata/swag/nginx/proxy-confs`.
 
 {table(["Metric", "Value"], [
     ["Active config files", str(len(swag_names)) if swag_names else "not collected"],
@@ -535,16 +535,16 @@ SWAG is expected on `squirts`. Active proxy config count is generated from `/mnt
 
 ## AI / RAG / Agent Stack
 
-### Axon on dookie
+### Axon on devhost
 
 {format_container_table(HostSnapshot(
-    spec=snapshots["dookie"].spec,
-    containers=[c for c in snapshots["dookie"].containers if c["name"].startswith("axon") or c["name"] in {"labby", "agentmemory-iii-engine-1"}],
+    spec=snapshots["devhost"].spec,
+    containers=[c for c in snapshots["devhost"].containers if c["name"].startswith("axon") or c["name"] in {"labby", "agentmemory-iii-engine-1"}],
 ))}
 
-### GPU Inference on steamy
+### GPU Inference on winhost
 
-{format_container_table(snapshots["steamy"])}
+{format_container_table(snapshots["winhost"])}
 
 ## MCP Server Ecosystem
 
@@ -552,33 +552,33 @@ SWAG is expected on `squirts`. Active proxy config count is generated from `/mnt
 
 ## Backup Strategy
 
-- `shart` is the ZFS receive target.
+- `backuphost` is the ZFS receive target.
 - Backup job freshness is not inferred by this script. Check Sanoid/Syncoid logs or Gotify notifications before relying on current backup health.
-- `shart` currently reports these ZFS pools:
+- `backuphost` currently reports these ZFS pools:
 
-{format_zpool(snapshots["shart"])}
+{format_zpool(snapshots["backuphost"])}
 
 ## Monitoring & Notifications
 
-- `syslog-mcp` is expected on dookie at ports 1514 and 3100.
-- Gotify is expected on squirts.
+- `syslog-mcp` is expected on devhost at ports 1514 and 3100.
+- Gotify is expected on edgehost.
 - This generator does not query application APIs or notification contents; it records container and host state only.
 
 ## Virtual Machines
 
-- `dookie` is treated as the active Linux KVM guest hosted on tootie.
-- VM inventory is not inferred by this script yet. Add `virsh list --all` collection on tootie if VM state needs to be authoritative here.
+- `devhost` is treated as the active Linux KVM guest hosted on nashost.
+- VM inventory is not inferred by this script yet. Add `virsh list --all` collection on nashost if VM state needs to be authoritative here.
 
 ## Security Posture
 
-- Public entrypoint: SWAG on squirts.
+- Public entrypoint: SWAG on edgehost.
 - Inter-node access: Tailscale and LAN SSH aliases.
 - Vulnerability scan data is not generated here. Run Arcane/Trivy before acting on CVE status.
-- tootie parity status is collected above; an empty parity slot remains a critical risk when observed.
+- nashost parity status is collected above; an empty parity slot remains a critical risk when observed.
 
 ## Known Issues & Follow-Up Checks
 
-- If tootie parity excerpt shows `diskName.0=` or `diskSize.0=0`, parity is not assigned.
+- If nashost parity excerpt shows `diskName.0=` or `diskSize.0=0`, parity is not assigned.
 - If Arcane marks a host offline but SSH works, reconcile Arcane environment registration.
 - If an expected service appears under "not observed", check whether it moved, stopped, or changed container name.
 - Confirm backup freshness from Sanoid/Syncoid logs; this report does not prove backup success.
@@ -586,14 +586,14 @@ SWAG is expected on `squirts`. Active proxy config count is generated from `/mnt
 ## Appendix: Key URLs
 
 {table(["Service", "URL"], [
-    ["Unraid Web UI", "http://10.1.0.2:6969"],
-    ["Syslog MCP", "http://dookie:3100"],
-    ["Arcane UI", "https://arcane.tootie.tv"],
-    ["Arcane MCP", "http://dookie:44332"],
-    ["Unraid MCP", "http://dookie:40010"],
-    ["Plex", "http://10.1.0.2:32400"],
-    ["Windows sandbox noVNC", "http://tootie:8006"],
-    ["Windows sandbox RDP", "tootie:33890"],
+    ["Unraid Web UI", "http://192.0.2.2:6969"],
+    ["Syslog MCP", "http://devhost:3100"],
+    ["Arcane UI", "https://arcane.example.internal"],
+    ["Arcane MCP", "http://devhost:44332"],
+    ["Unraid MCP", "http://devhost:40010"],
+    ["Plex", "http://192.0.2.2:32400"],
+    ["Windows sandbox noVNC", "http://nashost:8006"],
+    ["Windows sandbox RDP", "nashost:33890"],
 ])}
 """
 
@@ -615,7 +615,7 @@ def render_html_viewer(payload: dict[str, object]) -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WillyNet Homelab</title>
+  <title>HomeLAN Homelab</title>
   <style>
     :root {{
       color-scheme: light dark;
@@ -706,7 +706,7 @@ def render_html_viewer(payload: dict[str, object]) -> str:
 </head>
 <body>
   <header>
-    <h1>WillyNet Homelab</h1>
+    <h1>HomeLAN Homelab</h1>
     <div class="meta">Generated <span id="generated"></span> from <code>homelab.json</code></div>
   </header>
   <main>
@@ -894,7 +894,7 @@ def maybe_serve_viewer(directory: Path, bind_host: str, local_port: int, tailsca
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate the WillyNet homelab report artifacts.")
+    parser = argparse.ArgumentParser(description="Generate the HomeLAN homelab report artifacts.")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT, help=f"Output file. Default: {DEFAULT_OUTPUT}")
     parser.add_argument("--json-output", type=Path, default=DEFAULT_JSON_OUTPUT, help=f"JSON output file. Default: {DEFAULT_JSON_OUTPUT}")
     parser.add_argument("--html-output", type=Path, default=DEFAULT_HTML_OUTPUT, help=f"HTML viewer output file. Default: {DEFAULT_HTML_OUTPUT}")

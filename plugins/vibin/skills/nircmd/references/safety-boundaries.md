@@ -67,7 +67,7 @@ Even if asked, confirm the *exact target and timing* and require unambiguous use
 | `initshutdown` | Scheduled shutdown of local or remote machine |
 | `abortshutdown` | Only safe if user explicitly asked to cancel a pending shutdown |
 
-For Tier 3, the user instruction must contain BOTH (a) the explicit action ("reboot my computer", not "restart things") AND (b) the target ("my Win11 box", "steamy-wsl"). If either is fuzzy, ask before acting.
+For Tier 3, the user instruction must contain BOTH (a) the explicit action ("reboot my computer", not "restart things") AND (b) the target ("my Win11 box", "winhost-wsl"). If either is fuzzy, ask before acting.
 
 ## When in doubt
 
