@@ -10,7 +10,7 @@ Talk to a real, running Chrome instance on a remote machine via CDP (Chrome DevT
 ## Defaults (override via env vars)
 
 ```bash
-SSH_TARGET="${CHROME_HOST:-steamy-wsl}"
+SSH_TARGET="${CHROME_HOST:-winhost-wsl}"
 CHROME_PORT="${CHROME_PORT:-9222}"
 POWERSHELL="${CHROME_POWERSHELL:-/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe}"
 REMOTE_DIR="${CHROME_REMOTE_DIR:-/mnt/c/screens}"
@@ -32,7 +32,7 @@ ssh "$SSH_TARGET" "$POWERSHELL -NoProfile -Command \"try { Invoke-RestMethod -Ur
 
 If you see `CDP_DOWN`, keep the scope narrow:
 
-- For explicit "my Chrome", "my tabs", cookies, or steamy personal-session tasks, ask the user to start the debug Chrome and open the target page in that window.
+- For explicit "my Chrome", "my tabs", cookies, or winhost personal-session tasks, ask the user to start the debug Chrome and open the target page in that window.
 - For generic web automation or sandbox browser work, switch to the appropriate skill instead of stretching this one.
 
 Everything below assumes the selected CDP endpoint is live.

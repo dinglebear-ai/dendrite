@@ -27,7 +27,7 @@ Built on [NirSoft NirCmd](https://www.nirsoft.net/utils/nircmd.html) (~120KB bin
 ```
 [remote Linux + Claude]                       [Win11 desktop]
        │
-       │  ssh steamy-wsl  ─────────────────►  WSL Ubuntu
+       │  ssh winhost-wsl  ─────────────────►  WSL Ubuntu
        │                                           │
        │                                           │  shells out to
        │                                           ▼
@@ -42,7 +42,7 @@ Built on [NirSoft NirCmd](https://www.nirsoft.net/utils/nircmd.html) (~120KB bin
 
 ## Prerequisites
 
-- Passwordless SSH from the Claude host to your Windows-side WSL (`ssh steamy-wsl`).
+- Passwordless SSH from the Claude host to your Windows-side WSL (`ssh winhost-wsl`).
 - NirCmd installed on Windows at `C:\tools\nircmd\nircmd.exe`. To install:
   ```powershell
   Invoke-WebRequest 'https://www.nirsoft.net/utils/nircmd-x64.zip' -OutFile $env:TEMP\nircmd.zip

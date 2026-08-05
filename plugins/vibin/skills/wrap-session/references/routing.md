@@ -15,7 +15,7 @@ Classify from observed actions, not named hosts or keywords alone.
 - Editing a Compose file in a repository is code or configuration work. Applying it to a live host and verifying containers is maintenance too.
 - A repository-wide standards migration with no live deployment is code.
 - A generated inventory refresh with no implementation change is maintenance when it records current infrastructure state.
-- Mentioning TOOTIE, DOOKIE, Squirts, or another host is not enough. Classify by work performed.
+- Mentioning NASHOST, DEVHOST, Edgehost, or another host is not enough. Classify by work performed.
 
 ## Paired artifacts
 

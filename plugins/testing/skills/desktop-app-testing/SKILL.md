@@ -1,6 +1,6 @@
 ---
 name: desktop-app-testing
-description: 'Use when the user wants to live-test a built Windows desktop application (.exe) end-to-end inside the agent-os Windows 11 VM and get a works/doesn''t-work + UI/UX report — launching the real binary and driving it, not writing test code. Triggers: "test my Windows app", "QA this .exe", "run my desktop build on agent-os and tell me what breaks", "click through the app", "review the desktop app''s UX", "does my exe work", "test the built binary in the Windows VM". Gets the .exe into the VM, launches it, enumerates controls from the UI Automation tree, drives every feature (click/type by element), watches for crashes/hangs/error dialogs, captures screenshots + control-tree dumps, and emits a structured report. Drives the agent-os VM via the Windows-MCP gateway. Sibling of web-app-testing and android-app-testing (shared report format). Does NOT fire for: building/coding a desktop app, the user''s personal Windows on steamy (use nircmd), or general agent-os VM driving (use agent-os).'
+description: 'Use when the user wants to live-test a built Windows desktop application (.exe) end-to-end inside the agent-os Windows 11 VM and get a works/doesn''t-work + UI/UX report — launching the real binary and driving it, not writing test code. Triggers: "test my Windows app", "QA this .exe", "run my desktop build on agent-os and tell me what breaks", "click through the app", "review the desktop app''s UX", "does my exe work", "test the built binary in the Windows VM". Gets the .exe into the VM, launches it, enumerates controls from the UI Automation tree, drives every feature (click/type by element), watches for crashes/hangs/error dialogs, captures screenshots + control-tree dumps, and emits a structured report. Drives the agent-os VM via the Windows-MCP gateway. Sibling of web-app-testing and android-app-testing (shared report format). Does NOT fire for: building/coding a desktop app, the user''s personal Windows on winhost (use nircmd), or general agent-os VM driving (use agent-os).'
 ---
 
 # desktop-app-testing
@@ -10,7 +10,7 @@ the build in, launch it, drive every feature, watch for crashes/hangs/error dial
 and emit a structured works/doesn't-work report. Companion to `web-app-testing` and
 `android-app-testing` — all three share one report format (`references/report-format.md`).
 
-Drives the **agent-os** VM (container `agent-os-win11`, `dockur/windows` on `tootie`) through the
+Drives the **agent-os** VM (container `agent-os-win11`, `dockur/windows` on `nashost`) through the
 `agent-os_windows-mcp` upstream on the Lab gateway. Builds on the `agent-os` skill (which is the
 general VM driver) but adds the testing harness: build transfer, feature enumeration, failure
 taxonomy, evidence pipeline, and the report.
@@ -18,7 +18,7 @@ taxonomy, evidence pipeline, and the report.
 ## When to use vs. neighbors
 - **This skill** — a *test pass + report* over a desktop app's features and UX.
 - `agent-os` — general driving of the Windows VM (install software, run PowerShell, one-off tasks).
-- `nircmd` — the user's PERSONAL Windows on steamy, not the sandbox. Never target steamy here.
+- `nircmd` — the user's PERSONAL Windows on winhost, not the sandbox. Never target winhost here.
 
 ## ⚠️ Destructive-action gate — read first
 Every drive action (`PowerShell`, `Click`, `Type`, `App`, `Process`, …) is `destructive=true` and
@@ -37,15 +37,15 @@ a GUI there crashes with `os error 1459` and screenshots come back blank), and i
 in a browser without rebuilding. Full recipe: `references/ssh-fallback-capture.md`.
 
 ## Prerequisites
-- The **agent-os VM running** on tootie (the skill's preflight starts it if absent).
+- The **agent-os VM running** on nashost (the skill's preflight starts it if absent).
 - The Lab gateway reachable with an execute-capable scope (for drive actions).
 - The built `.exe`/installer on this host (or a URL the guest can fetch).
 
 ## Workflow
 
 1. **Preflight.**
-   - VM up? `ssh tootie 'docker ps --format "{{.Names}}" | grep agent-os-win11'`. If absent:
-     `ssh tootie 'cd /home/jmagar/compose/windows && docker compose up -d'` (boots existing install,
+   - VM up? `ssh nashost 'docker ps --format "{{.Names}}" | grep agent-os-win11'`. If absent:
+     `ssh nashost 'cd /home/jmagar/compose/windows && docker compose up -d'` (boots existing install,
      ~5 min cold; Windows-MCP auto-starts via an in-guest scheduled task).
    - MCP ready? Call `Screenshot {}` — an image back means ready. (Do NOT TCP-probe :8765, false
      negative.)
@@ -53,7 +53,7 @@ in a browser without rebuilding. Full recipe: `references/ssh-fallback-capture.m
      gate is open; if `confirmation_required`, fix the gateway first.
    - Create run dir `~/.agents/docs/sessions/<app>-desktop-test/run_<id>/`.
 2. **Transfer the build** into the VM (see `references/windows-mcp-calls.md`): HTTP-pull via
-   PowerShell `Invoke-WebRequest` (verified reachable) or SCP to the agent-os guest (`scp ... agent-os:` / host forward `tootie:2222`). `Unblock-File` the
+   PowerShell `Invoke-WebRequest` (verified reachable) or SCP to the agent-os guest (`scp ... agent-os:` / host forward `nashost:2222`). `Unblock-File` the
    copied binary; pre-create a firewall allow rule if it binds a port.
 3. **Launch.** Prefer `PowerShell {command:"Start-Process 'C:\\...\\app.exe'; ...return PID"}`
    (Start-menu `App {name}` is unreliable for arbitrary binaries). Confirm a PID came back.

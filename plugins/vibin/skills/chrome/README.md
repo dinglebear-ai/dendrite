@@ -18,4 +18,4 @@ The user asks about "my chrome", "my tabs", a tab they have open, etc. — anyth
 - `scripts/cdp-shot.ps1` — tab screenshot
 
 ## Setup
-Remote Chrome needs `chrome.exe --remote-debugging-port=9222 --user-data-dir=C:\\chrome-debug`. On the default host (`steamy-wsl`) there's a "Chrome (debug)" desktop shortcut wired up for this.
+Remote Chrome needs `chrome.exe --remote-debugging-port=9222 --user-data-dir=C:\\chrome-debug`. On the default host (`winhost-wsl`) there's a "Chrome (debug)" desktop shortcut wired up for this.

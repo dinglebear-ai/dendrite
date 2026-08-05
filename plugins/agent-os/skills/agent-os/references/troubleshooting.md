@@ -13,5 +13,5 @@ Work top to bottom — most failures are "the VM/MCP isn't reachable," and the c
 | GUI app launches but synthetic input/focus unreliable (esp. GPUI windows) | `Start-Process` / non-interactive SSH not desktop-attached | Drive through Windows-MCP `PowerShell` with `WScript.Shell` `Run` + `AppActivate` + `SendKeys` (see "Driving native / GPUI desktop apps" in `references/recipes.md`). |
 | Downloaded `.exe`/`.ps1` blocked, SmartScreen/publisher prompt | Mark-of-the-Web on copied files | `Unblock-File` the file; set `SEE_MASK_NOZONECHECKS=1` before launching child exes. |
 | First run of an app raises a Windows Firewall prompt | new listener needs an allow rule | Pre-create a firewall rule, or accept once from the desktop (via noVNC) before expecting unattended runs. |
-| Need to *see* the desktop to debug | — | noVNC at `http://tootie:8006/vnc.html?autoconnect=1&resize=remote` (visual only — fix through Windows-MCP). |
+| Need to *see* the desktop to debug | — | noVNC at `http://nashost:8006/vnc.html?autoconnect=1&resize=remote` (visual only — fix through Windows-MCP). |
 | Installed software/files vanished after reboot | something written outside `/storage` | Only `/storage` (the VM disk) persists; the container is reachable again after `docker compose up -d`. Re-install if it landed on an ephemeral layer. |

@@ -489,7 +489,7 @@
         ],
         "defaultPrompt": [
           "Use Plexus to inspect example-host before changing it.",
-          "Load live remote context for dookie.",
+          "Load live remote context for devhost.",
           "Summarize recent host activity."
         ],
         "brandColor": "#2563EB"
@@ -1041,7 +1041,7 @@
         "defaultPrompt": [
           "Use Unraid to check array and disk health.",
           "List Docker containers on the Unraid box.",
-          "Show share usage on tootie."
+          "Show share usage on nashost."
         ],
         "brandColor": "#F15A2C"
       }
@@ -2190,7 +2190,7 @@
     },
     {
       "name": "aurora",
-      "description": "Aurora design system \u2014 dark-first navy/cyan/rose/Axon-orange operator and agent control-plane UI across web (the @aurora shadcn registry, var(--aurora-*) plus --axon-* tokens), Android (the tv.tootie.aurora Jetpack Compose library), and CLI/editor themes.",
+      "description": "Aurora design system \u2014 dark-first navy/cyan/rose/Axon-orange operator and agent control-plane UI across web (the @aurora shadcn registry, var(--aurora-*) plus --axon-* tokens), Android (the tv.nashost.aurora Jetpack Compose library), and CLI/editor themes.",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/jmagar/aurora.git",

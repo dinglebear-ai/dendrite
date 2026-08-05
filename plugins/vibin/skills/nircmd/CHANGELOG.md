@@ -19,7 +19,7 @@ All notable changes to the `nircmd` skill are recorded here. Format roughly foll
 
 ## [0.1.0] - 2026-05-17
 - Initial release.
-- Installed NirCmd x64 to `C:\tools\nircmd\nircmd.exe` on the default host (`steamy-wsl`).
+- Installed NirCmd x64 to `C:\tools\nircmd\nircmd.exe` on the default host (`winhost-wsl`).
 - SKILL.md with three-tier safety model (auto / ask / refuse), charset gotcha documented, defaults block at top.
 - Scripts: `clip.sh` (UTF-8-safe text/file push), `clip-grab.sh` (text+image), `win-shot.sh` (activate+capture by title), `lock.sh`.
 - References: full categorized command reference (115 commands), clipboard patterns, window control patterns, safety boundaries.

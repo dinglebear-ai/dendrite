@@ -1,6 +1,6 @@
 ---
 name: homelab-map
-description: Load or refresh the authoritative personal homelab context layer whenever a prompt concerns named hosts, service placement, topology, storage, networking, proxies, MCP services, backups, or current infrastructure drift. Use for TOOTIE, DOOKIE, Squirts, Shart, Steamy, Vivobook, WillyNet, "where does this service run", "map the homelab", "refresh inventory", or "check declared versus observed state". Prefer version-controlled configuration for desired state, the ~/docs generators for observed domain inventories, and ~/.homelab for the compiled overview.
+description: Load or refresh the authoritative personal homelab context layer whenever a prompt concerns named hosts, service placement, topology, storage, networking, proxies, MCP services, backups, or current infrastructure drift. Use for NASHOST, DEVHOST, Edgehost, Backuphost, Winhost, Laptophost, HomeLAN, "where does this service run", "map the homelab", "refresh inventory", or "check declared versus observed state". Prefer version-controlled configuration for desired state, the ~/docs generators for observed domain inventories, and ~/.homelab for the compiled overview.
 allowed-tools: Read, Bash
 ---
 
@@ -10,12 +10,12 @@ Use the homelab knowledge system as a layered context source, not a static list 
 
 ## Stable host roles
 
-- **TOOTIE**: primary Unraid storage and application host; also owns the DOOKIE VM.
-- **DOOKIE**: development, AI, MCP, indexing, and automation hub.
-- **Squirts**: edge and utility services, including SWAG and authentication-adjacent services.
-- **Shart**: backup and replication target.
-- **Steamy / steamy-wsl**: Windows and WSL GPU workstation surfaces.
-- **Vivobook / vivobook-wsl**: mobile development workstation surfaces.
+- **NASHOST**: primary Unraid storage and application host; also owns the DEVHOST VM.
+- **DEVHOST**: development, AI, MCP, indexing, and automation hub.
+- **Edgehost**: edge and utility services, including SWAG and authentication-adjacent services.
+- **Backuphost**: backup and replication target.
+- **Winhost / winhost-wsl**: Windows and WSL GPU workstation surfaces.
+- **Laptophost / laptophost-wsl**: mobile development workstation surfaces.
 
 Treat exact versions, counts, IPs, ports, health, and service placement as point-in-time facts that require current evidence.
 
@@ -78,7 +78,7 @@ Report the two conflicting sources, their observation times, and which source ow
 
 ## Operating rules
 
-- `*.tootie.tv` identifies a SWAG route, not necessarily a service running on TOOTIE.
+- `*.nashost.tv` identifies a SWAG route, not necessarily a service running on NASHOST.
 - Use host names exactly as configured.
 - Public SSH is not assumed; prefer the configured Tailscale and LABBY paths.
 - Do not expose secrets from generated JSON, environment files, or live commands.

@@ -7,11 +7,11 @@ works/doesn't-work + UI/UX report. One of three sibling testing skills (`web-app
 ## When to invoke
 - "test my Windows app", "QA this .exe", "run my desktop build on agent-os and tell me what breaks",
   "click through the app", "review the desktop app's UX", "does my exe work".
-- NOT for building/coding a desktop app, the user's personal Windows on steamy (`nircmd`), or
+- NOT for building/coding a desktop app, the user's personal Windows on winhost (`nircmd`), or
   general agent-os VM driving (`agent-os`).
 
 ## How it works
-Drives the agent-os VM (`agent-os-win11`, dockur/windows on tootie) through the
+Drives the agent-os VM (`agent-os-win11`, dockur/windows on nashost) through the
 `agent-os_windows-mcp` gateway: transfer the build in → launch (`PowerShell Start-Process`) →
 enumerate controls from the UI Automation tree (`Snapshot`) → drive by element label
 (`Click`/`Type`) → detect crashes/hangs/error dialogs (`Process`, `Get-WinEvent`, `WaitFor`) →
@@ -24,7 +24,7 @@ capture screenshots + tree dumps → structured report.
 - `references/report-format.md` — shared cross-platform report spec, run-dir layout, verdict words.
 
 ## Prerequisites
-- agent-os VM running on tootie (preflight starts it if absent; ~5 min cold boot).
+- agent-os VM running on nashost (preflight starts it if absent; ~5 min cold boot).
 - Lab gateway reachable with an execute-capable scope (`lab`/`lab:admin`) for drive actions.
 - The `.exe`/installer on this host or a URL the guest can fetch.
 
@@ -37,4 +37,4 @@ work, so a UI/UX review is possible even before the gate is lifted.
 ## Companion skills
 - `agent-os` — general agent-os VM driver (this skill builds on it for testing).
 - `web-app-testing`, `android-app-testing` — same testing job, other targets, same report.
-- `nircmd` — the user's personal Windows on steamy (different target; never used here).
+- `nircmd` — the user's personal Windows on winhost (different target; never used here).

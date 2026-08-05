@@ -9,7 +9,7 @@ Push text to / pull text from Jacob's Windows clipboard over SSH.
 - Hardened against shell injection in the NirCmd branch (any `$`, backtick, quote, or backslash forces the temp-file path)
 
 ## When to invoke
-"copy this to my clipboard", "push X to my clipboard", "what's on my clipboard", "read my clipboard". Always targets `steamy-wsl` regardless of which host this Claude session is running on.
+"copy this to my clipboard", "push X to my clipboard", "what's on my clipboard", "read my clipboard". Always targets `winhost-wsl` regardless of which host this Claude session is running on.
 
 ## Why it matters
 You can't paste images *into* this Claude session over SSH, but you can shove any text out onto the user's clipboard for them to Ctrl+V wherever.
