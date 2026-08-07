@@ -112,6 +112,54 @@ $GIT -C "$WT2" reset -q --hard >/dev/null 2>&1; rm -f "$WT2/newwork.txt"
 "$RM" feature/login >/dev/null 2>&1
 check "[[ ! -d '$WT2' ]]"                            "rm removes a clean worktree (synced state ignored)"
 
+echo "== many worktrees (SIGPIPE regression) =="
+# Regression: the scripts used to pipe `git worktree list --porcelain` into an
+# awk that exited on the first match. awk closed the pipe while git was still
+# writing, git died of SIGPIPE, and `set -o pipefail` aborted the script with a
+# silent exit 141 and no output.
+#
+# The bug is INVISIBLE in a small fixture: git emits its output in one write()
+# and never notices the closed reader. It only appears once the porcelain stream
+# exceeds git's stdio buffer, forcing a second write(). Long worktree names get
+# there with few worktrees (~8 KB at 25) instead of needing hundreds.
+#
+# It is also a RACE, not a certainty — measured ~20-50% per sync call and ~87%
+# per worktree-new call at this fixture size — so each check runs the real
+# script repeatedly rather than once. Verified against the pre-fix scripts:
+# 4/20 and 7/8 respectively, i.e. a single-shot check would have missed it.
+BIG="$TMP/bigwt"; $GIT init -q "$BIG"
+( cd "$BIG" && $GIT commit -q --allow-empty -m init )
+PAD=$(printf 'x%.0s' $(seq 1 110))
+for i in $(seq 1 25); do
+  $GIT -C "$BIG" worktree add -q -b "br-$i-$PAD" "$BIG/../bigwt-$i-$PAD" HEAD >/dev/null 2>&1
+done
+BIG_BYTES=$($GIT -C "$BIG" worktree list --porcelain | wc -c)
+check "[[ $BIG_BYTES -gt 4096 ]]" "fixture exceeds git's stdio buffer (${BIG_BYTES}B) — smaller proves nothing"
+
+# Run from INSIDE a worktree with no --from: passing --from would skip the
+# SOURCE resolution that carries the racy pipeline, making this check vacuous.
+BIG_WT="$TMP/bigwt-1-$PAD"
+SIGPIPE_FAILS=0
+for _ in $(seq 1 20); do
+  rc=0
+  ( cd "$BIG_WT" && "$SYNC" --check ) >/dev/null 2>&1 || rc=$?
+  # --check exits 1 by design when it finds parity gaps; only 141 (128+SIGPIPE)
+  # or another hard abort indicates the regression.
+  [[ $rc -eq 0 || $rc -eq 1 ]] || SIGPIPE_FAILS=$((SIGPIPE_FAILS + 1))
+done
+check "[[ $SIGPIPE_FAILS -eq 0 ]]" "worktree-sync survives a many-worktree repo (no SIGPIPE/exit 141)"
+
+# worktree-new carries its own copy of the pipeline (its ROOT= line), so the
+# sync loop above would not catch a regression there. One invocation only trips
+# the race ~38-87% of the time depending on path, hence the loop.
+NEWBIG_FAILS=0
+for i in $(seq 1 4); do
+  rc=0
+  ( cd "$BIG" && "$NEW" "probe/sigpipe-$i" ) >/dev/null 2>&1 || rc=$?
+  [[ $rc -eq 0 ]] || NEWBIG_FAILS=$((NEWBIG_FAILS + 1))
+done
+check "[[ $NEWBIG_FAILS -eq 0 ]]" "worktree-new survives a many-worktree repo ($NEWBIG_FAILS/4 aborted)"
+
 echo
 if [[ $FAILED -eq 0 ]]; then echo "ALL SMOKE TESTS PASSED"; else echo "SOME SMOKE TESTS FAILED"; fi
 exit $FAILED
