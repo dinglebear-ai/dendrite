@@ -57,7 +57,11 @@ if [[ ${1:-} == "--" ]]; then shift; SYNC_ARGS=("$@"); fi
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || die "not inside a git repository"
 
 # Repo root = the main worktree (first entry of `git worktree list`).
-ROOT=$(git worktree list --porcelain 2>/dev/null | awk '/^worktree /{print $2; exit}')
+# NOTE: the awk below must consume ALL of git's output. Exiting after the
+# first match closes the pipe while git is still writing, git dies of
+# SIGPIPE, and `set -o pipefail` aborts the whole script with a silent
+# exit 141. Racy: ~28% per call in a 35-worktree repo.
+ROOT=$(git worktree list --porcelain 2>/dev/null | awk '/^worktree /{if(!s){print $2; s=1}}')
 [[ -n $ROOT ]] || die "could not determine main worktree"
 ROOT=$(cd "$ROOT" && pwd)
 

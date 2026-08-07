@@ -121,7 +121,11 @@ done
 command -v git >/dev/null 2>&1 || die "git is required"
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || die "not inside a git repository"
 
-main_worktree() { git worktree list --porcelain 2>/dev/null | awk '/^worktree /{print $2; exit}'; }
+# NOTE: the awk below must consume ALL of git's output. Exiting after the
+# first match closes the pipe while git is still writing, git dies of
+# SIGPIPE, and `set -o pipefail` aborts the whole script with a silent
+# exit 141. Racy: ~28% per call in a 35-worktree repo.
+main_worktree() { git worktree list --porcelain 2>/dev/null | awk '/^worktree /{if(!s){print $2; s=1}}'; }
 
 # ---- classifiers (portable: no associative arrays, bash 3.2-safe) ----------
 safe_relative_path() {
@@ -239,7 +243,7 @@ fi
 DEST=$(cd "$DEST" && pwd)
 
 if [[ -z $SOURCE ]]; then
-  SOURCE=$(git -C "$DEST" worktree list --porcelain 2>/dev/null | awk '/^worktree /{print $2; exit}')
+  SOURCE=$(git -C "$DEST" worktree list --porcelain 2>/dev/null | awk '/^worktree /{if(!s){print $2; s=1}}')
   [[ -n $SOURCE ]] || die "could not determine main worktree; pass --from"
 fi
 [[ -d $SOURCE ]] || die "source does not exist: $SOURCE"
@@ -444,6 +448,11 @@ fi
 
 # ---- 4. Git LFS ------------------------------------------------------------
 if [[ $DO_LFS -eq 1 ]] && command -v git-lfs >/dev/null 2>&1; then
+  # The `| head -1` below is the same early-close shape that caused the SIGPIPE
+  # aborts above, but it is safe HERE and only here: a command substitution
+  # inside `[[ ]]` does not propagate its status, so pipefail cannot abort on it.
+  # If this is ever refactored into a plain assignment (`x=$(... | head -1)`),
+  # it becomes a crash — drop the `head` at that point.
   if [[ -n $(git -C "$DEST" lfs ls-files 2>/dev/null | head -1) ]]; then
     if [[ $DRY_RUN -eq 1 ]]; then note "git lfs checkout"; else
       note "git lfs checkout"

@@ -54,7 +54,11 @@ done
 command -v git >/dev/null 2>&1 || die "git is required"
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || die "not inside a git repository"
 
-ROOT=$(git worktree list --porcelain 2>/dev/null | awk '/^worktree /{print $2; exit}')
+# NOTE: the awk below must consume ALL of git's output. Exiting after the
+# first match closes the pipe while git is still writing, git dies of
+# SIGPIPE, and `set -o pipefail` aborts the whole script with a silent
+# exit 141. Racy: ~28% per call in a 35-worktree repo.
+ROOT=$(git worktree list --porcelain 2>/dev/null | awk '/^worktree /{if(!s){print $2; s=1}}')
 [[ -n $ROOT ]] || die "could not determine main worktree"
 ROOT=$(cd "$ROOT" && pwd)
 
@@ -66,8 +70,9 @@ elif [[ -d "$ROOT/.worktrees/$TARGET" ]]; then
   WT=$(cd "$ROOT/.worktrees/$TARGET" && pwd)
 else
   # treat TARGET as a branch name: find the worktree that has it checked out
+  # Same SIGPIPE hazard as above: match without exiting early.
   WT=$(git -C "$ROOT" worktree list --porcelain 2>/dev/null | awk -v b="refs/heads/$TARGET" '
-    /^worktree /{p=$2} /^branch /{if ($2==b){print p; exit}}')
+    /^worktree /{p=$2} /^branch /{if ($2==b && !s){print p; s=1}}')
 fi
 [[ -n $WT && -d $WT ]] || die "could not find a worktree for '$TARGET'"
 WT=$(cd "$WT" && pwd)
