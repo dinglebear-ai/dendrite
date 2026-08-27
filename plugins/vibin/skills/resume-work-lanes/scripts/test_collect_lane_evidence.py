@@ -41,7 +41,7 @@ def git(path: Path, *args: str) -> None:
 class CollectLaneEvidenceTests(unittest.TestCase):
     def test_git_helper_ignores_inherited_hook_repository_environment(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             repository = root / "repository"
             repository.mkdir()
             wrong_git_dir = root / "wrong.git"
@@ -65,7 +65,7 @@ class CollectLaneEvidenceTests(unittest.TestCase):
         self,
     ) -> None:
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             home = root / "home"
             workspace = home / "workspace"
             repository = workspace / "sample"
@@ -211,7 +211,7 @@ class CollectLaneEvidenceTests(unittest.TestCase):
 
     def test_uses_cortex_as_primary_source_when_its_index_is_healthy(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             home = root / "home"
             workspace = home / "workspace"
             repository = workspace / "sample"
@@ -407,7 +407,7 @@ print(json.dumps(result))
 
     def test_raw_discovery_reports_per_tool_truncation_and_custom_homes(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             claude_home = root / "custom-claude"
             codex_home = root / "custom-codex"
             (claude_home / "projects").mkdir(parents=True)
@@ -435,7 +435,7 @@ print(json.dumps(result))
 
     def test_deadline_truncated_transcript_discovery_is_incomplete(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             _, coverage = transcript_paths(
                 root,
                 cutoff=0,
@@ -466,7 +466,7 @@ print(json.dumps(result))
 
     def test_git_only_does_not_scan_transcript_trees(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             with patch(
                 "collect_lane_evidence.transcript_paths",
                 side_effect=AssertionError("git-only must not scan transcripts"),
@@ -488,7 +488,7 @@ print(json.dumps(result))
 
     def test_disappearing_transcript_is_reported_without_sort_failure(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             missing = root / "vanished-session.jsonl"
             coverage = {
                 "limit_per_tool": 10,
@@ -538,7 +538,7 @@ print(json.dumps(result))
 
     def test_explicit_cortex_failure_returns_nonzero(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             script = Path(__file__).with_name("collect_lane_evidence.py")
             completed = subprocess.run(
                 [
