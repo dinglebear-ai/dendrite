@@ -1,0 +1,4 @@
+interface:
+  display_name: "Full Review"
+  short_description: "Run a checkpointed multi-agent review across quality, architecture, security, performance, tests, docs, and operations."
+  default_prompt: "Use $full-review to conduct a comprehensive review of the requested repository or code scope and produce the complete .full-review artifact set."
