@@ -88,6 +88,29 @@ title, every control and tooltip, code and evidence overflow, table behavior,
 focus visibility, and reduced motion. A template scaffold alone is insufficient
 visual proof because placeholder lengths do not represent real content.
 
+### Aligned artifact families
+
+Every Aurora HTML type shares the full-bleed identity bar, concise outcome hero,
+semantic metric strip, icon vocabulary, sticky or compact wayfinding, accessible
+disclosure and filtering, bounded evidence surfaces, responsive rules, and the
+same token meanings. The primary visual story remains specific to the artifact:
+
+| Type | Primary visual story | Secondary destination |
+| --- | --- | --- |
+| Reports | Findings, causal trace, and observed proof | Excluded claims |
+| PR reports | Six-stage lifecycle readiness and evidence graph | Handoff state |
+| Proposals | Recommendation and decision tradeoffs | Rejected alternatives |
+| Specs | Requirements and acceptance checks | Explicit boundaries |
+| Research | Confidence-weighted findings | Uncertainty and falsifiers |
+| Sessions | Chronology, actions, and results | Open work and handoff |
+| Docs | Durable rules and verification | Exceptions and non-goals |
+
+Navigation must move between those meaningful regions or change the visible
+information set. A control that produces no visible state change, useful empty
+state, result count, or new destination is unfinished. Filters expose pressed
+state and announce the visible record count. Zero-result filters explain what
+is absent and offer a clear way back to the complete set.
+
 ## Updating the Snapshot
 
 Update design resources deliberately against an inspected Aurora revision.

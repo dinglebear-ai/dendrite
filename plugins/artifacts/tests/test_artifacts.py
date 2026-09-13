@@ -108,6 +108,29 @@ class ArtifactIntegration(unittest.TestCase):
             self.assertIn('button[aria-label]:focus-visible:after',source)
             self.assertIn('@media(prefers-reduced-motion:reduce)',source)
 
+    def test_aurora_templates_share_shell_but_keep_useful_navigation(self):
+        interactive=['reports','proposals','specs','research','sessions','docs']
+        for kind in interactive:
+            source=template_path(kind,'aurora').read_text()
+            self.assertEqual(source.count('class="header-nav"'),1)
+            self.assertEqual(source.count('class="artifact-nav"'),1)
+            self.assertEqual(source.count('class="metric-icon"'),4)
+            self.assertGreaterEqual(source.count('class="section-icon"'),2)
+            self.assertIn('class="filter-feedback" role="status"',source)
+            self.assertIn('aria-pressed',source)
+            self.assertIn('visible ${visible===1?"record":"records"}',source)
+        pr=template_path('pr-reports','aurora').read_text()
+        self.assertEqual(pr.count('class="metric-icon"'),4)
+        self.assertEqual(pr.count('class="phasehead"'),6)
+        self.assertIn('aria-label="PR report stages"',pr)
+
+    def test_aurora_header_is_full_bleed_and_content_stays_contained(self):
+        source=(SKILL/'assets/aurora/artifact-components.css').read_text()
+        self.assertIn('width:100vw;margin-left:calc(50% - 50vw)',source)
+        self.assertIn('.excluded{margin-top:',source)
+        self.assertIn('.excluded-grid article{position:relative;min-width:0',source)
+        self.assertIn('.filter-feedback.visible{display:grid}',source)
+
     def test_artifact_skill_sets_html_comprehension_goal(self):
         source=(SKILL/'SKILL.md').read_text()
         self.assertIn('substantially better surface for understanding',source)

@@ -43,6 +43,14 @@ Use [Design and Template Parity](references/design.md) for the visual contract.
 If the visual result is not faster to scan and easier to understand than the
 source Markdown, revise it before delivery.
 
+Share the Aurora shell, tokens, accessibility behavior, and component patterns
+across artifact types, while giving every type its own information architecture.
+A report centers findings and proof; a proposal centers a decision and its
+alternatives; a spec centers requirements and acceptance; research centers
+confidence and falsifiers; a session centers chronology and handoff; docs center
+durable rules; and a PR report centers lifecycle readiness. Do not ship one
+generic page with labels changed for each type.
+
 ## Choose the Project and Template
 
 Resolve the artifact's actual subject repository as `owner/repository`, using the
