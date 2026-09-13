@@ -74,9 +74,11 @@ The linter enforces all of this:
   - **`**Interfaces:**`** — what this task Consumes and Produces, as exact
     signatures. A task's implementer sees only their own task; this block is the
     only way they learn the names and types their neighbours chose.
-  - **checkbox steps** — one action each, 2-5 minutes: write the failing test →
-    run it and watch it fail → minimal implementation → run it and watch it pass
-    → commit. Every code step shows the actual code.
+  - **checkbox steps** — one concrete action each, with observable verification. Use
+    failing-test → implementation → passing-test steps when they prove meaningful
+    behavior. A documentation-only task can have one actionable edit/check step
+    with its command and expected result. Do not invent tests or require commits
+    solely to fill a template. Implementation steps show the actual code.
 
 ## What the renderer colours
 
@@ -98,7 +100,7 @@ reading it.
 
 ## Task right-sizing
 
-A task is the smallest unit that carries its own test cycle and is worth a fresh
+A task is the smallest independently verifiable deliverable that is worth a fresh
 reviewer's gate. Fold setup, configuration, scaffolding, and docs into the task
 whose deliverable needs them. Split only where a reviewer could meaningfully
 reject one task while approving its neighbour. Each task ends with an

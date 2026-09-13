@@ -17,6 +17,7 @@ ROOT = HERE.parent
 sys.path.insert(0, str(ROOT))
 from _app.projects import assert_project, brand_for, library_root
 from _app.pr_reports import branch_stem
+from _app.evidence import bounded, start as start_evidence, seal as seal_evidence, verify as verify_evidence
 
 
 def run(*args: object, capture: bool = False) -> str:
@@ -41,7 +42,7 @@ def main() -> int:
 
     output_root = library_root()
     project = assert_project(output_root, args.repository)
-    evidence_dir = project / "pr-reports" / "evidence"
+    evidence_dir = project / "_evidence"
     if evidence_dir.parent.is_symlink() or evidence_dir.is_symlink():
         raise ValueError("PR evidence directories must not be symlinks")
     try:
@@ -76,8 +77,8 @@ def main() -> int:
             capture=True,
         )
         report, manifest = [Path(line) for line in output.strip().splitlines()[-2:]]
-        durable_dir = evidence_dir / report.stem
-        durable_dir.mkdir(parents=True, exist_ok=False)
+        run_dir = start_evidence(output_root, report, kind="verification")
+        durable_dir = run_dir / "raw"
         context_path = durable_dir / "context.json"
         context_path.write_text(json.dumps(context, indent=2) + "\n")
         run(
@@ -88,7 +89,7 @@ def main() -> int:
             "--source-sha", pr["head_sha"], "--applies-to", "head",
             "--cwd", args.worktree, "--state", "PASS",
         )
-        session_path = durable_dir / "session-evidence.json"
+        session_path = run_dir / "derived" / "session-evidence.json"
         session_command = [
             sys.executable, HERE / "build-pr-session-evidence.py",
             "--context", context_path, "--output", session_path,
@@ -128,6 +129,9 @@ def main() -> int:
                 "--changed-files", changed_path, report)
         finally:
             changed_path.unlink(missing_ok=True)
+        seal_evidence(output_root,run_dir,'generate-pr-report-draft.py')
+        result=verify_evidence(output_root,run_dir)
+        if result['errors']:raise ValueError('evidence integrity failed: '+str(result['errors']))
         print(report.resolve())
         return 0
     finally:

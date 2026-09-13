@@ -9,8 +9,11 @@ including forks, staging repos, QA, E2E, and plugins. For every other newly crea
 artifact use `assets/templates/aurora`. Preserve existing artifact designs and
 recorded evidence. Never infer the subject from the plugin checkout's own owner.
 
-Keep the output directory free of instructions, templates, package source,
-test suites, and build environments. Store generated artifacts and accompanying
+Keep the output directory free of copied instructions, templates, package source,
+test suites, and build environments. Root guidance may link to the maintained
+`references/output-*.md` files. Bulk evidence belongs in `<repo>/_evidence/`,
+owned by artifact and run. Content authority is documented in the shared
+content contract; both template families must implement it. Store generated artifacts and accompanying
 evidence at `~/artifacts/<owner-repo>/<type>/MM-DD-YY-description`.
 
 Preserve all nine type contracts and the complete PR-report lifecycle when

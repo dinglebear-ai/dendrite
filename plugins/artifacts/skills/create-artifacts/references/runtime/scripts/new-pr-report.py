@@ -14,6 +14,7 @@ import sys
 sys.path.insert(0, str(ROOT))
 from _app.projects import assert_project, brand_for, library_root, template_path
 from _app.asset_files import embed_fonts
+from _app.contracts import registry
 from _app.pr_reports import artifact_id, branch_stem, repository_dir  # noqa: E402
 def meta(source: str, name: str) -> str:
     found = re.search(r'<meta name="artifact\.' + re.escape(name) + r'" content="([^"]*)">', source)
@@ -156,6 +157,7 @@ def main() -> int:
     source=template_path("pr-reports",family).read_text()
     source=source.replace("{{Project}}", html.escape(args.repository))
     source=source.replace("</title>", '</title>\n<meta name="artifact.brand" content="'+family+'">\n<meta name="artifact.unraid-related" content="'+str(family=='unraid').lower()+'">')
+    source=source.replace('</title>','</title>\n<meta name="artifact.contract-version" content="'+registry()['version']+'">')
     values = {
         "id": artifact_id(args.repository, args.branch), "date": now[:10],
         "topic": args.topic, "target": args.head_sha.lower(), "branch": args.branch,

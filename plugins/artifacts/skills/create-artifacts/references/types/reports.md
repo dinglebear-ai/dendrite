@@ -19,7 +19,7 @@ A report may — and usually should — carry a `.fix` block per finding stating
 
 The index scrapes these; a report missing them renders as a card with holes.
 
-- `<title>Unraid Core — Report Name</title>`
+- `<title>Subject Project — Report Name</title>`
 - `<div class="eyebrow">Area / what was audited</div>` — text after `/` becomes the card tag
 - first `<p>` after the eyebrow — the card description
 - `<aside class="verified">` rows — the card's fact column; use them for **suite results and worktree state**, not for findings counts
@@ -31,7 +31,7 @@ This is the whole reason the folder exists. Every finding carries:
 
 1. **A causal trace** — `.trace` steps from precondition to observable consequence. Three steps is usually right. If you cannot write the middle step, you have not found the bug yet.
 2. **Verbatim observed output** — in `.evidence`. Never paraphrase output. Never reformat numbers.
-3. **Clickable source locations** — `file:///Users/jmagar/workspace/core/...#L<line>`, one per claim, labelled with what is at that line.
+3. **Clickable source locations** — `file:///absolute/subject/checkout/...#L<line>`, one per claim, labelled with what is at that line.
 4. **A stated boundary** — the `.limit` block. What this proof does *not* establish. **A finding without a `.limit` does not ship.**
 
 Tag honestly, using the tag classes as they are defined:

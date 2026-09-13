@@ -517,6 +517,7 @@ def check_plan(rel, source, template=False):
     # contain "### Task" headings, "- [ ] **Step" lines, and the banned phrases
     # themselves; the marker keeps "does this task show code?" answerable.
     masked = re.sub(r"(`{3,})\w*\n.*?^\1`*[ \t]*$", "\n<CODE>\n", source, flags=re.S | re.M)
+    modern = bool(re.search(r'^artifact\.contract-version:\s*["\']?1(?:["\']|\s|$)',source,re.M))
     tasks = re.split(r"^### Task \d+:", masked, flags=re.M)[1:]
     if not tasks:
         issues.append(issue("error", rel, "no '### Task N:' sections", "PLAN-TASKS", 1))
@@ -537,12 +538,12 @@ def check_plan(rel, source, template=False):
             issues.append(issue("error", rel, prefix + " has no **Interfaces:** block",
                                 "PLAN-TASK", 1))
         steps = re.findall(r"^- \[[ x]\] \*\*Step", task, re.M)
-        if len(steps) < 3:
+        if len(steps) < (1 if modern else 3):
             issues.append(issue("error", rel, prefix + " has " + str(len(steps))
-                                + " checkbox steps — each task needs its own test cycle",
+                                + " checkbox steps — include a concrete action and verification",
                                 "PLAN-STEPS", 1))
-        if "<CODE>" not in task:
-            issues.append(issue("error", rel, prefix + " shows no code", "PLAN-CODE", 1))
+        if "<CODE>" not in task and not (modern and "Run:" in task and "Expected:" in task):
+            issues.append(issue("error", rel, prefix + " needs concrete code or a verification command and expected result", "PLAN-CODE", 1))
 
     for pattern, label in ([] if template else PLAN_BANNED):
         if re.search(pattern, masked):

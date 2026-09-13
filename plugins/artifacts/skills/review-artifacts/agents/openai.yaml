@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Artifacts"
+  short_description: "Review artifact content, evidence, and readiness"
+  default_prompt: "Use $review-artifacts to review this project artifact and its supporting evidence."

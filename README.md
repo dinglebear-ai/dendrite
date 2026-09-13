@@ -75,8 +75,8 @@ Useful starting points in the catalog:
 - 26 local plugin directories
 - 78 Claude marketplace entries
 - 78 Codex/OpenAI marketplace entries
-- 79 skills
-- 79 OpenAI agent companion files
+- 80 skills
+- 80 OpenAI agent companion files
 - 26 Gemini extension manifests
 - 6 MCP config files, defining 5 MCP servers
 - 3 command docs
@@ -86,7 +86,7 @@ Useful starting points in the catalog:
 | `acp` | Rust implementation patterns for ACP, rmcp-derived MCP servers, and Lab runtime work. | rust | none | 1 | none |
 | `adguard` | Skill for operating adguard via the lab MCP server / CLI. | adguard | none | 1 | none |
 | `agent-os` | Drive the agent-os Windows 11 sandbox VM through an MCP gateway or an already-configured Windows-MCP endpoint. Ships the agent-os skill, a /agent-os status command, and a SessionStart health check. | agent-os | windows-mcp | 1 | agent-os.md |
-| `artifacts` | Create repository-scoped engineering artifacts with complete Unraid and Aurora template families. | create-artifacts | none | 1 | none |
+| `artifacts` | Create repository-scoped engineering artifacts with complete Unraid and Aurora template families. | create-artifacts, review-artifacts | none | 2 | none |
 | `broadcastr` | Helper assets for Broadcastr plugin tooling. | none | none | 0 | none |
 | `bytestash` | Skills for operating a ByteStash snippet manager. | bytestash | none | 1 | none |
 | `dozzle` | Skill for operating Dozzle through direct HTTP API checks, auth guidance, and MCP setup notes. | dozzle | dozzle | 1 | none |

@@ -19,6 +19,8 @@ sys.path.insert(0,str(ENGINE))
 from _app.projects import assert_project, brand_for, library_root, repository_slug, template_path
 from _app.catalog import CATEGORIES, load_catalog
 from _app.asset_files import embed_fonts
+from _app.contracts import contract, registry
+from _app import evidence
 
 def module(name):
     spec=importlib.util.spec_from_file_location(name.replace('-','_'),ENGINE/'scripts'/(name+'.py'))
@@ -51,7 +53,7 @@ def new(args):
     content=template.read_text()
     fields={'id':repository_slug(args.repository)+'-'+args.type+'-'+day.isoformat()+'-'+args.slug,
             'status':'draft','date':day.isoformat(),'topic':args.topic or args.slug,
-            'repository':args.repository,'brand':brand,'unraid-related':str(brand=='unraid').lower(),'related':''}
+            'contract-version':registry()['version'],'repository':args.repository,'brand':brand,'unraid-related':str(brand=='unraid').lower(),'related':''}
     if args.worktree:
         fields['worktree']=str(Path(args.worktree).expanduser().resolve())
         for key,cmd in [('branch',['branch','--show-current']),('target',['rev-parse','HEAD'])]:
@@ -123,6 +125,22 @@ def main():
     check.add_argument('--path',type=Path)
     check.add_argument('--json',action='store_true')
     commands.add_parser('index')
+    commands.add_parser('inventory',help='Count documents separately from evidence, datasets, and snapshots')
+    commands.add_parser('init-root',help='Link root guidance to the installed plugin without duplicating instructions')
+    spec=commands.add_parser('contract',help='Read the content requirements for an artifact type')
+    spec.add_argument('type',choices=CATEGORIES)
+    start=commands.add_parser('evidence-start',help='Allocate an artifact-owned run without executing commands')
+    start.add_argument('artifact',type=Path)
+    start.add_argument('--run')
+    start.add_argument('--kind',choices=['verification','model-run'],default='verification')
+    seal=commands.add_parser('evidence-seal',help='Hash completed files; this does not verify their claims')
+    seal.add_argument('folder',type=Path)
+    seal.add_argument('--producer',required=True)
+    verify=commands.add_parser('evidence-verify',help='Check recorded evidence bytes without executing them')
+    verify.add_argument('folder',type=Path)
+    organize=commands.add_parser('organize-evidence',help='Plan or apply a lossless evidence layout migration')
+    organize.add_argument('--plan',type=Path,required=True)
+    organize.add_argument('--apply',action='store_true')
     serve=commands.add_parser('serve')
     serve.add_argument('--port',type=int,default=8787)
     serve.add_argument('--open',action='store_true')
@@ -134,6 +152,20 @@ def main():
     args,unknown=parser.parse_known_args()
     if unknown and args.command not in {'pr-new','pr'}: parser.error('unrecognized arguments: '+' '.join(unknown))
     args.root=args.root.expanduser().resolve()
+    if args.command=='contract': print(json.dumps(contract(args.type),indent=2)); return 0
+    if args.command=='init-root':
+        args.root.mkdir(parents=True,exist_ok=True)
+        targets={'README.md':'output-README.md','AGENTS.md':'output-AGENTS.md','CLAUDE.md':'output-AGENTS.md','GEMINI.md':'output-AGENTS.md'}
+        for name,target in targets.items():
+            path=args.root/name;source=SKILL/'references'/target
+            if path.is_symlink() and path.resolve()==source:continue
+            if path.exists() or path.is_symlink():raise FileExistsError(path)
+            path.symlink_to(source)
+        print(args.root);return 0
+    if args.command=='evidence-start': print(evidence.start(args.root,args.artifact,args.run,args.kind));return 0
+    if args.command=='evidence-seal': print(json.dumps(evidence.seal(args.root,args.folder,args.producer),indent=2));return 0
+    if args.command=='evidence-verify':
+        result=evidence.verify(args.root,args.folder);print(json.dumps(result,indent=2));return int(bool(result['errors']))
     if args.command=='route': print(json.dumps({'repository':args.repository,'directory':repository_slug(args.repository),'brand':choose(args)})); return 0
     if args.command=='new': new(args); return 0
     if args.command=='render-plan': render_plan(args); return 0
@@ -145,12 +177,25 @@ def main():
     if args.command=='serve':
         return subprocess.run([sys.executable,str(ENGINE/'scripts/app.py'),'--root',str(args.root),'--port',str(args.port),*(['--open'] if args.open else [])]).returncode
     catalog=load_catalog(args.root)
+    if args.command=='inventory':print(json.dumps(evidence.inventory(args.root,catalog),indent=2));return 0
+    if args.command=='organize-evidence':
+        if args.apply:result=evidence.organize(args.root,json.loads(args.plan.read_text()))
+        else:
+            result=evidence.organization_plan(args.root,catalog)
+            evidence.write_json(args.plan,result,True)
+            result={'plan':str(args.plan),'bundles':len(result['moves']),'files':result['file_count']}
+        print(json.dumps(result,indent=2));return 0
     if args.command=='validate':
         issues=catalog['issues']
         if args.path:
             rel=args.path.expanduser().resolve().relative_to(args.root).as_posix()
-            if not any(i['href']==rel or i.get('generated_from')==rel for i in catalog['items']): raise ValueError('path is not a cataloged artifact')
-            issues=[i for i in issues if i['where']==rel]
+            selected=[i for i in catalog['items'] if i['href']==rel or i.get('generated_from')==rel]
+            if not selected:raise ValueError('path is not a cataloged artifact')
+            related_paths={rel}
+            for item in selected:
+                related_paths.add(item['href'])
+                if item.get('generated_from'):related_paths.add(item['generated_from'])
+            issues=[i for i in issues if i['where'] in related_paths]
         if args.json: print(json.dumps(issues,indent=2))
         else:
             for i in issues: print(i['severity'].upper(),i['where'],i['message'])

@@ -1,0 +1,173 @@
+{
+  "version": "1",
+  "types": {
+    "reports": {
+      "question": "What is true about the current system?",
+      "required_content": [
+        "Scope and inspected revision",
+        "Findings with stable IDs and severity",
+        "Observed evidence and source links",
+        "Causal reasoning and proof boundaries",
+        "Excluded or disproven claims"
+      ],
+      "review_questions": [
+        "Does each finding follow from the cited evidence?",
+        "Are source-only observations labeled separately from reproduced behavior?",
+        "Do totals match the actual findings?"
+      ],
+      "record_blocks": [
+        "trace",
+        "evidence",
+        "links",
+        "limit"
+      ]
+    },
+    "pr-reports": {
+      "question": "Is this exact PR state ready for its next lifecycle gate?",
+      "required_content": [
+        "All 29 governed sections and six lifecycle stages",
+        "Exact repository, base, head, merge base and file map",
+        "Claims connected to retained evidence",
+        "Review, CI, rollback, documentation and handoff state",
+        "Current integrity seals for accepted reports"
+      ],
+      "review_questions": [
+        "Does decisive evidence apply to this head?",
+        "Are unknown, failed, blocked and not-run states explicit?",
+        "Does the public summary exclude private provenance?"
+      ],
+      "record_blocks": []
+    },
+    "proposals": {
+      "question": "Which decision should be made, and why?",
+      "required_content": [
+        "Problem and decision requested",
+        "Options including the status quo",
+        "Tradeoffs, cost and blast radius",
+        "Recommendation and preserved invariants",
+        "Non-goals and reversal criteria"
+      ],
+      "review_questions": [
+        "Is the recommendation distinguished from an approved decision?",
+        "Could a reader choose a rejected option based on the stated tradeoffs?"
+      ],
+      "record_blocks": [
+        "trace",
+        "evidence",
+        "fix",
+        "limit"
+      ]
+    },
+    "plans": {
+      "question": "How will an approved outcome be implemented and verified?",
+      "required_content": [
+        "Approved goal and constraints",
+        "Source-verified architecture and file responsibilities",
+        "Ordered tasks with dependencies and interfaces",
+        "Observable verification for meaningful behavior",
+        "Rollback or stopping conditions where relevant",
+        "Explicit blockers for unavailable implementation facts"
+      ],
+      "review_questions": [
+        "Can a fresh engineer execute the plan without inventing interfaces?",
+        "Does the plan distinguish proposed code from observed behavior?",
+        "Are tests proportional to risk rather than ceremony?"
+      ],
+      "record_blocks": []
+    },
+    "specs": {
+      "question": "What behavior must the implementation satisfy?",
+      "required_content": [
+        "Stable requirement IDs and priorities",
+        "Given/When/Then behavior",
+        "Exact interfaces or explicitly proposed contracts",
+        "Acceptance checks",
+        "Non-goals and unresolved decisions"
+      ],
+      "review_questions": [
+        "Can each requirement be checked independently?",
+        "Are dependencies and failure behavior specified where material?"
+      ],
+      "record_blocks": [
+        "trace",
+        "evidence",
+        "fix"
+      ]
+    },
+    "research": {
+      "question": "What do the available sources tell us about an open question?",
+      "required_content": [
+        "Question, scope and as-of date",
+        "Method and source selection",
+        "Observations separated from inference",
+        "Confidence and limitations",
+        "Falsifiers, contrary evidence and unanswered questions"
+      ],
+      "review_questions": [
+        "Are source claims accurately represented?",
+        "Is confidence proportional to evidence quality?",
+        "Are competing explanations considered?"
+      ],
+      "record_blocks": [
+        "trace",
+        "evidence",
+        "fix",
+        "limit"
+      ]
+    },
+    "sessions": {
+      "question": "What happened, and what does the next person need?",
+      "required_content": [
+        "Requested goal and actual scope",
+        "Actions and observed results",
+        "Wrong turns and what ruled them out",
+        "Produced and consumed artifacts",
+        "Current state, open threads and next actions"
+      ],
+      "review_questions": [
+        "Can someone resume without this conversation?",
+        "Do completion claims match files and verification?"
+      ],
+      "record_blocks": [
+        "trace",
+        "evidence",
+        "fix",
+        "limit"
+      ]
+    },
+    "docs": {
+      "question": "What durable rules or reference information apply?",
+      "required_content": [
+        "Applicability and last-reviewed date",
+        "Required behavior and rationale",
+        "Examples and checks appropriate to each rule",
+        "Exceptions and adjacent ownership",
+        "Canonical sources"
+      ],
+      "review_questions": [
+        "Would two readers agree about what is required?",
+        "Are time-sensitive facts marked for review?"
+      ],
+      "record_blocks": [
+        "trace",
+        "evidence",
+        "fix"
+      ]
+    },
+    "scripts": {
+      "question": "Which claim does this reproducible harness verify?",
+      "required_content": [
+        "Artifact metadata and related report",
+        "Explicit target and inspected revision",
+        "One meaningful assertion per claimed behavior",
+        "Nonzero failure and faithful output",
+        "Declared proof boundary"
+      ],
+      "review_questions": [
+        "Was the harness inspected before execution?",
+        "Does a PASS prove the stated claim rather than just match source wording?"
+      ],
+      "record_blocks": []
+    }
+  }
+}

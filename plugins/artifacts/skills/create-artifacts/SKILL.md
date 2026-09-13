@@ -8,7 +8,8 @@ description: Create and maintain repository-scoped HTML engineering reports, PR 
 Use this plugin as the source of truth for artifact templates, evidence contracts,
 renderers, and validation. Save authored outputs under `~/artifacts`; do not copy
 the skill, templates, instructions, tests, or reusable tooling into that directory.
-An explicit output root from the user takes precedence.
+An explicit output root from the user takes precedence. `init-root` creates
+README/agent guidance symlinks to this plugin; keep their maintained contents here.
 
 ## Choose the Project and Template
 
@@ -38,7 +39,8 @@ python3 "$SKILL_DIR/scripts/artifacts.py" route \
 ```
 
 Templates live under `assets/templates/{unraid,aurora}/<artifact_type>/`.
-Read [Design and Template Parity](references/design.md) before visual work and
+Read [Content Authority](references/content-contract.md) to understand the shared
+content requirements; `contract TYPE` prints the versioned contract. Read [Design and Template Parity](references/design.md) before visual work and
 the one relevant type contract below before authoring its content.
 
 | Artifact Type | Purpose and Contract | Template |
@@ -87,6 +89,18 @@ For a PR report, use [PR Operations](references/pr-operations.md). Its verified
 repository/branch identity, paired evidence manifest, lifecycle compiler,
 revision ledger, and seal are required. Do not use `new` or hand-copy the HTML
 for an ordinary PR report.
+
+## Evidence and Review
+
+Use [Evidence Storage](references/evidence.md) to allocate artifact-owned runs
+with `evidence-start`, then seal and verify their files. Bulk evidence and model
+output belong under the subject repository’s `_evidence` directory. `inventory`
+distinguishes documents from supporting files. Keep observed inputs/output apart
+from derived/model-generated material.
+
+Use the sibling `review-artifacts` skill when the task calls for a content review
+or the artifact’s decisions need an independent evidence check. Structural
+validation does not establish truth or implementation readiness.
 
 ## Validate and Deliver
 

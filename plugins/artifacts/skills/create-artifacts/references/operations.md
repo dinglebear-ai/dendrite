@@ -44,3 +44,9 @@ repository citation mappings to the package's configured map when needed.
 Framework changes belong in Dendrite. Authored artifacts, paired Markdown,
 evidence, exported snapshots, and migration receipts belong in the output
 repository. Do not place agent instructions or templates in `~/artifacts`.
+
+Read [Content Authority](content-contract.md) for shared type requirements and
+[Evidence Storage](evidence.md) for artifact-owned runs. `contract TYPE` exposes
+the content contract, `inventory` separates human-facing items from supporting
+files, and `init-root` installs canonical guidance symlinks. `review-artifacts`
+adds semantic review of facts and readiness to the mechanical validator.

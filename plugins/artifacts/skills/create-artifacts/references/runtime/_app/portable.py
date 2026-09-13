@@ -25,13 +25,15 @@ def export_catalog(catalog, destination, embed_fonts):
         by_path={i['href']:i for i in catalog['items']}
         # Retain the complete evidence subtree and paired ledgers for each
         # exported project/type. Never traverse symlinks or copy framework files.
-        for folder in {root/Path(i['href']).parent for i in catalog['items']}:
+        for folder in ({root/Path(i['href']).parent for i in catalog['items']} | {root/i['project']/'_evidence' for i in catalog['items'] if i.get('project')}):
             for path in folder.rglob('*'):
                 rel=path.relative_to(root)
-                if any(p.startswith('.') or p in {'node_modules','__pycache__'} for p in rel.parts): continue
+                evidence_file='_evidence' in rel.parts
+                if evidence_file and path.is_symlink():raise ValueError('evidence contains a symlink: '+str(rel))
+                if not evidence_file and any(p.startswith('.') or p in {'node_modules','__pycache__'} for p in rel.parts): continue
                 if path.is_symlink() or not path.is_file(): continue
                 if not path.resolve().is_relative_to(root): raise ValueError('evidence escapes artifact root: '+str(rel))
-                if path.name in {'CLAUDE.md','AGENTS.md','GEMINI.md','README.md'} or path.name.startswith('_template'): continue
+                if not evidence_file and (path.name in {'CLAUDE.md','AGENTS.md','GEMINI.md','README.md'} or path.name.startswith('_template')): continue
                 files.setdefault(rel.as_posix(),None)
         for item in catalog['items']:
             if item.get('generated_from'): files.setdefault(item['generated_from'],None)

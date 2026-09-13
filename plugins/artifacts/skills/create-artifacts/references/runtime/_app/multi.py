@@ -18,7 +18,16 @@ def migration(root):
     manifests = sorted(root.glob('jmagar-artifacts/reports/*-artifact-migration.json'))
     if not manifests:
         return {}
-    return json.loads(manifests[-1].read_text())
+    result=json.loads(manifests[-1].read_text())
+    mapping=result.get('artifact_paths',{});aliases={}
+    for old,target in mapping.items():
+        path=(root/target).resolve()
+        if not path.is_relative_to(root.resolve()):raise ValueError('migration alias escapes artifact root')
+        canonical=path.relative_to(root.resolve()).as_posix()
+        aliases[old]=canonical
+        if canonical!=target:aliases[target]=canonical
+    result['artifact_paths']=aliases
+    return result
 
 def projected_source(source, old, current, mapping):
     """Repair presentation links, leaving the archived file and evidence bytes intact."""
@@ -65,7 +74,7 @@ def load_catalog(root):
                 continue
             for path in sorted(folder.iterdir()):
                 if (not path.is_file() or path.is_symlink() or path.suffix not in SUFFIXES
-                        or path.name.startswith(('.', '_')) or path.name.endswith(('.evidence.jsonl','.manifest.json'))):
+                        or path.name.startswith(('.', '_')) or path.name.endswith(('.evidence.jsonl','.manifest.json','-artifact-migration.json'))):
                     continue
                 rel = path.relative_to(root).as_posix()
                 original = path.read_text(errors='replace')
@@ -93,6 +102,8 @@ def load_catalog(root):
                     'repository':repository,'project':project.name,'category':category,'brand':brand,'legacy':is_legacy,
                     'shas':sorted(set(re.findall(r'\b[0-9a-f]{40}\b',source))), 'references':[], 'related':[]}
                 if path.suffix=='.html': item['source']=source
+                from .contracts import check_content
+                if not is_legacy: issues.extend(check_content(item,source))
                 if path.suffix in {'.html','.md'}:
                     check_source = original if is_legacy else source
                     check_rel = category + '/' + path.name
@@ -150,5 +161,9 @@ def load_catalog(root):
         for category in CATEGORIES:
             group=[i for i in items if i['project']==project and i['category']==category]
             if group: groups.append({'name':project+'/'+category,'blurb':plain_blurb(TYPES/(category+'.md'),(TYPES/(category+'.md')).read_text().splitlines()),'template':None,'items':group})
-    return {'root':root,'groups':groups,'items':items,'issues':issues,'signature':hashlib.sha256('\n'.join(stamps).encode()).hexdigest(),
+    result={'root':root,'groups':groups,'items':items,'issues':issues,'signature':hashlib.sha256('\n'.join(stamps).encode()).hexdigest(),
             'generated_at':datetime.now(timezone.utc),'shas':sorted({s for i in items for s in i['shas']}),'multi_project':True,'aliases':mapping}
+
+    from .evidence import inventory
+    result['inventory']=inventory(root,result)
+    return result

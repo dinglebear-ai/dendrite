@@ -114,7 +114,7 @@ class ArtifactIntegration(unittest.TestCase):
             return ''
         with patch.dict(os.environ,{'ARTIFACTS_ROOT':str(self.root)}), patch.object(sys,'argv',['discover','--repository','acme/relay','--pr','1','--worktree',str(work),'--unraid-related']),patch.object(helper,'run',fake_run):
             self.assertEqual(helper.main(),0)
-        proof=next(self.root.glob('acme-relay/pr-reports/evidence/*/context.json'))
+        proof=next(self.root.glob('acme-relay/_evidence/*/*/raw/context.json'))
         self.assertEqual(json.loads(proof.read_text()),context)
         report=next(self.root.glob('acme-relay/pr-reports/*.html'))
         self.assertEqual(metadata(report.read_text(),'.html')['brand'],'unraid')

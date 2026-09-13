@@ -37,3 +37,15 @@ Run `python3 -m unittest discover -s tests` from this plugin. Runtime regression
 tests live under `skills/create-artifacts/references/runtime/_tests`. Read
 `CLAUDE.md` before changing templates or routing. The source provenance and
 license notices accompany the design assets.
+
+## Content, Evidence, and Review
+
+Templates include the type-specific content scaffold as well as the UI. The
+shared versioned contract defines required content independently of brand;
+`contract TYPE` prints it. `review-artifacts` evaluates factual support and
+readiness beyond structural validation.
+
+Use `evidence-start`, `evidence-seal`, and `evidence-verify` to keep captured and
+derived files under `<repo>/_evidence/<artifact-stem>/<run-id>`. The `inventory`
+command distinguishes documents from thousands of supporting files. `init-root`
+links root guidance back to Dendrite. No automatic evidence deletion occurs.

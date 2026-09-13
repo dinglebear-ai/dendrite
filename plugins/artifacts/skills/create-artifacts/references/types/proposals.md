@@ -34,7 +34,7 @@ The closing "Not proposed" section lists tempting adjacent changes you deliberat
 
 ## Respect existing authority
 
-When Core already owns a concern maturely, say so and leave it alone. A proposal that rewrites a working subsystem to match a preferred shape will be rejected on those grounds — name the authorities you are not touching, explicitly.
+When the subject project already owns a concern maturely, say so and leave it alone. A proposal that rewrites a working subsystem to match a preferred shape will be rejected on those grounds — name the authorities you are not touching, explicitly.
 
 ## Metadata
 
