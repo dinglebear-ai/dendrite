@@ -75,8 +75,8 @@ Useful starting points in the catalog:
 - 26 local plugin directories
 - 78 Claude marketplace entries
 - 78 Codex/OpenAI marketplace entries
-- 79 skills
-- 79 OpenAI agent companion files
+- 78 skills
+- 78 OpenAI agent companion files
 - 26 Gemini extension manifests
 - 6 MCP config files, defining 5 MCP servers
 - 3 command docs
@@ -107,7 +107,7 @@ Useful starting points in the catalog:
 | `testing` | App-testing and MCP-tooling skills: live QA of web, Android, and desktop apps; MCP server smoke-testing (mcporter); MCP-UI / Apps validation (mcpjam); and claude-in-mobile device automation. | android-app-testing, claude-in-mobile, desktop-app-testing, mcpjam-ui-testing, mcporter, web-app-testing | none | 6 | none |
 | `upstream-skills` | Skills vendored verbatim from upstream repos (openclaw + openai), kept in sync via sync-upstream-skills. | acpx, agent-transcript, autoreview, chatgpt-apps, define-goal, gog, handoff, meme-maker, openai-docs, session-viewer, yeet | none | 11 | none |
 | `uptime-kuma` | Read-only monitoring of a self-hosted Uptime Kuma instance via direct HTTP — Prometheus /metrics (API-key auth) and public status-page JSON. No monitor management (that requires Uptime Kuma's socket.io API). | uptime-kuma | none | 1 | none |
-| `vibin` | Knowledge, session closeout, repository, GitHub, homelab, Windows, Paperless, MCP gateway, Jetpack Compose, and SWAG utility skills. | align-standards, check-skill-clis, chrome, claude-android-ninja, clipboard, compose-skill, create-swag-config, deploy-new-service, fastmcp-client-cli, full-review, gh-fix-ci, gh-pr, hand-off, homelab-map, jetpack-compose-expert, log-code-session, log-decisions, log-homelab-maintenance, merge-status, monolith-check, new-report, new-runbook, nircmd, paperless-ngx, quick-push, rclone, refresh-docs, repo-status, resume-work-lanes, review-pr, save-to-md, screenshots, submit-unraid-community-app, sysinternals, using-rmcp, validate-skill, work-it, worktree-setup, wrap-session | none | 39 | scaffold-claude-plugin.md |
+| `vibin` | Knowledge, session closeout, repository, GitHub, homelab, Windows, Paperless, MCP gateway, Jetpack Compose, and SWAG utility skills. | align-standards, check-skill-clis, chrome, claude-android-ninja, clipboard, compose-skill, create-swag-config, deploy-new-service, fastmcp-client-cli, full-review, gh-fix-ci, gh-pr, hand-off, homelab-map, jetpack-compose-expert, log-code-session, log-decisions, log-homelab-maintenance, merge-status, monolith-check, new-report, new-runbook, nircmd, paperless-ngx, quick-push, rclone, refresh-docs, repo-status, resume-work-lanes, review-pr, save-to-md, screenshots, sysinternals, using-rmcp, validate-skill, work-it, worktree-setup, wrap-session | none | 38 | scaffold-claude-plugin.md |
 | `zsnoop-mcp` | ZFS snapshot exploration and recovery over SSH through the zsnoop-mcp server. | zsnoop-mcp | zsnoop | 1 | none |
 
 <!-- END GENERATED README INVENTORY -->
