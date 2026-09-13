@@ -1,6 +1,6 @@
 # Full Review Workflow
 
-Follow every phase in order. Paths are relative to the repository root. Read `state-management.md` and `reviewer-contract.md` first.
+Follow every phase in order as one uninterrupted batch. Paths are relative to the repository root. Read `state-management.md` and `reviewer-contract.md` first. Do not stop for phase checkpoints or ask the user whether to continue.
 
 Severity is stable across all artifacts: `Critical=P0`, `High=P1`, `Medium=P2`, and `Low=P3`. Never renumber findings during synthesis.
 
@@ -9,12 +9,11 @@ Severity is stable across all artifacts: `Critical=P0`, `High=P1`, `Medium=P2`, 
 1. Pre-flight and scope
 2. Phase 1: quality and architecture
 3. Phase 2: security and performance
-4. Checkpoint 1
-5. Phase 3: testing and documentation
-6. Phase 4: best practices and operations
-7. Checkpoint 2
-8. Phase 5: consolidated report
-9. Completion criteria
+4. Phase 3: testing and documentation
+5. Phase 4: best practices and operations
+6. Phase 5: consolidate and deduplicate every finding
+7. Create and validate the report artifact
+8. Clean up scratch and complete
 
 ## 1. Pre-flight and scope
 
@@ -29,7 +28,7 @@ Recognize:
 - `--strict-mode`
 - `--framework <name>`
 
-Determine the target from the remaining request. Verify paths exist. Translate descriptions such as `recent changes`, `authentication module`, a PR, or a branch into an immutable diff and explicit file manifest. Capture the VCS mode, reviewed commit, base, dirty patch hash, and tracked and eligible-untracked file hashes before creating `.full-review/`. Freeze eligible untracked contents under `.full-review/scope-files/` as specified by `state-management.md`. Outside Git, use snapshot mode and a complete frozen content manifest. Exclude `.full-review/**` and `.full-review-archive/**` unless explicitly targeted. Confirm the frozen scope before dispatch.
+Determine the target from the remaining request. Verify paths exist. Translate descriptions such as `recent changes`, `authentication module`, a PR, or a branch into an immutable diff and explicit file manifest. Capture the VCS mode, reviewed commit, base, dirty patch hash, and tracked and eligible-untracked file hashes before creating `.full-review/`. Store the immutable diff at `.full-review/scope.patch`; freeze eligible untracked contents under `.full-review/scope-files/`. Build the frozen contextual-evidence manifest and copies required by each review dimension. Outside Git, use snapshot mode and a complete frozen content manifest. Exclude `.full-review/**` and `.full-review-archive/**` as subject code. Validate and record the frozen scope internally, then dispatch without a user approval step.
 
 For large targets, partition by subsystem or bounded file batches. Assign each partition a deterministic ID namespace and record it with assigned, inspected, skipped, generated, vendored, unsupported, and excluded files in `.full-review/coverage.json`. Never claim exhaustive coverage unless all eligible files were inspected; report coverage percentage and limitations.
 
@@ -169,21 +168,9 @@ Consolidate and deduplicate into `.full-review/02-security-performance.md`:
 [Testing/documentation implications]
 ```
 
-Update coverage, record the phase artifact, and atomically transition to `checkpoint_1`.
+Update coverage, record the phase artifact, and atomically transition directly to `phase_3`. Critical findings affect the verdict and action order; they do not pause the review.
 
-## 4. Checkpoint 1
-
-Summarize Phase 1 and Phase 2 counts by category and severity. Point the user to both artifacts and ask for exactly one direction:
-
-1. Continue to testing and documentation.
-2. Fix critical issues before continuing.
-3. Pause and preserve progress.
-
-Strict mode blocks continuation or completion with unresolved P0/P1 findings, failed reviewers, unverified P0/P1 evidence, or incomplete eligible-file coverage. Otherwise recommend fixes when Critical findings exist. Do not start Phase 3 without approval.
-
-If fixes are authorized, mark this frozen session `superseded`, implement and verify separately, then start a fresh review. Never feed stale pre-fix artifacts into later phases.
-
-## 5. Phase 3: testing and documentation
+## 4. Phase 3: testing and documentation
 
 Both reviewers read prior artifacts and receive the shared contract, frozen evidence, and assigned coverage partitions.
 
@@ -218,7 +205,7 @@ Persist one unmodified output per dispatch to `.full-review/raw/03-testing-<PART
 
 Write `.full-review/03-testing-documentation.md` with severity-ordered sections preserving IDs. Update coverage, record all artifacts, and transition to `phase_4`.
 
-## 6. Phase 4: best practices and operations
+## 5. Phase 4: best practices and operations
 
 Both reviewers read all prior artifacts and receive the shared contract, frozen evidence, and coverage assignments.
 
@@ -244,23 +231,15 @@ Write `.full-review/04-best-practices.md`:
 [By severity]
 ```
 
-Update coverage, record all artifacts, and atomically transition to `checkpoint_2`.
+Update coverage, record all artifacts, and atomically transition directly to `consolidation`.
 
-## 7. Checkpoint 2
+## 6. Phase 5: consolidate and deduplicate every finding
 
-Show new Phase 3 and Phase 4 counts plus the cumulative Critical and High findings. Ask whether to:
+Read every raw and consolidated artifact from `artifacts.json`. Build the pre-deduplication inventory exclusively from raw artifacts, including failed/skipped placeholders in partial sessions. Account for every stable ID or placeholder.
 
-1. Generate the consolidated report.
-2. Fix critical/high issues first.
-3. Pause and preserve progress.
+Deduplicate only findings with the same root cause, affected behavior, and consequence. Select one canonical finding, retain the highest supported severity, and merge all unique absolute locations, causal traces, verbatim observed outputs, evidence classes, proof boundaries, consulted revisions and hashes, other evidence, impacts, remediations, validation requirements, reviewer roles, and source IDs into it. Similar symptoms with different causes or fixes remain separate findings. Never discard a finding merely because another reviewer reported it. For every raw ID, record exactly one disposition: canonical, merged into a named canonical ID, contextual/pre-existing, inapplicable with reason, unsupported with reason, failed, or skipped. Reconcile raw, canonical, and disposition counts so no issue can disappear during synthesis.
 
-Re-evaluate every strict-mode gate using all four phases. Unresolved P0/P1 findings, failed reviewers, unverified P0/P1 evidence, or incomplete eligible-file coverage block completion. Do not start Phase 5 without approval. Authorized fixes supersede the session and require a fresh review.
-
-## 8. Phase 5: consolidated report
-
-Read every raw and consolidated artifact from `artifacts.json`. Build the pre-deduplication inventory exclusively from raw artifacts, including authorized failed/skipped placeholders in partial sessions. For every stable ID or placeholder, mark it included, duplicate, contextual/pre-existing, inapplicable, unsupported, failed, or skipped, with a reason and canonical duplicate target. In-scope findings drive the verdict; contextual findings are separate unless they block safe integration.
-
-Write `.full-review/05-final-report.md`:
+Write `.full-review/05-consolidated-findings.md` as the complete content source for the final artifact:
 
 ```markdown
 # Comprehensive Code Review Report
@@ -316,25 +295,54 @@ Write `.full-review/05-final-report.md`:
 
 ## Inventory Reconciliation
 - Raw finding IDs by reviewer
-- Included findings
-- Duplicates
+- Canonical findings
+- Merged duplicate IDs with their canonical target
 - Discarded/inapplicable findings with reasons
 ```
 
-Verify the target fingerprint and re-evaluate every strict-mode gate immediately before the terminal transition. Record each gate and pass/fail evidence in final metadata. Then record the report and ledger and transition to `complete` only when every gate passes. Explicit skips use `partial`; unresolved strict failures lead to `failed`, `partial`, or `superseded`, never `complete`.
+Append a complete raw-findings ledger. Every raw record, including contextual, unsupported, inapplicable, failed, and skipped entries, retains its title, original severity, absolute locations, causal trace, observed output, evidence class, impact, proof boundary, validation request, consulted hashes, source reviewer, disposition, and disposition rationale. A merged entry may point to its canonical record only after every unique detail has been copied into the canonical record.
+
+Verify the target fingerprint and evaluate every strict-mode gate. Strict failures set the artifact verdict to `NOT READY` and affect release advice; they never stop consolidation, artifact production, validation, indexing, evidence sealing, or cleanup. Record each gate and its evidence in the consolidated source, register its checksum, and transition to `artifact_creation`.
+
+## 7. Create and validate the report artifact
+
+Invoke `artifacts:create-artifacts` and follow its current `SKILL.md` completely. Resolve the actual subject repository and create an artifact of type `reports` under the routed repository artifact root. Read and follow the artifact content contract, report type contract, evidence contract, and design contract. Use the report template selected by that skill; do not hand-roll a replacement report in `.full-review/`.
+
+Populate the artifact from `05-consolidated-findings.md` and the registered evidence. The artifact must contain:
+
+- the target, verdict, severity and category counts, coverage, review flags, reviewers, commands, tests, limitations, and strict-mode gate results;
+- every canonical finding with severity, stable canonical ID, all source IDs, every absolute affected location, causal trace, verbatim observed output, evidence class, proof boundary, consulted revisions and hashes, other evidence, impact, remediation, and validation requirement;
+- contextual findings in a separate section;
+- a complete raw-findings ledger preserving the full substance and disposition of unsupported, inapplicable, contextual, failed, and skipped records;
+- the full raw-to-canonical reconciliation, including every duplicate mapping and every non-finding disposition with its reason;
+- count checks showing that all raw IDs equal canonical IDs plus merged and otherwise dispositioned IDs.
+
+Before deleting scratch, run `artifacts.py evidence-start "$ARTIFACT" --kind model-run`. Copy the frozen scope and context manifests, `scope.patch`, immutable target/context copies, reviewer prompts and shared contract, reviewer identities and model settings, every raw output and failed placeholder, coverage, failure history, consolidated source, and command receipts into the run's `raw/` and `derived/` directories according to the evidence contract. Link the evidence bundle from the report.
+
+Run initial path and content validation and inspect the report at desktop and phone widths. This validation is provisional until evidence sealing is complete.
+
+If creation, rendering, evidence sealing/verification, validation, indexing, or index lookup fails after safe retry, mark the session `failed`, retain `.full-review/`, and report the failure. Do not delete recoverable evidence.
+
+## 8. Clean up scratch and complete
+
+Before cleanup, add an intent receipt to the unsealed evidence run containing artifact identity, repository identity, reconciliation counts, intended cleanup target, and timestamp; do not claim sealing, verification, or cleanup has occurred. Run `evidence-seal` and `evidence-verify`, capturing their commands, timestamps, exit codes, and verbatim outputs in `.full-review/evidence-receipts.txt`. Add those receipts and the verified evidence-bundle path to the final report, then rerun artifact path/content validation, update the index, and verify the intended artifact card by stable artifact ID and path. Record the final artifact SHA-256 and all final validation, index, lookup, seal, and verification receipts in `.full-review/artifacts.json`, then transition to `ready_for_cleanup`.
+
+Immediately before removal, verify every prerequisite. Resolve the repository root again, verify the target is exactly `<repo-root>/.full-review/`, remove that directory and no sibling path, and verify it no longer exists. Report the observed cleanup result in the final response. The surviving artifact and verified model-run bundle are the durable review proof; cleanup is proven by the post-removal filesystem check during the run.
 
 ## 9. Completion criteria
 
 The review is complete only when:
 
 - Scope and flags are explicit.
-- All four analysis phases ran for `complete`; user-authorized incomplete output is `partial`.
-- Both user checkpoints were honored.
-- Every required immutable scope, raw, consolidated, and final artifact exists with a checksum in `artifacts.json`; authorized partial sessions use durable failed/skipped raw placeholders.
+- All four analysis phases ran for `complete`; incomplete coverage is `partial`.
+- The workflow ran continuously without phase checkpoints.
+- Every required immutable scope, raw, and consolidated scratch artifact existed with a checksum before cleanup; partial sessions used durable failed/skipped raw placeholders while the artifact was built.
 - Every reported finding has severity, path/line evidence, impact, and remediation.
 - The inventory reconciles every stable raw finding ID.
 - Coverage records every eligible file as inspected, skipped, generated, vendored, unsupported, or excluded.
 - The frozen target fingerprint still matches, or the session is `superseded`.
-- The final report provides counts, verdict, action order, reviewer list, and verification limitations.
+- A complete, deduplicated report was created through `artifacts:create-artifacts`, validated, indexed, and includes every surfaced issue in its full raw ledger and reconciliation.
+- A linked artifact-owned model-run bundle preserves all review provenance and passed `evidence-seal` and `evidence-verify`.
+- `.full-review/` was removed only after the artifact and reconciliation checks succeeded.
 
-Present the final report path and a compact severity summary. Do not claim files were fixed unless the user separately authorized implementation and the fixes were verified.
+Present the validated artifact path and a compact severity summary. State whether cleanup succeeded. Do not claim files were fixed unless the user separately authorized implementation and the fixes were verified.
