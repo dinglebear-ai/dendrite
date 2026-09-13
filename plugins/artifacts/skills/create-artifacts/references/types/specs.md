@@ -44,4 +44,3 @@ Fill in the `<meta name="artifact.*">` block under the `<title>`. `status`,
 `date`, and `topic` are required; the linter fails without them. Use `related`
 to name the artifacts this one answers or feeds — that lineage is how someone
 finds the rest of the chain.
-

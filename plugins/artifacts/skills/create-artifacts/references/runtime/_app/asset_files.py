@@ -19,4 +19,3 @@ def embed_fonts(source):
         license_text='\n\n'.join(f.name+'\n'+f.read_text() for f in sorted(notices.glob('*.txt')))
         source=source.replace('@font-face','/* Bundled font notices\n'+license_text.replace('*/','* /')+'\n*/\n@font-face',1)
     return re.sub(r'url\(["\']([^"\']+\.woff2)["\']\)',replace,source)
-
