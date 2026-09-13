@@ -111,6 +111,11 @@ state, result count, or new destination is unfinished. Filters expose pressed
 state and announce the visible record count. Zero-result filters explain what
 is absent and offer a clear way back to the complete set.
 
+Reports use Overview, Findings, and Evidence as their primary navigation. Do
+not add category filters when the report has too few findings for filtering to
+provide a meaningful reduction. A short report should spend that space on its
+scope and evidence boundary instead.
+
 ## Updating the Snapshot
 
 Update design resources deliberately against an inspected Aurora revision.

@@ -109,7 +109,7 @@ class ArtifactIntegration(unittest.TestCase):
             self.assertIn('@media(prefers-reduced-motion:reduce)',source)
 
     def test_aurora_templates_share_shell_but_keep_useful_navigation(self):
-        interactive=['reports','proposals','specs','research','sessions','docs']
+        interactive=['proposals','specs','research','sessions','docs']
         for kind in interactive:
             source=template_path(kind,'aurora').read_text()
             self.assertEqual(source.count('class="header-nav"'),1)
@@ -119,6 +119,11 @@ class ArtifactIntegration(unittest.TestCase):
             self.assertIn('class="filter-feedback" role="status"',source)
             self.assertIn('aria-pressed',source)
             self.assertIn('visible ${visible===1?"record":"records"}',source)
+        report=template_path('reports','aurora').read_text()
+        self.assertEqual(report.count('class="artifact-nav"'),1)
+        self.assertNotIn('<div class="filters">',report)
+        self.assertNotIn('class="filter-feedback" role="status"',report)
+        self.assertIn('href="#artifact-evidence"',report)
         pr=template_path('pr-reports','aurora').read_text()
         self.assertEqual(pr.count('class="metric-icon"'),4)
         self.assertEqual(pr.count('class="phasehead"'),6)
