@@ -10,8 +10,6 @@ Tracked license or notice files whose terms differ from the repository AGPL lice
 - plugins/upstream-skills/skills/yeet/LICENSE.txt
 - plugins/vibin/skills/claude-android-ninja/LICENSE.md
 - plugins/vibin/skills/compose-skill/LICENSE
-- plugins/vibin/skills/create-unraid-plugin/assets/LICENSE-MIT.template
-- plugins/vibin/skills/create-unraid-plugin/assets/api-plugin/LICENSE-MIT.template
 - plugins/vibin/skills/submit-unraid-community-app/assets/LICENSE-MIT.template
 
 Dependency manifests and lockfiles may identify additional dependencies governed by their own licenses.

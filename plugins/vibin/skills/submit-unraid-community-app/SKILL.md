@@ -1,11 +1,11 @@
 ---
 name: submit-unraid-community-app
-description: Prepare, audit, validate, and submit an existing Unraid plugin to Community Applications (CA). Use when a user asks to list or publish a plugin in Community Apps, "submit my Unraid plugin," create or fix CA plugin wrapper XML or ca_profile.xml, prepare CA listing copy or artwork, run portal Validate or Scan, review a CA repository, or respond to moderation feedback. Do not use for Docker or container application submissions; this workflow is for Unraid plugins only and Docker applications require Container version 2 metadata. Do not use to implement the plugin runtime itself; use create-unraid-plugin first.
+description: Prepare, audit, validate, and submit an existing legacy `.plg` Unraid plugin to Community Applications (CA). Use when a user asks to list or publish a legacy plugin in Community Apps, create or fix its CA wrapper XML or ca_profile.xml, prepare listing copy or artwork, run portal Validate or Scan, review its CA repository, or respond to moderation feedback. This workflow is for legacy Unraid plugins only. Do not use for Docker or container application submissions, native Core plugin distribution manifests, or plugin runtime implementation.
 ---
 
 # Submit an Unraid Community App
 
-Build a current, reviewable Community Applications submission for an Unraid plugin from the project's real release and support surfaces.
+Build a current, reviewable Community Applications submission for an existing legacy `.plg` plugin from the project's real release and support surfaces. This skill does not scaffold plugin runtime code and does not handle native Core plugin distribution manifests.
 
 ## Establish the current contract
 
