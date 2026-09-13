@@ -96,6 +96,24 @@ class ArtifactIntegration(unittest.TestCase):
         ids=lambda family:re.findall(r'<section[^>]*\bid="([^"]+)"',template_path('pr-reports',family).read_text())
         self.assertEqual(ids('aurora'),ids('unraid'))
 
+    def test_every_aurora_html_template_uses_visual_contract_v2(self):
+        for kind in ['reports','pr-reports','proposals','specs','research','sessions','docs']:
+            source=template_path(kind,'aurora').read_text()
+            self.assertIn('Aurora artifact visual contract v2',source)
+            self.assertIn('--stat-color:var(--aurora-accent-pink)',source)
+            self.assertIn('--stat-color:var(--aurora-success)',source)
+            self.assertIn('--stat-color:var(--aurora-warn)',source)
+            self.assertIn('grid-template-columns:minmax(300px,.72fr) minmax(0,1.28fr)',source)
+            self.assertIn('@media(max-width:620px)',source)
+            self.assertIn('button[aria-label]:focus-visible:after',source)
+            self.assertIn('@media(prefers-reduced-motion:reduce)',source)
+
+    def test_artifact_skill_sets_html_comprehension_goal(self):
+        source=(SKILL/'SKILL.md').read_text()
+        self.assertIn('substantially better surface for understanding',source)
+        self.assertIn('keyboard-accessible tooltip or popover',source)
+        self.assertIn('No text may overlap',source)
+
     def test_generic_plan_header_and_discovery_output_root(self):
         from _app.validate import check_plan
         self.assertNotIn('PLAN-HEADER',{i['rule'] for i in check_plan('plans/example.md',template_path('plans','aurora').read_text())})

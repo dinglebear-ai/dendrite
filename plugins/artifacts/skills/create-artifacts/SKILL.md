@@ -11,6 +11,38 @@ the skill, templates, instructions, tests, or reusable tooling into that directo
 An explicit output root from the user takes precedence. `init-root` creates
 README/agent guidance symlinks to this plugin; keep their maintained contents here.
 
+## HTML Quality Goal
+
+An HTML artifact must provide a substantially better surface for understanding
+its information than the equivalent Markdown. A reader should be able to infer
+the result, status, severity, evidence shape, and next action from hierarchy,
+icons, semantic color, and compact visual summaries before reading the prose.
+HTML is not complete when it merely wraps the Markdown in styled cards.
+
+Design every region for the value it contributes at that location and size:
+
+- Lead with the conclusion and strongest proof. Keep supporting prose concise
+  and disclose forensic detail progressively.
+- Use the full semantic palette consistently: cyan for navigation and
+  information, mint for verified success, rose for risk or failure, amber for
+  caution or uncertainty, and neutral tones for context.
+- Prefer an unambiguous icon for compact actions. Every icon-only control needs
+  an accessible name and a keyboard-accessible tooltip or popover with a short
+  title or description. Keep text where an icon would make meaning less clear.
+- Use purposeful hover, focus, disclosure, and state transitions to explain
+  interactivity. Avoid decorative motion, repetitive card effects, and motion
+  that competes with the report. Respect `prefers-reduced-motion`.
+- Maintain deliberate spacing and containment. No text may overlap, collide
+  with an edge, form one-word columns, or depend on horizontal page scrolling.
+  Code and evidence may scroll inside their own bounded regions.
+- Make desktop and phone layouts independently legible. At both sizes, inspect
+  the header, hero, metrics, navigation, expanded details, tables, code, and the
+  longest realistic identifier or evidence line.
+
+Use [Design and Template Parity](references/design.md) for the visual contract.
+If the visual result is not faster to scan and easier to understand than the
+source Markdown, revise it before delivery.
+
 ## Choose the Project and Template
 
 Resolve the artifact's actual subject repository as `owner/repository`, using the
