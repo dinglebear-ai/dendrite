@@ -612,6 +612,11 @@
       "name": "upstream-skills",
       "source": "./plugins/upstream-skills",
       "description": "Skills vendored verbatim from upstream repos (openclaw + openai), kept in sync via sync-upstream-skills."
+    },
+    {
+      "name": "artifacts",
+      "description": "Create repository-scoped engineering artifacts with complete Unraid and Aurora template families.",
+      "source": "./plugins/artifacts"
     }
   ]
 }

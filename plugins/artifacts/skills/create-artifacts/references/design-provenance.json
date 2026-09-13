@@ -1,0 +1,18 @@
+{
+  "legacy_repository": "https://github.com/jmagar/artifacts",
+  "legacy_commit": "bf4c0c9",
+  "aurora_repository": "https://github.com/dinglebear-ai/aurora",
+  "aurora_commit": "35388b8e168521ea51cbc2d3b6a84a06575095ae",
+  "labby_commit": "dfa317b240dfd78521e9f467f3dd97fa7aa7ea88",
+  "unraid_template_sha256": {
+    "reports": "3f2fc4394fbb5ef4e81f1c436f70407633504c87786a0782aa7f38bfa1da3518",
+    "pr-reports": "8ed6e2dc9c5e1171507c6cac564b58d37115b82979fec34ef7ea5910855f82fd",
+    "proposals": "8f8484201ab9b6d2cb4f6e1e149aa4e0a9e45d784d66e9df36af51cee2f9a289",
+    "plans": "cac3fbe8f91258a2c6f23a970eae414b3e0fd85e2c7d59dc48422b435116569f",
+    "specs": "26a1ac856547ffb347b1eb188e125c27f9c74c3bc3a34bd6f71da7a744b03527",
+    "research": "928da4a64de2d11736865edce8958f82a8b1ceccf8e241b89a8451657ef2c8ae",
+    "sessions": "5140b1c6276e83d7fe4892076575c1b210c68c47357bb3478a74d6a534eb1bae",
+    "docs": "4d3a4e5324705915e87f8b3e0b4cb14236e69ad32c4c835a064f87feb26bac95",
+    "scripts": "d46f0d030eccaa604ead2f47be93c063c2dc29e8ca8602e11f937de690705109"
+  }
+}

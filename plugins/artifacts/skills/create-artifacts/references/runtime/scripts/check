@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# The single verification entry point. The pre-commit hook calls this, so there
+# is one definition of "verified" rather than two that drift.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+fail() { printf '\ncheck: %s\n' "$1" >&2; exit 1; }
+
+# 1. Rendered plans must not lag their Markdown source.
+for md in plans/*.md; do
+  [ -e "$md" ] || continue
+  case "$(basename "$md")" in _*|CLAUDE.md|AGENTS.md|README.md) continue ;; esac
+  html="${md%.md}.html"
+  [ -e "$html" ] || fail "$md has no rendered artifact — run scripts/render-plan.py --all"
+  if [ "$md" -nt "$html" ]; then
+    fail "$md is newer than its render — run scripts/render-plan.py --all"
+  fi
+done
+
+# 2. The shared style blocks must match _app/theme.py and _app/typography.py.
+#    Without this, editing a palette leaves every artifact silently stale.
+scripts/apply-styles.py --check >/dev/null || fail "style blocks are stale — run scripts/apply-styles.py"
+
+# 3. Unit tests, including the shell script executed against a DOM stub.
+python3 -m unittest discover -s _tests
+
+# 4. Every rule the folder docs claim.
+scripts/lint-artifacts.py
+
+# 5. The static export must still build, and must not regress to dead links.
+scripts/build-index.py
+scripts/export-portable.py | tee /tmp/artifact-export.log
+if grep -qE '^  [1-9][0-9]* degraded' /tmp/artifact-export.log; then
+  printf 'check: note — some citations have no repo mapping (see index-meta.json "repos")\n'
+fi
+
+git diff --check
+printf '%s\n' "Artifact package checks passed. Browser behaviour beyond the script smoke test still needs a real browser."

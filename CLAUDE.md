@@ -134,3 +134,13 @@ done
 jq empty .claude-plugin/marketplace.json
 jq empty .agents/plugins/marketplace.json
 ```
+
+## Project Artifacts
+
+Use the `create-artifacts` skill in `plugins/artifacts` for project artifacts.
+That plugin owns templates, instructions, and reusable tools. Save authored
+outputs and evidence under `~/artifacts/<owner-repo>/<type>/MM-DD-YY-name`.
+All Unraid-related artifacts always use Unraid templates, including forks and
+plugin projects. All other new artifacts always use Aurora templates.
+Classify by the artifact subject, not by the current checkout. Do not put
+framework files in the output root.

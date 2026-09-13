@@ -2363,10 +2363,42 @@
         "longDescription": "A bundle of agent skills vendored verbatim from their upstream repositories (openclaw and openai orgs). Each skill folder is mirrored whole; the sync-upstream-skills tool detects and applies upstream drift via per-skill content hashes.",
         "developerName": "Jacob Magar",
         "category": "Developer Tools",
-        "capabilities": ["Read", "Write", "Automation"],
+        "capabilities": [
+          "Read",
+          "Write",
+          "Automation"
+        ],
         "defaultPrompt": [
           "Use the meme-maker skill to caption an image.",
           "Use the handoff skill to summarize this session."
+        ],
+        "brandColor": "#29B6F6"
+      }
+    },
+    {
+      "name": "artifacts",
+      "description": "Create repository-scoped engineering artifacts with complete Unraid and Aurora template families.",
+      "source": {
+        "source": "local",
+        "path": "./plugins/artifacts"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity",
+      "interface": {
+        "displayName": "Artifacts",
+        "shortDescription": "Create engineering artifacts with Unraid or Aurora templates.",
+        "longDescription": "Create, validate, browse, and export repository-scoped reports, PR evidence, proposals, plans, specs, research, sessions, docs, and proof harnesses.",
+        "developerName": "Jacob Magar",
+        "category": "Productivity",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "defaultPrompt": [
+          "Use $create-artifacts to create and validate a project artifact."
         ],
         "brandColor": "#29B6F6"
       }

@@ -1,0 +1,1 @@
+../../../assets/templates/unraid/scripts/_template.sh

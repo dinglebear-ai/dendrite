@@ -16,6 +16,7 @@ updated: 2026-07-30
 | `agent-os` | local | ./plugins/agent-os | none | local | ./plugins/agent-os | none |
 | `agent-sdk-dev` | git-subdir | https://github.com/anthropics/claude-plugins-official.git:plugins/agent-sdk-dev | none | git-subdir | https://github.com/anthropics/claude-plugins-official.git:plugins/agent-sdk-dev | none |
 | `apprise` | git-subdir | https://github.com/jmagar/apprise-mcp.git:plugins/apprise | none | git-subdir | https://github.com/jmagar/apprise-mcp.git:plugins/apprise | none |
+| `artifacts` | local | ./plugins/artifacts | none | local | ./plugins/artifacts | none |
 | `aurora` | git-subdir | https://github.com/jmagar/aurora.git:plugin | none | git-subdir | https://github.com/jmagar/aurora.git:plugin | none |
 | `axon` | git-subdir | https://github.com/jmagar/axon.git:plugins/axon | none | git-subdir | https://github.com/jmagar/axon.git:plugins/axon | none |
 | `beads` | git-subdir | https://github.com/gastownhall/beads.git:plugins/beads | none | git-subdir | https://github.com/gastownhall/beads.git:plugins/beads | none |

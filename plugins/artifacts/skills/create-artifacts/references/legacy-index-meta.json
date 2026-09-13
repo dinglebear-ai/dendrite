@@ -1,0 +1,72 @@
+{
+  "order": [
+    "docs/core-contribution-process.html",
+    "reports/core-contribution-audit-2026-09-11.html",
+    "reports/plugin-system-live-issues.html",
+    "reports/plugin-system-author-onboarding.html",
+    "reports/plugin-port-briefs.html",
+    "reports/unassigned-devices-parity.html",
+    "reports/unassigned-devices-duplication.html",
+    "reports/storage-locations-pr68-review.html",
+    "reports/agent-skill-gaps.html",
+    "reports/storage-tools-port-readiness.html",
+    "reports/labby-auth-full-review.html",
+    "reports/axon-pipeline-throughput-full-review.html",
+    "reports/ci-runner-farm-plugin-full-review.html",
+    "pr-reports/unraid-core/codex-unassigned-devices-acceptance.html",
+    "pr-reports/dinglebear-ai-core/fix-hidden-red-integration-tests.html",
+    "pr-reports/dinglebear-ai-core/fix-ai-workflow-lint-toml-parser.html",
+    "pr-reports/dinglebear-ai-core/codex-ci-runner-routing.html",
+    "proposals/plugin-system-should-port.html",
+    "proposals/storage-tools-port-strategy.html",
+    "plans/2026-08-28-consolidate-artifact-validation.html",
+    "plans/2026-08-28-storage-tools-core-activation.html",
+    "sessions/2026-08-28-storage-tools-port.html",
+    "docs/core-repository-working-contract.html",
+    "docs/core-repository-working-contract-template.html",
+    "docs/DEPLOYMENT.md",
+    "specs/storage-tools-core-acceptance.html",
+    "research/storage-tools-port-open-questions.html",
+    "research/2026-08-30-local-session-model-evaluation.html",
+    "sessions/2026-08-28-plugin-remediation-verification.html",
+    "sessions/2026-08-28-agent-tooling-build.html",
+    "sessions/2026-08-28-plugin-authoring-toolkit.html",
+    "sessions/2026-08-28-hidden-red-integration-tests.html",
+    "sessions/2026-08-28-unassigned-devices-inventory.html",
+    "sessions/2026-08-31-unraid-onboarding-plan-review.html"
+  ],
+  "blurbs": {
+    "pr-reports/schema/sections.json": "Authoritative machine-readable six-stage and 29-section PR-report lifecycle registry, including evidence classifications, freshness dependencies, risk levels, and reviewer checkpoints.",
+    "research/session-bakeoff-corpus-v1.json": "Immutable, reviewed session-bakeoff corpus manifest defining the fixed evidence packets, source contracts, scoring rules, limitations, and blinded-review rubric for the Axon Palette local-model evaluation.",
+    "scripts/prove-plugin-issues.sh": "Deterministic harness for the live findings. Asserts each source-path claim against the Core worktree.",
+    "sessions/2026-08-28-plugin-remediation-verification.html": "Independent re-verification of the eleven plugin remediation branches, and their publication as pull requests.",
+    "sessions/2026-08-28-hidden-red-integration-tests.html": "Three integration tests were red and invisible; fixing them uncovered 28 test files CI never runs.",
+    "reports/storage-locations-pr68-review.html": "Read-only review of dinglebear-ai/core PR 68 at 1ceb94084: 13 proven blockers, four boot-veto paths, and a reconciliation of every bead that names the Storage Locations work."
+  },
+  "repos": {
+    "/Users/jmagar/workspace/core": {
+      "base": "https://github.com/jmagar/core/blob",
+      "ref": "main"
+    },
+    "/Users/jmagar/workspace/phoenix": {
+      "base": "https://github.com/dinglebear-ai/phoenix/blob",
+      "ref": "main"
+    },
+    "/Users/jmagar/workspace/unraid-elixir-plugins": {
+      "base": "https://github.com/dinglebear-ai/unraid-elixir-plugins/blob",
+      "ref": "main"
+    },
+    "/Users/jmagar/unraid/core-plugins/main": {
+      "base": "https://github.com/unraid/core-plugins/blob",
+      "ref": "main"
+    },
+    "/Users/jmagar/unraid/unraid8-docs": {
+      "base": "https://github.com/unraid/unraid8-docs/blob",
+      "ref": "main"
+    },
+    "/Users/jmagar/workspace/labby/.worktrees/codex/labbiauth-session-review": {
+      "base": "https://github.com/dinglebear-ai/labby/blob",
+      "ref": "52fa54ca431f1205dcbcd2a2dce73d5a9dabfd9c"
+    }
+  }
+}

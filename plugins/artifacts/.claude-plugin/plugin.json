@@ -1,0 +1,9 @@
+{
+  "name": "artifacts",
+  "version": "0.1.0",
+  "description": "Create repository-scoped engineering artifacts with complete Unraid and Aurora template families.",
+  "author": {"name": "Jacob Magar"},
+  "repository": "https://github.com/dinglebear-ai/dendrite",
+  "license": "AGPL-3.0-only",
+  "skills": "./skills/"
+}

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Refuse a commit that would leave the library inconsistent.
+# Delegates to scripts/check so "verified" has one definition, not two.
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+if ! scripts/check; then
+  printf '\npre-commit: scripts/check failed. Fix it, or commit with --no-verify if you know why.\n' >&2
+  exit 1
+fi
+
+# The index is a build product: it must reflect what is being committed.
+if ! git diff --quiet -- index.html; then
+  printf '\npre-commit: index.html was rebuilt — stage it and commit again.\n' >&2
+  exit 1
+fi

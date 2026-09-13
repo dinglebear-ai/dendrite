@@ -13,6 +13,7 @@ updated: 2026-07-30
 | `acp` | Rust implementation patterns for ACP, rmcp-derived MCP servers, and Lab runtime work. | yes | yes | yes | `rust` | none | 1 | none | yes | yes |
 | `adguard` | Skill for operating adguard via the lab MCP server / CLI. | yes | yes | yes | `adguard` | none | 1 | none | yes | yes |
 | `agent-os` | Drive the agent-os Windows 11 sandbox VM through an MCP gateway or an already-configured Windows-MCP endpoint. Ships the agent-os skill, a /agent-os status command, and a SessionStart health check. | yes | yes | yes | `agent-os` | `windows-mcp` | 1 | `agent-os.md` | yes | yes |
+| `artifacts` | Create repository-scoped engineering artifacts with complete Unraid and Aurora template families. | yes | yes | yes | `create-artifacts` | none | 1 | none | yes | yes |
 | `broadcastr` | Helper assets for Broadcastr plugin tooling. | no | no | yes | none | none | 0 | none | no | no |
 | `bytestash` | Skills for operating a ByteStash snippet manager. | yes | yes | yes | `bytestash` | none | 1 | none | yes | yes |
 | `dozzle` | Skill for operating Dozzle through direct HTTP API checks, auth guidance, and MCP setup notes. | yes | yes | yes | `dozzle` | `dozzle` | 1 | none | yes | yes |

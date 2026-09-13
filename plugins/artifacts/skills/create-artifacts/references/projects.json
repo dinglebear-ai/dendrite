@@ -1,0 +1,21 @@
+{
+  "unraid_repositories": [
+    "dinglebear-ai/core",
+    "jmagar/core",
+    "dinglebear-ai/unraid-elixir-plugins",
+    "dinglebear-ai/ci-runner-farm-plugin"
+  ],
+  "repositories": {
+    "unraid-core": "unraid/core",
+    "dinglebear-ai-core": "dinglebear-ai/core",
+    "dinglebear-ai-labby": "dinglebear-ai/labby",
+    "dinglebear-ai-axon": "dinglebear-ai/axon",
+    "dinglebear-ai-aurora": "dinglebear-ai/aurora",
+    "dinglebear-ai-dendrite": "dinglebear-ai/dendrite",
+    "dinglebear-ai-unraid-elixir-plugins": "dinglebear-ai/unraid-elixir-plugins",
+    "dinglebear-ai-ci-runner-farm-plugin": "dinglebear-ai/ci-runner-farm-plugin",
+    "unraid-limetech-ai-skills": "unraid/limetech-ai-skills",
+    "unraid-limetech-elixir-skills": "unraid/limetech-elixir-skills",
+    "jmagar-artifacts": "jmagar/artifacts"
+  }
+}
