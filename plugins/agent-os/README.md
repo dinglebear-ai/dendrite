@@ -20,15 +20,15 @@ Set these in the plugin's settings (Claude Code prompts on enable). Values reach
 
 | Key | Required | Default | What it is |
 |---|---|---|---|
-| `agent_os_mcp_url` | ✅ | `https://agent-os.manatee-triceratops.ts.net/mcp` | Windows-MCP `/mcp` endpoint (prefer the VM's own Tailscale/MagicDNS name). |
+| `agent_os_mcp_url` | ✅ | `https://agent-os.example.ts.net/mcp` | Windows-MCP `/mcp` endpoint (prefer the VM's own Tailscale/MagicDNS name). |
 | `agent_os_mcp_token` | ✅ (sensitive) | — | Bearer token Windows-MCP expects. |
-| `agent_os_vm_tailscale_ip` | | `100.109.125.128` | Guest's own Tailscale IP for `ssh agent-os` (port 22). |
-| `agent_os_vm_host` | | `tootie` | Docker host running the container. |
-| `agent_os_host_forward_ssh` | | `docker@100.120.242.29` | Host-forward SSH target (Tailscale maintenance — survives `tailscale down`). |
+| `agent_os_vm_tailscale_ip` | | `198.51.100.10` | Guest's own Tailscale IP for `ssh agent-os` (port 22). |
+| `agent_os_vm_host` | | `nashost` | Docker host running the container. |
+| `agent_os_host_forward_ssh` | | `docker@198.51.100.20` | Host-forward SSH target (Tailscale maintenance — survives `tailscale down`). |
 | `agent_os_host_forward_port` | | `2222` | Host-forward port → guest `:22`. |
 | `agent_os_compose_file` | | `/mnt/cache/compose/windows/docker-compose.yml` | Compose file on the Docker host to bring the VM up. |
 | `agent_os_container_name` | | `agent-os-win11` | dockur/windows container name. |
-| `agent_os_novnc_url` | | `http://tootie:8006` | dockur/windows web (noVNC) UI for visual debugging. |
+| `agent_os_novnc_url` | | `http://nashost:8006` | dockur/windows web (noVNC) UI for visual debugging. |
 | `agent_os_autostart` | | `false` | `"true"` lets the SessionStart hook SSH to the Docker host and `docker compose up -d` the VM when the MCP endpoint is unreachable (requires `agent_os_vm_host` + `agent_os_compose_file`). Starts only, never stops; doesn't block on Windows boot. |
 
 ### Auto-recovery (opt-in)
@@ -50,4 +50,4 @@ If `windows-mcp` doesn't appear in `/mcp`, the most likely cause is the URL/toke
 ## Notes
 
 - This skill was moved out of the `vibin` plugin into its own plugin so it can carry userConfig and self-register the MCP.
-- It does **not** fire on the user's personal Windows (steamy-wsl) — that's the `nircmd` skill.
+- It does **not** fire on the user's personal Windows (winhost-wsl) — that's the `nircmd` skill.

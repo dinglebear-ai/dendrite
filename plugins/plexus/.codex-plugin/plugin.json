@@ -26,8 +26,8 @@
       "Automation"
     ],
     "defaultPrompt": [
-      "Use Plexus to inspect squirts before changing it.",
-      "Load live remote context for dookie.",
+      "Use Plexus to inspect edgehost before changing it.",
+      "Load live remote context for devhost.",
       "Summarize recent host activity."
     ],
     "brandColor": "#2563EB"

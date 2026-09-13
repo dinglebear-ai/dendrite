@@ -7,7 +7,7 @@
 
 set -euo pipefail
 
-HOST="${NIRCMD_HOST:-steamy-wsl}"
+HOST="${NIRCMD_HOST:-winhost-wsl}"
 NIRCMD="${NIRCMD_PATH:-/mnt/c/tools/nircmd/nircmd.exe}"
 
 if [[ $# -eq 0 ]]; then

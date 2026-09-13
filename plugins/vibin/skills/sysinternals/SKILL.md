@@ -1,6 +1,6 @@
 ---
 name: sysinternals
-description: Drive Microsoft Sysinternals CLI tools on a remote Windows machine over SSH — list/kill processes (pslist, pskill), inspect open handles (handle), audit autoruns (autorunsc), check TCP/UDP connections (tcpvcon), verify file signatures + VirusTotal (sigcheck), audit permissions (accesschk), find alt data streams (streams), measure disk usage (du), check who's logged in (psloggedon), and run remotely (psexec). Use whenever the user wants kernel-level handle inspection, signed-binary process control under EDR, autorun forensics, file signature verification, security/permission audits, or anything from Mark Russinovich's suite. Sibling to the nircmd / NirSoft skill — prefer Sysinternals when the answer needs Microsoft-signed tooling (works under stricter AV, deeper system access) or covers kernel handles, autoruns, or signature/permission audits. Defaults to `ssh steamy-wsl` and `C:\tools\sysinternals\`; override via `SYSINTERNALS_HOST` and `SYSINTERNALS_DIR` env vars.
+description: Drive Microsoft Sysinternals CLI tools on a remote Windows machine over SSH — list/kill processes (pslist, pskill), inspect open handles (handle), audit autoruns (autorunsc), check TCP/UDP connections (tcpvcon), verify file signatures + VirusTotal (sigcheck), audit permissions (accesschk), find alt data streams (streams), measure disk usage (du), check who's logged in (psloggedon), and run remotely (psexec). Use whenever the user wants kernel-level handle inspection, signed-binary process control under EDR, autorun forensics, file signature verification, security/permission audits, or anything from Mark Russinovich's suite. Sibling to the nircmd / NirSoft skill — prefer Sysinternals when the answer needs Microsoft-signed tooling (works under stricter AV, deeper system access) or covers kernel handles, autoruns, or signature/permission audits. Defaults to `ssh winhost-wsl` and `C:\tools\sysinternals\`; override via `SYSINTERNALS_HOST` and `SYSINTERNALS_DIR` env vars.
 ---
 
 # sysinternals
@@ -10,7 +10,7 @@ Bridge for driving Mark Russinovich's Sysinternals Suite on a remote Windows box
 ## Defaults (override via env vars)
 
 ```bash
-SYSINTERNALS_HOST="${SYSINTERNALS_HOST:-${NIRCMD_HOST:-steamy-wsl}}"   # ssh alias
+SYSINTERNALS_HOST="${SYSINTERNALS_HOST:-${NIRCMD_HOST:-winhost-wsl}}"   # ssh alias
 SYSINTERNALS_DIR="${SYSINTERNALS_DIR:-/mnt/c/tools/sysinternals}"      # POSIX path from WSL
 ```
 

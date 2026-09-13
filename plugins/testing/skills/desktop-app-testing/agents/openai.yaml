@@ -1,4 +1,4 @@
 interface:
   display_name: "Desktop App Testing"
   short_description: "Live-test a built Windows .exe inside the agent-os Windows 11 VM and produce a works/doesn't-work plus UI/UX report."
-  default_prompt: "Use $desktop-app-testing when the user asks to QA, click through, or review the UX of a built Windows .exe in the agent-os VM. Do not use it for coding/building desktop apps, the user's steamy desktop, or general agent-os administration."
+  default_prompt: "Use $desktop-app-testing when the user asks to QA, click through, or review the UX of a built Windows .exe in the agent-os VM. Do not use it for coding/building desktop apps, the user's winhost desktop, or general agent-os administration."
