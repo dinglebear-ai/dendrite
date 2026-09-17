@@ -1,7 +1,7 @@
 ---
 name: full-review
 description: Orchestrate a comprehensive, continuous multi-agent review across code quality, architecture, security, performance, testing, documentation, framework practices, and CI/CD, then produce one complete, deduplicated report artifact. Use when the user explicitly asks for a comprehensive, full, exhaustive, multi-agent, or multi-dimensional review of a repository, branch, diff, change set, or path. Security focus, performance criticality, strict mode, and framework selection are optional modifiers. Do not use for routine single-perspective reviews, narrow scans, or requests that only ask to fix already-known findings.
-allowed-tools: Read, Bash, Grep, Glob, Task, Write, Edit
+allowed-tools: Read Bash Grep Glob Task Write Edit
 ---
 
 # Full Review

@@ -1,0 +1,148 @@
+#!/usr/bin/env python3
+"""Validate first-party Agent Skill frontmatter portability."""
+
+from __future__ import annotations
+
+import json
+import re
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+FRONTMATTER = re.compile(r"\A---\n(?P<header>.*?)\n---(?:\n|\Z)", re.DOTALL)
+ALLOWED_TOOLS = re.compile(r"^allowed-tools:[ \t]*(?P<value>.*)$")
+SEQUENCE_ITEM = re.compile(r"^[ \t]+-[ \t]+")
+METADATA = re.compile(r"^metadata:[ \t]*(?P<value>.*)$")
+METADATA_ENTRY = re.compile(r"^[ \t]+[^:#]+:[ \t]*(?P<value>.*)$")
+NON_STRING_SCALAR = re.compile(r"(?:true|false|null|~|[-+]?(?:\d+(?:\.\d*)?|\.\d+))", re.IGNORECASE)
+
+
+def first_party_skills(root: Path = ROOT) -> list[Path]:
+    skills = []
+    for path in root.glob("plugins/*/skills/*/SKILL.md"):
+        plugin = path.relative_to(root).parts[1]
+        if plugin == "upstream-skills":
+            # This plugin is a byte-for-byte upstream mirror. Its provenance/sync
+            # contract owns compatibility decisions instead of local rewrites.
+            continue
+        skills.append(path)
+    return sorted(skills)
+
+
+def parse_scalar(raw: str) -> str:
+    raw = raw.strip()
+    if raw.startswith('"'):
+        value = json.loads(raw)
+        if not isinstance(value, str):
+            raise ValueError("must be a string")
+        return value
+    if raw.startswith("'"):
+        if not raw.endswith("'") or len(raw) < 2:
+            raise ValueError("has an unterminated quoted string")
+        return raw[1:-1].replace("''", "'")
+    return raw
+
+
+def has_top_level_comma(value: str) -> bool:
+    """Return true only for commas separating top-level tool entries."""
+    depth = 0
+    for character in value:
+        if character == "(":
+            depth += 1
+        elif character == ")" and depth > 0:
+            depth -= 1
+        elif character == "," and depth == 0:
+            return True
+    return False
+
+
+def validate_skill(path: Path) -> list[str]:
+    text = path.read_text(encoding="utf-8")
+    match = FRONTMATTER.match(text)
+    if not match:
+        return [f"{path}: missing YAML frontmatter"]
+
+    lines = match.group("header").splitlines()
+    errors: list[str] = []
+
+    for index, line in enumerate(lines):
+        metadata = METADATA.match(line)
+        if not metadata:
+            continue
+        inline = metadata.group("value").strip()
+        if inline:
+            if not inline.startswith("{"):
+                errors.append(f"{path}: metadata must be a mapping with string values")
+                continue
+            # JSON is a valid YAML subset, so validate inline JSON objects when
+            # they are mechanically parseable without adding a YAML dependency.
+            try:
+                parsed = json.loads(inline)
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(parsed, dict) or any(
+                not isinstance(key, str) or not isinstance(value, str)
+                for key, value in parsed.items()
+            ):
+                errors.append(f"{path}: metadata values must be strings")
+            continue
+        cursor = index + 1
+        while cursor < len(lines) and (not lines[cursor] or lines[cursor][0].isspace()):
+            entry = METADATA_ENTRY.match(lines[cursor])
+            if entry:
+                raw = entry.group("value").strip()
+                if (
+                    not raw
+                    or raw.startswith(("[", "{"))
+                    or NON_STRING_SCALAR.fullmatch(raw)
+                ):
+                    errors.append(
+                        f"{path}: metadata values must be strings; invalid entry {lines[cursor].strip()!r}"
+                    )
+            cursor += 1
+
+    for index, line in enumerate(lines):
+        field = ALLOWED_TOOLS.match(line)
+        if not field:
+            continue
+        raw = field.group("value").strip()
+        if not raw:
+            if index + 1 < len(lines) and SEQUENCE_ITEM.match(lines[index + 1]):
+                errors.append(
+                    f"{path}: allowed-tools must be one space-separated string, not a YAML sequence"
+                )
+            else:
+                errors.append(f"{path}: allowed-tools must not be empty")
+            continue
+        if raw.startswith("["):
+            errors.append(
+                f"{path}: allowed-tools must be one space-separated string, not a YAML sequence"
+            )
+            continue
+        try:
+            value = parse_scalar(raw)
+        except (ValueError, json.JSONDecodeError) as error:
+            errors.append(f"{path}: invalid allowed-tools scalar: {error}")
+            continue
+        if not value.strip():
+            errors.append(f"{path}: allowed-tools must not be empty")
+        elif has_top_level_comma(value):
+            errors.append(
+                f"{path}: allowed-tools must use spaces between tool entries, not commas"
+            )
+    return errors
+
+
+def main() -> int:
+    errors = [error for path in first_party_skills() for error in validate_skill(path)]
+    if errors:
+        print("Agent Skill frontmatter validation failed:", file=sys.stderr)
+        for error in errors:
+            print(f"  {error}", file=sys.stderr)
+        return 1
+    print(f"validated {len(first_party_skills())} first-party Agent Skills")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

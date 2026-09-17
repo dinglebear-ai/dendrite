@@ -1,7 +1,7 @@
 ---
 name: wrap-session
 description: Route session closeout to the correct domain logger based on observed work. Use when the user says "wrap session", "wrap up this session", "log what we did", "close out", or invokes /wrap-session. Classify the full session as coding, homelab maintenance, or both, invoke log-code-session and/or log-homelab-maintenance, cross-link paired artifacts, refresh knowledge indexes, and validate the knowledge base. This skill never commits, pushes, merges, or performs cleanup.
-allowed-tools: Read, Write, Edit, Bash
+allowed-tools: Read Write Edit Bash
 ---
 
 ## Context

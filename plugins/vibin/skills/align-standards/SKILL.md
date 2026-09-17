@@ -1,7 +1,7 @@
 ---
 name: align-standards
 description: Measure repositories or homelab configuration against canonical standards, distinguish documented policy from actual enforcement, produce a drift report, and optionally reconcile explicitly selected gaps. Use when the user says "align standards", "audit repo standards", "check fleet drift", "standardize the Rust repos", or asks whether repositories match the policies in the knowledge base. Default to audit mode. Apply changes only when the user explicitly requests implementation.
-allowed-tools: Read, Write, Edit, Bash
+allowed-tools: Read Write Edit Bash
 ---
 
 # Align Standards

@@ -3,6 +3,8 @@ set -euo pipefail
 
 jq empty .claude-plugin/marketplace.json .agents/plugins/marketplace.json
 plugins/scripts/validate-plugin-schemas
+plugins/scripts/check-skill-frontmatter
+python3 plugins/scripts/tests/test_check_skill_frontmatter.py
 python3 plugins/scripts/tests/test_sync_upstream_skills.py
 PYTHONDONTWRITEBYTECODE=1 python3 plugins/vibin/skills/resume-work-lanes/scripts/test_collect_lane_evidence.py
 plugins/scripts/check-marketplace-sync

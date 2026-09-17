@@ -1,7 +1,7 @@
 ---
 name: validate-skill
 description: Validate a Claude Code skill's SKILL.md using skills-ref validate, then layer in Claude Code-specific checks that skills-ref doesn't cover (trigger phrases, argument-hint, disable-model-invocation, plugin.json registration). Use whenever the user says "validate this skill", "check my skill", "is my skill valid", "review skill structure", "does this skill follow conventions", or is about to publish or install a skill. Also use proactively after creating or editing any SKILL.md file.
-allowed-tools: Read, Bash
+allowed-tools: Read Bash
 ---
 
 ## Context

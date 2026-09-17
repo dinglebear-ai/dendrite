@@ -5,9 +5,7 @@ metadata:
   doc_type: "skill"
   status: "active"
   owner: "fastmcp-client-cli"
-  audience:
-    - "agents"
-    - "maintainers"
+  audience: "agents, maintainers"
   review_basis: "local command guidance; refresh against upstream FastMCP docs before version-sensitive edits"
 ---
 

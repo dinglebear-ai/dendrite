@@ -1,7 +1,7 @@
 ---
 name: quick-push
 description: Stage, commit, and push the current repository changes with an optional version bump and changelog update. Use when the user says "quick push", "push my changes", "commit and push", "ship this", "push to a new branch", or asks to publish the current worktree. Session logging is handled separately by wrap-session so quick-push never mutates the personal knowledge base. Accepts optional `--no-bump` argument to skip the version bump.
-allowed-tools: Bash, Read, Edit, Write, TodoWrite
+allowed-tools: Bash Read Edit Write TodoWrite
 ---
 
 ## Context
