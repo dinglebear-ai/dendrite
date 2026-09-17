@@ -44,13 +44,14 @@ def parse_scalar(raw: str) -> str:
 
 
 def has_top_level_comma(value: str) -> bool:
+    """Return true only for commas separating top-level tool entries."""
     depth = 0
-    for char in value:
-        if char == "(":
+    for character in value:
+        if character == "(":
             depth += 1
-        elif char == ")" and depth:
+        elif character == ")" and depth > 0:
             depth -= 1
-        elif char == "," and depth == 0:
+        elif character == "," and depth == 0:
             return True
     return False
 
@@ -72,6 +73,18 @@ def validate_skill(path: Path) -> list[str]:
         if inline:
             if not inline.startswith("{"):
                 errors.append(f"{path}: metadata must be a mapping with string values")
+                continue
+            # JSON is a valid YAML subset, so validate inline JSON objects when
+            # they are mechanically parseable without adding a YAML dependency.
+            try:
+                parsed = json.loads(inline)
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(parsed, dict) or any(
+                not isinstance(key, str) or not isinstance(value, str)
+                for key, value in parsed.items()
+            ):
+                errors.append(f"{path}: metadata values must be strings")
             continue
         cursor = index + 1
         while cursor < len(lines) and (not lines[cursor] or lines[cursor][0].isspace()):

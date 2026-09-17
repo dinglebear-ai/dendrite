@@ -69,6 +69,20 @@ class SkillFrontmatterTest(unittest.TestCase):
                 errors = self.validate(frontmatter)
                 self.assertTrue(any("metadata values must be strings" in error for error in errors))
 
+    def test_accepts_inline_json_metadata_with_string_values(self):
+        self.assertEqual(
+            [],
+            self.validate(
+                'name: demo\ndescription: demo\nmetadata: {"author":"example","version":"1.0"}'
+            ),
+        )
+
+    def test_rejects_inline_json_metadata_with_structured_values(self):
+        errors = self.validate(
+            'name: demo\ndescription: demo\nmetadata: {"tags":["android","kotlin"]}'
+        )
+        self.assertTrue(any("metadata values must be strings" in error for error in errors))
+
     def test_repository_first_party_skills_are_portable(self):
         failures = {
             str(path.relative_to(ROOT)): module.validate_skill(path)
