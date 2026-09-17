@@ -1,7 +1,7 @@
 ---
 name: hand-off
 description: Load the most recent log-code-session artifact into a fresh session and brief the new agent on where prior coding work left off. Use at the start of a new conversation when the user says "hand off", "pick up where we left off", "resume the last session", "continue from yesterday", "load the last session log", or otherwise wants prior engineering context restored. Prefer the central personal knowledge base, with repo-local docs/sessions as a fallback.
-allowed-tools: Read, Bash, Glob
+allowed-tools: Read Bash Glob
 ---
 
 ## Context

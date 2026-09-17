@@ -1,7 +1,7 @@
 ---
 name: log-homelab-maintenance
 description: Create a factual homelab maintenance record for live infrastructure, hosts, services, networking, storage, security, deployments, upgrades, migrations, repairs, audits, and routine operations. Use when the user says "write a maintenance log", "log this homelab work", "document the deployment", "record this repair", or when wrap-session routes a session containing live operational changes. This skill writes the maintenance artifact only and never commits, pushes, deploys, restarts, or changes infrastructure.
-allowed-tools: Read, Write, Bash
+allowed-tools: Read Write Bash
 ---
 
 ## Context

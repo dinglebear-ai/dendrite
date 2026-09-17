@@ -1,7 +1,7 @@
 ---
 name: homelab-map
 description: Load or refresh the authoritative personal homelab context layer whenever a prompt concerns named hosts, service placement, topology, storage, networking, proxies, MCP services, backups, or current infrastructure drift. Use for NASHOST, DEVHOST, Edgehost, Backuphost, Winhost, Laptophost, HomeLAN, "where does this service run", "map the homelab", "refresh inventory", or "check declared versus observed state". Prefer version-controlled configuration for desired state, the ~/docs generators for observed domain inventories, and ~/.homelab for the compiled overview.
-allowed-tools: Read, Bash
+allowed-tools: Read Bash
 ---
 
 # Homelab Map

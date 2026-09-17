@@ -1,7 +1,7 @@
 ---
 name: deploy-new-service
 description: Orchestrate a new homelab service from declared configuration through live verification. Use when the user says "deploy a new service", "add this app to the homelab", "create the compose stack", "put this behind SWAG", or requests a complete service rollout. Create version-controlled Compose and documentation, invoke create-swag-config when needed, validate desired state, deploy to the selected host, verify runtime health, update inventory, and finish with wrap-session. Never place real secrets in Git and never overwrite or remove an existing deployment without explicit authorization.
-allowed-tools: Read, Write, Edit, Bash
+allowed-tools: Read Write Edit Bash
 ---
 
 # Deploy New Service

@@ -1,7 +1,7 @@
 ---
 name: new-runbook
 description: Create a reusable, evidence-backed homelab or development runbook from a proven procedure. Use when the user says "create a runbook", "turn this into a runbook", "document how to do this again", "write a recovery procedure", or asks for a repeatable operational workflow. Read related maintenance logs, session logs, decisions, standards, and current configuration before writing. This skill writes the runbook only and never executes the procedure or publishes the artifact.
-allowed-tools: Read, Write, Bash
+allowed-tools: Read Write Bash
 ---
 
 # New Runbook

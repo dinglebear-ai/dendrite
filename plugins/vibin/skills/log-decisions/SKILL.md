@@ -1,7 +1,7 @@
 ---
 name: log-decisions
 description: Record one or more durable architecture or operational decisions as ADRs in the personal knowledge base. Use when the user says "log this decision", "create an ADR", "record why we chose this", "capture these decisions", or when a session produced choices that future agents would otherwise relitigate. Read the ADR contract and related evidence, create the next numbered ADR files, and link superseded decisions. This skill writes decision records only and never implements, commits, or publishes them.
-allowed-tools: Read, Write, Edit, Bash
+allowed-tools: Read Write Edit Bash
 ---
 
 # Log Decisions

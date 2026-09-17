@@ -1,7 +1,7 @@
 ---
 name: new-report
 description: Create a sourced investigation, audit, benchmark, comparison, incident-analysis, or research report in the personal knowledge base. Use when the user says "write a report", "document the investigation", "capture the audit", "summarize the benchmark", or needs conclusions that are broader than a session or maintenance log. This skill writes a report from observed evidence and never performs unrelated remediation, commits, or publishes it.
-allowed-tools: Read, Write, Bash
+allowed-tools: Read Write Bash
 ---
 
 # New Report

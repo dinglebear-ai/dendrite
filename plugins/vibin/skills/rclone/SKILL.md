@@ -1,7 +1,7 @@
 ---
 name: rclone
 description: Move, sync, mount, encrypt, and inspect files across cloud storage and remote hosts using the rclone CLI. Supports 50+ backends (Google Drive, S3, B2, Dropbox, OneDrive, SFTP, WebDAV, Mega, etc.) plus crypt overlays and HTTP/Web serving. Use whenever the user wants to copy files to/from a cloud remote, sync a local folder up to / down from cloud, list/move/delete files on a remote, mount a remote as a local filesystem, dedupe or check files, serve files over HTTP/WebDAV, browse what's configured (`rclone listremotes`), or run any rclone subcommand. Trigger phrases include "rclone", "sync to gdrive / s3 / b2 / onedrive", "copy this to my cloud", "mount the remote", "what's on my drive", "back up to S3", "list my buckets", "rclone config". Reads remotes from `~/.config/rclone/rclone.conf` by default. Destructive verbs (sync, delete, purge, move) require user confirmation per the safety boundaries below.
-allowed-tools: Read, Bash
+allowed-tools: Read Bash
 argument-hint: [remote:path or subcommand]
 ---
 

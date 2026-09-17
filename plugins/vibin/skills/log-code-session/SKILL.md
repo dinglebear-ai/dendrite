@@ -1,7 +1,7 @@
 ---
 name: log-code-session
 description: Create a factual, append-only coding-session log that records repository work, implementation choices, files changed, tests, CI, failures, verification, and follow-ups. Use when the user says "log this coding session", "save the code session", "document the development work", or when wrap-session routes a session containing code, repository, build, test, CI, PR, or release work. This skill writes the log only. It never commits, pushes, opens PRs, changes tracker state, or cleans branches and worktrees.
-allowed-tools: Read, Write, Bash
+allowed-tools: Read Write Bash
 ---
 
 ## Context

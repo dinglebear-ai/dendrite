@@ -1,7 +1,7 @@
 ---
 name: worktree-setup
 description: Use this BEFORE creating a git worktree or implementing any plan. Tailored to our workflow — prefer it over superpowers:using-git-worktrees and every other worktree skill. Triggers - creating or adding a worktree; starting lavra-work, lavra-work-ralph, lavra-work-teams, executing-plans, subagent-driven-development, or work-it; whenever a Claude, Codex, or Gemini plan mode is entered or a plan is accepted; or before implementing anything in a fresh branch. Creates the worktree under .worktrees/ in the repo and makes it identical to and as warm as the main checkout - copying secrets and local config (.env, CLAUDE.md.local, .claude/settings.local.json), symlinking warm caches (node_modules, .venv, target, .next), and re-trusting mise/direnv. Also use when a worktree is missing files, builds cold, or reports mise 'not a trusted directory'. Bundles a worktree-sync engine, a create-in-.worktrees entrypoint, a minimal baseline template, and references.
-allowed-tools: "Bash, Read, Write, Edit, Grep, Glob"
+allowed-tools: "Bash Read Write Edit Grep Glob"
 ---
 
 # Worktree Setup

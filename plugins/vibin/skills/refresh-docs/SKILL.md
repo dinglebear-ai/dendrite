@@ -1,7 +1,7 @@
 ---
 name: refresh-docs
 description: Use when the user asks to refresh local reference docs, rerun `./scripts/refresh-docs.sh`, review the latest `docs/references/CHANGES.md` entry, or produce/update `docs/references/CHANGES-REPORT.md`. Trigger phrases include "refresh docs", "refresh references", "update references", "check what the refresh changed", "write the changes report". Scoped to repos that ship this specific Axon/Repomix reference-docs pipeline — requires the host project to provide `./scripts/refresh-docs.sh` and a `docs/references/` tree. Does not apply to generic documentation, README, or doc-generator refreshes in other repos.
-allowed-tools: "Bash(./scripts/refresh-docs.sh *), Bash(*archive-changes-report.sh *), Bash(rg *), Bash(find *), Bash(sed *), Bash(awk *), Read, Write"
+allowed-tools: "Bash(./scripts/refresh-docs.sh *) Bash(*archive-changes-report.sh *) Bash(rg *) Bash(find *) Bash(sed *) Bash(awk *) Read Write"
 ---
 
 # Refresh Docs Impact Review
