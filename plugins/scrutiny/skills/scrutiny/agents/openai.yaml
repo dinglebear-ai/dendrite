@@ -1,4 +1,0 @@
-interface:
-  display_name: "Scrutiny"
-  short_description: "Inspect Scrutiny SMART monitoring data for drive health, temperatures, disk failures, and storage device status."
-  default_prompt: "Use $scrutiny when the user asks to check drives, inspect SMART errors, review disk temperatures, verify drive health, or summarize Scrutiny storage status."

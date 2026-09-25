@@ -1,1 +1,0 @@
-../../../assets/templates/unraid/plans/_template.md

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Handoff"
-  short_description: "Clipboard-ready handoff prompt for another agent to investigate or continue a task."
-  default_prompt: "Use handoff: Clipboard-ready handoff prompt for another agent to investigate or continue a task."

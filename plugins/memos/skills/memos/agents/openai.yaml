@@ -1,4 +1,0 @@
-interface:
-  display_name: "Memos"
-  short_description: "Create, search, tag, archive, and manage notes in Memos."
-  default_prompt: "Use $memos to create, search, tag, archive, and manage notes in Memos."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "ByteStash"
-  short_description: "Use when the user asks to save, create, search, list, retrieve, update, share, or delete ByteStash snippets or reusable code notes."
-  default_prompt: "Use $bytestash to manage ByteStash snippets, including search, creation, updates, sharing, deletion, and auth troubleshooting."

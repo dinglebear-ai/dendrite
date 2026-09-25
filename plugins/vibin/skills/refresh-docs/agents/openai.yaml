@@ -1,4 +1,0 @@
-interface:
-  display_name: "Refresh Docs"
-  short_description: "Refresh project reference docs and write the impact report for changed references. Scoped to repos shipping the Axon/Repomix refresh-docs.sh pipeline."
-  default_prompt: "Use $refresh-docs to run the project refresh script, inspect reference changes, archive the old report, and write CHANGES-REPORT.md."

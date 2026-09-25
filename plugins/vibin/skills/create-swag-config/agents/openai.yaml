@@ -1,4 +1,0 @@
-interface:
-  display_name: "Create Swag Config"
-  short_description: "Add or update a SWAG reverse-proxy config through Vibin-managed SWAG variables and direct SSH/file writes."
-  default_prompt: "Use $create-swag-config to add a SWAG reverse-proxy config with SWAG_* settings. Do not rely on the retired swag-mcp marketplace plugin."

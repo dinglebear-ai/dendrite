@@ -1,4 +1,0 @@
-interface:
-  display_name: "Nircmd"
-  short_description: "Drive NirCmd and NirSoft utilities on a Windows machine over SSH."
-  default_prompt: "Use $nircmd to control Windows audio, windows, TTS, locks, screenshots, and NirSoft inspection tools over SSH."

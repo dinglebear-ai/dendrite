@@ -1,4 +1,0 @@
-interface:
-  display_name: "Full Review"
-  short_description: "Run a continuous multi-agent review and deliver one complete, deduplicated report artifact."
-  default_prompt: "Use $full-review to review the requested repository or code scope end to end, create one complete deduplicated report with $artifacts:create-artifacts, validate it, and clean up review scratch."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Bootstrap Plexus"
-  short_description: "Use when the user wants to install, set up, repair, or initialize the Plexus remote-device memory plugin, find where persistent REMOTE.md host profiles are stored, or seed missing host profiles from bundled defaults."
-  default_prompt: "Use $bootstrap-plexus to initialize Plexus persistent host profiles, report the data directory, preserve existing REMOTE.md files, and explain where host memory is stored."

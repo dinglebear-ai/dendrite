@@ -1,4 +1,0 @@
-interface:
-  display_name: "Gog"
-  short_description: "gog CLI: safe Google Workspace automation, JSON, auth, scoped reads/writes."
-  default_prompt: "Use gog: gog CLI: safe Google Workspace automation, JSON, auth, scoped reads/writes."

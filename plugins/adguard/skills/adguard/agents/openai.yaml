@@ -1,4 +1,0 @@
-interface:
-  display_name: "AdGuard"
-  short_description: "This skill should be used when the user asks about AdGuard Home status, DNS filtering, or blocked domains. Triggers include: \\\"is adguard running\\\", \\\"how many queries did it block today\\\", \\\"show me recent DNS queries\\\", \\\"search the DNS log for a domain\\\", \\\"is example.com blocked\\\", \\\"AdGuard stats\\\", or any question about DNS-level ad blocking or network filtering"
-  default_prompt: "Use $adguard for this skill should be used when the user asks about AdGuard Home status, DNS filtering, or blocked domains. Triggers include: \\\"is adguard running\\\", \\\"how many queries did it block today\\\", \\\"show me recent DNS queries\\\", \\\"search the DNS log for a domain\\\", \\\"is example.com blocked\\\", \\\"AdGuard stats\\\", or any question about DNS-level ad blocking or network filtering."

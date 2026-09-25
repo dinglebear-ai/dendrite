@@ -1,4 +1,0 @@
-interface:
-  display_name: "LoggiFly"
-  short_description: "Configure LoggiFly Docker log alerting, notifications, and container actions."
-  default_prompt: "Use $loggifly to configure LoggiFly log alerts, notifications, and safe container action rules."

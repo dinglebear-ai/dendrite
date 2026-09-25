@@ -1,4 +1,0 @@
-interface:
-  display_name: "Radicale"
-  short_description: "Manage Radicale CalDAV calendars and CardDAV contacts: list events, create or delete events, search contacts, and add or remove contacts."
-  default_prompt: "Use $radicale to manage Radicale calendars and contacts when the user asks about calendar events, scheduling, addressbooks, contact lookup, or contact changes."

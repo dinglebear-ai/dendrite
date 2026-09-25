@@ -1,4 +1,0 @@
-interface:
-  display_name: "Fastmcp Client CLI"
-  short_description: "Inspect and exercise MCP servers from the shell with the FastMCP client CLI"
-  default_prompt: "Use $fastmcp-client-cli to discover, list, and call MCP servers from the shell with the FastMCP client CLI."

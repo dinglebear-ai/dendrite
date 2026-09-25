@@ -1,4 +1,0 @@
-interface:
-  display_name: "Using RMCP"
-  short_description: "Build, modify, and debug Rust MCP servers and clients using the rmcp crate."
-  default_prompt: "Use $using-rmcp for rmcp tool, resource, prompt, handler, transport, and progress-notification work."

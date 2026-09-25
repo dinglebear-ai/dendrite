@@ -1,4 +1,0 @@
-interface:
-  display_name: "Chrome"
-  short_description: "Inspect or control a real Chrome session over SSH and CDP."
-  default_prompt: "Use $chrome to inspect tabs, screenshots, console, network, cookies, and pages in a real Chrome session over SSH and CDP."

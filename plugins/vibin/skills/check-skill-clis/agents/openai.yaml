@@ -1,4 +1,0 @@
-interface:
-  display_name: "Check Skill CLIs"
-  short_description: "Audit CLI dependencies referenced by installed agent skills."
-  default_prompt: "Use $check-skill-clis to audit skill CLI dependencies and report missing or ambiguous commands."

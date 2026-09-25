@@ -1,4 +1,0 @@
-interface:
-  display_name: "Homelab Map"
-  short_description: "Use when a prompt names a known homelab host and needs the host/service map."
-  default_prompt: "Use $homelab-map to load the current homelab host and service map before operating on a named host."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Agent Transcript"
-  short_description: "GitHub PR/issue agent transcripts: redact, preview, and insert safely."
-  default_prompt: "Use agent-transcript: GitHub PR/issue agent transcripts: redact, preview, and insert safely."

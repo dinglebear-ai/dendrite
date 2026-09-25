@@ -1,4 +1,0 @@
-interface:
-  display_name: "SWAG"
-  short_description: "Manage SWAG/nginx reverse-proxy configs, backups, logs, and health checks through the SWAG MCP action router."
-  default_prompt: "Use $swag when creating, updating, inspecting, removing, backing up, or health-checking SWAG reverse-proxy configs."

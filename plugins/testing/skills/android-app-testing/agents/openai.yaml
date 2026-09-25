@@ -1,4 +1,0 @@
-interface:
-  display_name: "Android App Testing"
-  short_description: "Live-test a built Android APK on an emulator/device and produce a works/doesn't-work plus UI/UX report. Uses direct local adb by default; optional claude-in-mobile gateway path only after device visibility is confirmed."
-  default_prompt: "Use $android-app-testing to install and launch the APK, enumerate screens from UI dumps, exercise features with adb, capture screenshots/logcat evidence, and write the structured Android QA report."

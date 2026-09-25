@@ -1,4 +1,0 @@
-interface:
-  display_name: "Web App Testing"
-  short_description: "Use when live-testing a web app/site end-to-end in a real browser and producing a works/doesn't-work plus UX report."
-  default_prompt: "Use $web-app-testing to enumerate web app features, exercise them in Chrome through Playwright/CDP, capture evidence, and write the shared testing report."

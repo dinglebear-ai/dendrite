@@ -1,4 +1,0 @@
-interface:
-  display_name: "Neo4j"
-  short_description: "Use when the user wants to query Neo4j with Cypher, inspect labels or relationship types, check constraints or indexes, verify connectivity, or explore graph data."
-  default_prompt: "Use $neo4j to run read-only Cypher, inspect graph schema, list labels or relationship types, check indexes or constraints, and verify Neo4j connectivity."

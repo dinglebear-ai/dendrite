@@ -1,4 +1,0 @@
-interface:
-  display_name: "Save to MD (Deprecated)"
-  short_description: "Compatibility alias for log-code-session."
-  default_prompt: "Use $log-code-session instead of $save-to-md to record this coding session."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Acpx"
-  short_description: "Use acpx as a headless ACP CLI for agent-to-agent communication, including prompt/exec/sessions workflows, session sc..."
-  default_prompt: "Use acpx: Use acpx as a headless ACP CLI for agent-to-agent communication, including prompt/exec/sessions workflows, session sc..."

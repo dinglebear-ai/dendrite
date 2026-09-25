@@ -1,4 +1,0 @@
-interface:
-  display_name: "Rust Patterns"
-  short_description: "Work on Jacob's Rust repos using the rmcp-template family conventions: action-dispatched MCP tools, CLI/MCP parity, service-layer architecture, auth/scopes, config, tests, builds, and ACP runtime/provider patterns."
-  default_prompt: "Use the Rust patterns skill when changing rmcp-family Rust servers, Lab runtime Rust code, action-dispatched MCP surfaces, CLI/MCP parity, auth/scope contracts, or ACP integrations."

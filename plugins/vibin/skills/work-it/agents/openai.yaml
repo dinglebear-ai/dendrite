@@ -1,4 +1,0 @@
-interface:
-  display_name: "Work It"
-  short_description: "Run a plan through PR-tracked worktree execution"
-  default_prompt: "Use $work-it to execute this plan in a worktree with an early draft PR, mandatory review waves, clean verification, and session logging."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Navidrome"
-  short_description: "Use when the user wants to inspect a Navidrome music server: status, artists, albums, library search, playlists, now-playing, recently played, or starred items."
-  default_prompt: "Use $navidrome to inspect my Navidrome music library, such as server status, playlists, artists, albums, search results, now-playing tracks, or starred items."

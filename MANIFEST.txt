@@ -1,0 +1,12 @@
+Workspace cleanup archive for dinglebear-ai/dendrite
+Date: 2026-09-25
+Default: main
+
+STALE_BRANCHES 1
+STALE	fix/sep-2640-allowed-tools	659fb34325660e35a15acb2abf940ac86911a0ee
+
+LOCAL_ONLY_BRANCHES 0
+
+STALE_WORKTREES 0
+
+WIP_SNAPSHOTS 0

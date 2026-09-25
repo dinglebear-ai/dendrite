@@ -1,4 +1,0 @@
-interface:
-  display_name: "Autoreview"
-  short_description: "Pre-commit/ship code review: Codex default; optional Claude, Pi, Droid, Copilot, Cursor, or OpenCode."
-  default_prompt: "Use autoreview: Pre-commit/ship code review: Codex default; optional Claude, Pi, Droid, Copilot, Cursor, or OpenCode."

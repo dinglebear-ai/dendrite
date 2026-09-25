@@ -1,4 +1,0 @@
-interface:
-  display_name: "TEI"
-  short_description: "Call Hugging Face Text Embeddings Inference for health checks, model info, embeddings, sparse embeddings, reranking, and tokenization."
-  default_prompt: "Use $tei when checking TEI health/model info or calling TEI embedding, sparse embedding, rerank, tokenize, or OpenAI-compatible embedding endpoints."

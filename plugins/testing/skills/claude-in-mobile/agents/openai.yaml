@@ -1,4 +1,0 @@
-interface:
-  display_name: "Claude In Mobile"
-  short_description: "Raw call-by-call driver for Android devices, iOS Simulators, macOS desktop apps, Chrome/Chromium sessions, mobile quality checks, and guarded store releases via claude-in-mobile MCP or CLI. Not the structured test-report harness (use android-app-testing for that)."
-  default_prompt: "Use $claude-in-mobile to inspect the available mobile automation tools, verify the active target, then drive the requested Android, iOS Simulator, desktop, browser, accessibility, visual, or store action with evidence. For an end-to-end APK works/doesn't-work report, defer to android-app-testing instead."

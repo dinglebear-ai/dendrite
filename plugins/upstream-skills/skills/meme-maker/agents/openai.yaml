@@ -1,4 +1,0 @@
-interface:
-  display_name: "Meme Maker"
-  short_description: "Search meme templates, suggest formats, and generate local or hosted image memes."
-  default_prompt: "Use meme-maker: Search meme templates, suggest formats, and generate local or hosted image memes."

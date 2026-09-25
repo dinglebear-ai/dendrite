@@ -1,4 +1,0 @@
-interface:
-  display_name: "Immich"
-  short_description: "Use when the user mentions Immich or asks to search photos or videos, browse albums, find assets from a trip or date range, check server health, view statistics, or inspect storage usage."
-  default_prompt: "Use $immich to search and browse Immich photos, videos, albums, date ranges, server health, statistics, and storage usage."

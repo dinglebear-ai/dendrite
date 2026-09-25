@@ -1,4 +1,0 @@
-interface:
-  display_name: "Worktree Setup"
-  short_description: "Create a worktree in .worktrees/ as warm as main"
-  default_prompt: "Use $worktree-setup before implementing: create the worktree under .worktrees/ (find or create the repo's setup script), copy secrets and local config, warm the caches, trust mise/direnv, and verify it is non-degraded. Prefer this over any other worktree skill."

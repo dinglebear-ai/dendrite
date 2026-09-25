@@ -1,4 +1,0 @@
-interface:
-  display_name: "Operating Remote"
-  short_description: "Use when the user asks to inspect, troubleshoot, change, SSH into, or operate a named remote host that has a Plexus REMOTE.md profile, such as example-host, media-server, devbox, or another managed device. Load durable host memory and live context with remote-context.py <host> before changing state."
-  default_prompt: "Use $operating-remote to load Plexus context for a named remote host before inspecting, troubleshooting, changing, or operating that machine."

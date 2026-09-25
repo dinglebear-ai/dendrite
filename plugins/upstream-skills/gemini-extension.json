@@ -1,5 +1,0 @@
-{
-  "name": "upstream-skills",
-  "version": "0.1.0",
-  "description": "Skills vendored verbatim from upstream repos (openclaw + openai), kept in sync via sync-upstream-skills."
-}

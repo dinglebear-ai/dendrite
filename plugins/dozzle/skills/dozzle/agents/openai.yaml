@@ -1,4 +1,0 @@
-interface:
-  display_name: "Dozzle"
-  short_description: "Use when the user wants Dozzle Docker logs, container log discovery, health/version checks, auth/session troubleshooting, or native Dozzle MCP setup."
-  default_prompt: "Use $dozzle to inspect Dozzle container logs, check health/version, troubleshoot auth, and configure the native Dozzle MCP endpoint."

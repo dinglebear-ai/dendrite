@@ -1,5 +1,0 @@
-self-hosted-runner:
-  labels:
-    - ci-pool-python
-    - ci-pool-typescript
-    - ci-pool-ops

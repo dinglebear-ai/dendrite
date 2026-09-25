@@ -1,4 +1,0 @@
-interface:
-  display_name: "Review PR"
-  short_description: "Run the PR Review Toolkit sweep"
-  default_prompt: "Use $review-pr to run the PR review toolkit flow for the current branch or PR, covering code, tests, comments, silent failures, type design, docs/config drift, and simplification."

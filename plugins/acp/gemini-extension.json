@@ -1,5 +1,0 @@
-{
-  "name": "acp",
-  "version": "0.1.0",
-  "description": "Rust implementation patterns for ACP, rmcp-derived MCP servers, and Lab runtime work."
-}

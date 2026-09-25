@@ -1,4 +1,0 @@
-interface:
-  display_name: "Merge Status"
-  short_description: "Check branch readiness to merge"
-  default_prompt: "Use $merge-status to audit whether this branch or PR is ready to merge, including conflicts, tests, CI, docs, and config examples."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Quick Push"
-  short_description: "Stage, commit, and push the current repo with the expected quick-push workflow."
-  default_prompt: "Use $quick-push to save or update the session log before staging, stage intended changes, commit with trailer, and push."

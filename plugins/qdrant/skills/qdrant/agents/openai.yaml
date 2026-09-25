@@ -1,4 +1,0 @@
-interface:
-  display_name: "Qdrant"
-  short_description: "Use when the user asks to inspect, operate, or troubleshoot a Qdrant vector database: list collections, inspect collection config, upsert or scroll points, query nearest neighbors, run similarity search, check health, or debug vector storage."
-  default_prompt: "Use $qdrant to inspect, operate, or troubleshoot a Qdrant vector database."

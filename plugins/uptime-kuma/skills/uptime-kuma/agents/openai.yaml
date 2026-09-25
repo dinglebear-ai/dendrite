@@ -1,4 +1,0 @@
-interface:
-  display_name: "Uptime Kuma"
-  short_description: "Check Uptime Kuma monitor status, uptime, response times, and status pages."
-  default_prompt: "Use $uptime-kuma to inspect Uptime Kuma monitors, uptime percentages, response times, and failing services."

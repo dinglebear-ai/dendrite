@@ -1,4 +1,0 @@
-interface:
-  display_name: "Monolith Check"
-  short_description: "Check source files against file and Rust function size limits."
-  default_prompt: "Use $monolith-check to audit source files for monolith policy violations and report the exact oversized files or functions."

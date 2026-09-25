@@ -1,4 +1,0 @@
-interface:
-  display_name: "Sysinternals"
-  short_description: "Drive Microsoft Sysinternals tools on a remote Windows machine over SSH."
-  default_prompt: "Use $sysinternals to inspect processes, handles, autoruns, signatures, permissions, TCP state, and disk usage on Windows."

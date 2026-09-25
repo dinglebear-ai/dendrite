@@ -1,4 +1,0 @@
-interface:
-  display_name: "Linkding"
-  short_description: "Use when the user asks to save, search, list, tag, archive, update, delete, or check Linkding bookmarks, or when they mention their Linkding bookmark library."
-  default_prompt: "Use $linkding to save links, search and list bookmarks, manage tags or bundles, archive bookmarks, and check whether URLs already exist in Linkding."
